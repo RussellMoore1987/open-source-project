@@ -1,0 +1,10 @@
+react drag and drop
+
+https://codepen.io/baruch/pen/XNgrjb
+
+https://blog.bitsrc.io/implement-better-drag-and-drop-in-your-react-app-beafc4451599
+https://blog.usejournal.com/mastering-drag-drop-with-reactjs-part-01-39bed3d40a03
+https://codepen.io/jhonyoung/pen/PeGpNL
+
+
+https://codepen.io/heysafronov/pen/jpabKX

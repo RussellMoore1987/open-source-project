@@ -1,0 +1,35 @@
+icon, sub titles, gray btn
+#CECFCF
+
+icon media content
+#DFDFDF
+
+doted line media add
+#ABABAB
+
+header text, sidebar text
+#A5A5A5
+
+header profile menu
+#BBBBBB
+
+title
+#707070
+
+bacic text
+#ABABAB
+
+input text
+#7D7D7D
+
+input place holder text, input sub text
+#A4A4A4
+
+dashbord icon on, help me gray
+#F7F8F8
+
+hr
+#D5D4D4
+
+light hr
+#EAE9E9
