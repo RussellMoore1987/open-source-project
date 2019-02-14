@@ -26,6 +26,8 @@ class Database {
         if (is_null($this->DBNAME)) {
             $this->create_database_name();
         }
+
+        $this->set_use_database();
     }
 
     private function connect_to_database() {
@@ -48,7 +50,7 @@ class Database {
             $this->dbConnection = new mysqli($this->SERVERNAME, $this->USERNAME, $this->PASSWORD, $this->DBNAME);
             if ($this->dbConnection->connect_error) {
                 die($this->dbConnection);
-                array_push($this->errors_array, "Database Connection Error");
+                array_push($this->errors_array, $this->dbConnection->connect_error);
                 return false;
             }
         }
@@ -60,7 +62,66 @@ class Database {
         if ($this->dbConnection->query($sql) === TRUE) {
             return true;
         } else {
-            array_push($this->errors_array, "Query Error: Unable to create database");
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // Function to set the database that will be used by subsiquent requests.
+    private function set_use_database() {
+        $sql = "USE " . $this->DBNAME;
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return true;
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // TABLE CREATION FUNCTIONS
+    public function createPostsTable() {
+        $sql = "CREATE TABLE posts IF NOT EXISTS ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
+        $sql .= "author INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "comments INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "content TEXT, ";
+        $sql .= "createdBy INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "authorName VARCHAR(50), ";
+        $sql .= "createdDate DATE, ";
+        $sql .= "postDate DATE, ";
+        $sql .= "status TINYINT(1), ";
+        $sql .= "title VARCHAR(50), ";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table posts Created Successfully!";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    public function createTagsTable() {
+        $sql = "CREATE TABLE tags IF NOT EXISTS ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
+        $sql .= "title VARCHAR(50) ";
+        $sql .= "note VARCHAR(255) ";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table tags Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // TABLE DROP FUNCTION
+    public function dropTable($tablename) {
+        $sql = "DROP TABLE " . $tablename . " IF EXISTS";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table " . $tablename . " Dropped Successfully!";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
             return false;
         }
     }
