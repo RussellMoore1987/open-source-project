@@ -80,7 +80,7 @@ class Database {
 
     // TABLE CREATION FUNCTIONS
     public function createPostsTable() {
-        $sql = "CREATE TABLE posts IF NOT EXISTS ";
+        $sql = "CREATE TABLE posts IF NOT EXISTS ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
         $sql .= "author INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "comments INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
@@ -90,7 +90,7 @@ class Database {
         $sql .= "createdDate DATE, ";
         $sql .= "postDate DATE, ";
         $sql .= "status TINYINT(1), ";
-        $sql .= "title VARCHAR(50) NOT NULL, ";
+        $sql .= "title VARCHAR(50) NOT NULL )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table posts Created Successfully!";
