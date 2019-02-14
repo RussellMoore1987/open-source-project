@@ -82,20 +82,20 @@ class Database {
     public function createPostsTable() {
         $sql = "CREATE TABLE posts IF NOT EXISTS ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
-        $sql .= "author INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "comments INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "content TEXT, ";
+        $sql .= "author INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "comments INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "content TEXT NOT NULL, ";
         $sql .= "createdBy INT(10) UNSIGNED NOT NULL, ";
         $sql .= "authorName VARCHAR(50), ";
         $sql .= "createdDate DATE, ";
         $sql .= "postDate DATE, ";
         $sql .= "status TINYINT(1), ";
-        $sql .= "title VARCHAR(50), ";
+        $sql .= "title VARCHAR(50) NOT NULL, ";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table posts Created Successfully!";
         } else {
-            array_push($this->errors_array, $this->dbConnection->error);
+            array_push($this->errors_array, "Error creating table posts");
             return false;
         }
     }
@@ -103,13 +103,27 @@ class Database {
     public function createTagsTable() {
         $sql = "CREATE TABLE tags IF NOT EXISTS ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
-        $sql .= "title VARCHAR(50) ";
-        $sql .= "note VARCHAR(255) ";
+        $sql .= "title VARCHAR(50) NOT NULL, ";
+        $sql .= "note VARCHAR(255) DEFAULT NULL";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table tags Created Successfully";
         } else {
-            array_push($this->errors_array, $this->dbConnection->error);
+            array_push($this->errors_array, "Error creating table tags");
+            return false;
+        }
+    }
+
+    public function createLabelsTable() {
+        $sql = "CREATE TABLE labels IF NOT EXISTS ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
+        $sql .= "title VARCHAR(50) NOT NULL, ";
+        $sql .= "note VARCHAR(255) DEFAULT NULL";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table labels Created Successfully";
+        } else {
+            array_push($this->errors_array, "Error creating table labels");
             return false;
         }
     }
