@@ -95,6 +95,7 @@ class Database {
     }
 
     // TABLE CREATION FUNCTIONS
+    // POSTS
     public function createPostsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS posts ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
@@ -116,6 +117,7 @@ class Database {
         }
     }
 
+    // TAGS
     public function createTagsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS tags ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
@@ -130,6 +132,7 @@ class Database {
         }
     }
 
+    // LABELS
     public function createLabelsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS labels ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
@@ -143,6 +146,50 @@ class Database {
             return false;
         }
     }
+
+    // USERS
+    public function createUsersTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS users ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "username VARCHAR(35) NOT NULL, ";
+        $sql .= "password VARCHAR(50) NOT NULL, ";
+        $sql .= "firstName VARCHAR(25) NOT NULL, ";
+        $sql .= "lastName VARCHAR(25) NOT NULL, ";
+        $sql .= "address VARCHAR(150) NOT NULL, ";
+        $sql .= "phoneNumber VARCHAR(25) NOT NULL, ";
+        $sql .= "emailAddress VARCHAR(150) NOT NULL, ";
+        $sql .= "title VARCHAR(35) DEFAULT NULL, ";
+        $sql .= "mediaContent INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "adminNote VARCHAR(255) DEFAULT NULL, ";
+        $sql .= "note VARCHAR(255) DEFAULT NULL, ";
+        $sql .= "showOnWeb TINYINT(1) DEFAULT 1, ";
+        $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0 )";
+
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table labels Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // CATEGORIES
+    public function createCategoriesTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS categories ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "title VARCHAR(50) NOT NULL, ";
+        $sql .= "sudCatId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "note VARCHAR(255) DEFAULT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table labels Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+    
 
     // TABLE DROP FUNCTION
     public function dropTable($tablename) {

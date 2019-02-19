@@ -13,6 +13,10 @@ $successMessage = false;
             $successMessage = $Database->createTagsTable();
         } elseif ($_GET['createtable'] == 'labels') {
             $successMessage = $Database->createLabelsTable();
+        } elseif ($_GET['createtable'] == 'users') {
+            $successMessage = $Database->createUsersTable();
+        } elseif ($_GET['createtable'] == 'categories') {
+            $successMessage = $Database->createCategoriesTable();
         }
     } elseif(isset($_GET['droptable'])) {
         $tableToDrop = $_GET['droptable'];
@@ -64,7 +68,7 @@ $successMessage = false;
     ?>
 </div>
 <br>
-<h2>Please use the code listed below to make sure you have the corect user in your Database</h2>
+<h2>Please use the code listed below to make sure you have the correct user in your Database</h2>
 <h3 style="color: blue;">CREATE USER 'devteam'@''127.0.0.1' IDENTIFIED BY 'devPass1!';</h3>
 <h3 style="color: blue;">GRANT ALL ON developmentdb.* TO 'devteam'@'127.0.0.1';</h3>
 <br>
@@ -81,3 +85,9 @@ $successMessage = false;
 <h2>Labels Table</h2>
 <a href="dev_tools.php?createtable=labels">Create Labels Table</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=labels">Drop Labels Table</a>
+<h2>Users Table</h2>
+<a href="dev_tools.php?createtable=users">Create Users Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=users">Drop Users Table</a>
+<h2>Categories Table</h2>
+<a href="dev_tools.php?createtable=categories">Create Categories Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=categories">Drop Categories Table</a>
