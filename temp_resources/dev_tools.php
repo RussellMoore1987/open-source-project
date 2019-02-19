@@ -9,11 +9,18 @@ $successMessage = false;
     if(isset($_GET['createtable'])) {
         if ($_GET['createtable'] == 'posts') {
             $successMessage = $Database->createPostsTable();
+        } elseif ($_GET['createtable'] == 'tags') {
+            $successMessage = $Database->createTagsTable();
+        } elseif ($_GET['createtable'] == 'labels') {
+            $successMessage = $Database->createLabelsTable();
         }
     } elseif(isset($_GET['droptable'])) {
         $tableToDrop = $_GET['droptable'];
         $successMessage = $Database->dropTable($tableToDrop);
     }
+
+    // Get the database tables
+    $tables_array = $Database->show_all_tables();
 ?>
 
 <div class="update-notes">
@@ -45,7 +52,18 @@ $successMessage = false;
     }
     ?>
 </div>
-
+<br>
+<div style="color: black; border: 1px solid black;">
+    <h2>Current Tables in Database</h2>
+    <?php
+        if(!empty($tables_array)) {
+            foreach($tables_array as $table) {
+                echo "<h3>" . $table . "</h3>";
+            }
+        }
+    ?>
+</div>
+<br>
 <h2>Please use the code listed below to make sure you have the corect user in your Database</h2>
 <h3 style="color: blue;">CREATE USER 'devteam'@''127.0.0.1' IDENTIFIED BY 'devPass1!';</h3>
 <h3 style="color: blue;">GRANT ALL ON developmentdb.* TO 'devteam'@'127.0.0.1';</h3>

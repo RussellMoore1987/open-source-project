@@ -1,1 +1,3 @@
-GRANT ALL ON developmentdb.* TO 'devteam'@'127.0.0.1';
+USE developmentdb;
+
+SHOW tables;

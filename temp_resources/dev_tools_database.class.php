@@ -56,6 +56,22 @@ class Database {
         }
     }
 
+    // Function to show all tables
+    public function show_all_tables() {
+        $sql = "SHOW tables";
+        $result = $this->dbConnection->query($sql);
+        if ($result !== FALSE) {
+            $tableList = [];
+            while($row = $result->fetch_array()) {
+                array_push($tableList, $row[0]);
+            }
+            return $tableList;
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
     // Function to create the database name
     private function create_database_name() {
         $sql = "CREATE DATABASE developmentdb";
@@ -80,8 +96,8 @@ class Database {
 
     // TABLE CREATION FUNCTIONS
     public function createPostsTable() {
-        $sql = "CREATE TABLE posts IF NOT EXISTS ( ";
-        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
+        $sql = "CREATE TABLE IF NOT EXISTS posts ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "author INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "comments INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "content TEXT NOT NULL, ";
@@ -95,42 +111,42 @@ class Database {
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table posts Created Successfully!";
         } else {
-            array_push($this->errors_array, "Error creating table posts");
+            array_push($this->errors_array, $this->dbConnection->error);
             return false;
         }
     }
 
     public function createTagsTable() {
-        $sql = "CREATE TABLE tags IF NOT EXISTS ";
-        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
+        $sql = "CREATE TABLE IF NOT EXISTS tags ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "title VARCHAR(50) NOT NULL, ";
-        $sql .= "note VARCHAR(255) DEFAULT NULL";
+        $sql .= "note VARCHAR(255) DEFAULT NULL )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table tags Created Successfully";
         } else {
-            array_push($this->errors_array, "Error creating table tags");
+            array_push($this->errors_array, $this->dbConnection->error);
             return false;
         }
     }
 
     public function createLabelsTable() {
-        $sql = "CREATE TABLE labels IF NOT EXISTS ";
-        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO INCREMENT PRIMARY KEY, ";
+        $sql = "CREATE TABLE IF NOT EXISTS labels ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "title VARCHAR(50) NOT NULL, ";
-        $sql .= "note VARCHAR(255) DEFAULT NULL";
+        $sql .= "note VARCHAR(255) DEFAULT NULL )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table labels Created Successfully";
         } else {
-            array_push($this->errors_array, "Error creating table labels");
+            array_push($this->errors_array, $this->dbConnection->error);
             return false;
         }
     }
 
     // TABLE DROP FUNCTION
     public function dropTable($tablename) {
-        $sql = "DROP TABLE " . $tablename . " IF EXISTS";
+        $sql = "DROP TABLE IF EXISTS " . $tablename;
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table " . $tablename . " Dropped Successfully!";
