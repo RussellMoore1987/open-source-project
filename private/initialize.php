@@ -6,6 +6,7 @@
   define("PRIVATE_PATH", dirname(__FILE__)); // C:\wamp64\www\open_source_project\private
   define("PROJECT_PATH", dirname(PRIVATE_PATH)); // C:\wamp64\www\open_source_project
   define("PUBLIC_PATH", PROJECT_PATH . '/public'); // C:\wamp64\www\open_source_project/public
+  // todo: make image path
 
   
   // setting up variables to check whether or not were local or live
