@@ -17,6 +17,10 @@ $successMessage = false;
             $successMessage = $Database->createUsersTable();
         } elseif ($_GET['createtable'] == 'categories') {
             $successMessage = $Database->createCategoriesTable();
+        } elseif ($_GET['createtable'] == 'mediaContent') {
+            $successMessage = $Database->createMediaContentTable();
+        } elseif ($_GET['createtable'] == 'comments') {
+            $successMessage = $Database->createCommentsTable();
         }
     } elseif(isset($_GET['droptable'])) {
         $tableToDrop = $_GET['droptable'];
@@ -91,3 +95,9 @@ $successMessage = false;
 <h2>Categories Table</h2>
 <a href="dev_tools.php?createtable=categories">Create Categories Table</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=categories">Drop Categories Table</a>
+<h2>Media Content Table</h2>
+<a href="dev_tools.php?createtable=mediaContent">Create Media Content Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=mediaContent">Drop Media Content Table</a>
+<h2>Comments Table</h2>
+<a href="dev_tools.php?createtable=comments">Create Comments Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=comments">Drop Comments Table</a>

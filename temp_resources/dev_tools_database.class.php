@@ -167,7 +167,7 @@ class Database {
 
 
         if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table labels Created Successfully";
+            return "Table users Created Successfully";
         } else {
             array_push($this->errors_array, $this->dbConnection->error);
             return false;
@@ -183,13 +183,53 @@ class Database {
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table labels Created Successfully";
+            return "Table categories Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // MEDIA CONTENT
+    public function createMediaContentTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS mediaContent ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "name VARCHAR(150) NOT NULL, ";
+        $sql .= "type VARCHAR(25) NOT NULL, ";
+        $sql .= "note VARCHAR(255) DEFAULT NULL, ";
+        $sql .= "alt VARCHAR(30) DEFAULT NULL, ";
+        $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "createdDate DATE )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table mediaContent Created Successfully";
         } else {
             array_push($this->errors_array, $this->dbConnection->error);
             return false;
         }
     }
     
+
+    // COMMENTS
+    public function createCommentsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS comments ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "title VARCHAR(50) NOT NULL, ";
+        $sql .= "createdDate DATE, ";
+        $sql .= "comment VARCHAR(255) DEFAULT NULL, ";
+        $sql .= "status TINYINT(1) NOT NULL DEFAULT 0, ";
+        $sql .= "name VARCHAR(50) DEFAULT NULL, ";
+        $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "approvedBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "postId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table comments Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
 
     // TABLE DROP FUNCTION
     public function dropTable($tablename) {
