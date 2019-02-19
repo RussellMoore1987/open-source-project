@@ -8,7 +8,6 @@ class Database {
     private $USERNAME;
     private $PASSWORD;
     private $DBNAME;
-    private $listOfTables = [];
 
     public $errors_array = [];
     public $dbConnection;
@@ -62,12 +61,10 @@ class Database {
         $sql = "SHOW tables";
         $result = $this->dbConnection->query($sql);
         if ($result !== FALSE) {
-            $this->listOfTables = [];
             $tableList = [];
             while($row = $result->fetch_array()) {
                 array_push($tableList, $row[0]);
             }
-            $this->listOfTables = $tableList;
             return $tableList;
         } else {
             array_push($this->errors_array, $this->dbConnection->error);
@@ -237,16 +234,23 @@ class Database {
     // TABLE DROP FUNCTION
     public function dropTable($tablename) {
         if ($tablename === 'all') {
+            $listOfTables = $this->show_all_tables();
             $sql = "DROP TABLE IF EXISTS ";
-            foreach ($this->listOfTables as $table ) {
-                $sql .= $table . ", ";
+            $i = 0;
+            foreach ($listOfTables as $table ) {
+                if ($i == (sizeof($listOfTables) - 1)) {
+                    $sql .= $table;
+                } else {
+                    $sql .= $table . ", ";
+                }
+                $i++;
             }
         } else {
             $sql = "DROP TABLE IF EXISTS " . $tablename;
         }
 
         if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table " . $tablename . " Dropped Successfully!";
+            return "Table(s) " . $tablename . " Dropped Successfully!";
         } else {
             array_push($this->errors_array, $this->dbConnection->error);
             return false;

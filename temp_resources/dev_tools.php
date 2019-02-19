@@ -24,7 +24,7 @@ $successMessage = false;
         }
     } elseif(isset($_GET['droptable'])) {
         if ($_GET['droptable'] == 'all') {
-            $successMessage = $Database->dropTable($tableToDrop);
+            $successMessage = $Database->dropTable('all');
         } else {
             $tableToDrop = $_GET['droptable'];
             $successMessage = $Database->dropTable($tableToDrop);
