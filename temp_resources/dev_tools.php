@@ -23,8 +23,12 @@ $successMessage = false;
             $successMessage = $Database->createCommentsTable();
         }
     } elseif(isset($_GET['droptable'])) {
-        $tableToDrop = $_GET['droptable'];
-        $successMessage = $Database->dropTable($tableToDrop);
+        if ($_GET['droptable'] == 'all') {
+            $successMessage = $Database->dropTable($tableToDrop);
+        } else {
+            $tableToDrop = $_GET['droptable'];
+            $successMessage = $Database->dropTable($tableToDrop);
+        }
     }
 
     // Get the database tables
@@ -77,6 +81,8 @@ $successMessage = false;
 <h3 style="color: blue;">GRANT ALL ON developmentdb.* TO 'devteam'@'127.0.0.1';</h3>
 <br>
 <h2>Please see the options below: </h2>
+<br>
+<a style="color: darkred; padding: 20px; border: 1ps solid darkred;" href="dev_tools.php?droptable=all">DROP ALL TABLES</a>
 <br>
 <h2>Posts Table</h2>
 <a href="dev_tools.php?createtable=posts">Create Posts Table</a>
