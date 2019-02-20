@@ -98,7 +98,7 @@ $successMessage = false;
         foreach($Database->errors_array as $error) {
             echo "<h3 style='color: red;'>" . $error . "</h3>";
         }
-    } elseif($successMessage != false) {
+    } elseif ($successMessage != false) {
         echo "<h3 style='color: green;'>" . $successMessage . "</h3>";
     } else {
         echo "<h3 style='color: green;'>No Errors Detected</h3>";

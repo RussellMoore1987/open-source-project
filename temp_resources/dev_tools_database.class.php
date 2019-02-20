@@ -165,11 +165,11 @@ class Database {
                 return false;
                 break;
             } else {
-                continue;
+                // Do Nothing
             }
-
-            return "All tables created successfully!";
         }
+        
+        return "All tables created successfully!";
     }
 
     // POSTS
