@@ -94,6 +94,39 @@ class Database {
         }
     }
 
+    // Function to disable/enable foreign key constraints for table creation and drop
+    private function toggleForeignKeyChecks($toggle) {
+        // Toggle the key checks OFF
+        if ($toggle === false) {
+            $sql = "SET FOREIGN_KEY_CHECKS = 0";
+            $this->dbConnection->query($sql);
+
+        // Toggle the key checks ON
+        } else {
+            $sql = "SET FOREIGN_KEY_CHECKS = 1";
+            $this->dbConnection->query($sql);
+        }
+    }
+
+    // Function to execute sql queries
+    private function executeCreateQuery($query, $tablename=NULL) {
+        // DISABLE Foreign key checks in preparation
+        $this->toggleForeignKeyChecks(FALSE);
+
+        if ($this->dbConnection->query($query) === TRUE) {
+            // ENABLE Foreign key checks when finished
+            $this->toggleForeignKeyChecks(TRUE);
+
+            return "Table " . $tablename . " created successfully!";
+        } else {
+            // ENABLE Foreign key checks when finished
+            $this->toggleForeignKeyChecks(TRUE);
+
+            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            return false;
+        }
+    }
+
     // ========================================== TABLE CREATION FUNCTIONS ===============================================================
     // CREATE ALL TABLES
     public function createAllTables() {
@@ -110,6 +143,7 @@ class Database {
         array_push($results, $this->createTodoTable());
         array_push($results, $this->createMainSettingsTable());
         array_push($results, $this->createStyleSettingsTable());
+        array_push($results, $this->createPersonalSettingsTable());
         array_push($results, $this->createContentTable());
         array_push($results, $this->createBookmarksTable());
         array_push($results, $this->createPermissionsTable());
@@ -150,14 +184,12 @@ class Database {
         $sql .= "createdDate DATE, ";
         $sql .= "postDate DATE, ";
         $sql .= "status TINYINT(1), ";
-        $sql .= "title VARCHAR(50) NOT NULL )";
+        $sql .= "title VARCHAR(50) NOT NULL, ";
+        $sql .= "FOREIGN KEY (author) REFERENCES users(id), ";
+        $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table posts Created Successfully!";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'posts');
     }
 
     // TAGS
@@ -167,12 +199,8 @@ class Database {
         $sql .= "title VARCHAR(50) NOT NULL, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table tags Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'tags');
     }
 
     // LABELS
@@ -182,12 +210,8 @@ class Database {
         $sql .= "title VARCHAR(50) NOT NULL, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table labels Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'labels');
     }
 
     // USERS
@@ -206,15 +230,13 @@ class Database {
         $sql .= "adminNote VARCHAR(255) DEFAULT NULL, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL, ";
         $sql .= "showOnWeb TINYINT(1) DEFAULT 1, ";
-        $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0 )";
+        $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id), ";
+        $sql .= "FOREIGN KEY (mediaContent) REFERENCES media_content(id) )";
 
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table users Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'users');
     }
 
     // CATEGORIES
@@ -224,13 +246,11 @@ class Database {
         $sql .= "title VARCHAR(50) NOT NULL, ";
         $sql .= "sudCatId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
+        // TODO: What does the SudCatId reference?
+        // $sql .= "FOREIGN KEY (sudCatId) REFERENCES ?(?) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table categories Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'categories');
     }
 
     // MEDIA CONTENT
@@ -242,14 +262,11 @@ class Database {
         $sql .= "note VARCHAR(255) DEFAULT NULL, ";
         $sql .= "alt VARCHAR(30) DEFAULT NULL, ";
         $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
-        $sql .= "createdDate DATE )";
+        $sql .= "createdDate DATE, ";
+        $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table mediaContent Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'media_content');
     }
     
 
@@ -266,12 +283,8 @@ class Database {
         $sql .= "approvedBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table comments Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'comments');
     }
 
     // TODO
@@ -279,14 +292,11 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS todo ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
-        $sql .= "todo VARCHAR(255) )";
+        $sql .= "todo VARCHAR(255), ";
+        $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table todo Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'todo');
     }
 
     // MAIN SETTINGS
@@ -300,12 +310,8 @@ class Database {
         $sql .= "contentKey VARCHAR(255), ";
         $sql .= "mainSettings JSON NOT NULL )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table main_settings Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'main_settings');
     }
 
     // PERSONAL SETTINGS
@@ -315,12 +321,8 @@ class Database {
         $sql .= "changedDate DATE, ";
         $sql .= "personalSettings JSON NOT NULL )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table personal_settings Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'personal_settings');
     }
 
     // STYLE SETTINGS
@@ -329,14 +331,11 @@ class Database {
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "changedDate DATE, ";
-        $sql .= "styleSettings JSON NOT NULL )";
+        $sql .= "styleSettings JSON NOT NULL, ";
+        $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table style_settings Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'style_settings');
     }
 
     // CONTENT
@@ -345,14 +344,11 @@ class Database {
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "createdBy INT(10) UNSIGNED NOT NULL, ";
         $sql .= "changedDate DATE, ";
-        $sql .= "content JSON NOT NULL )";
+        $sql .= "content JSON NOT NULL, ";
+        $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table content Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'content');
     }
 
     // BOOKMARKS
@@ -361,14 +357,11 @@ class Database {
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "url VARCHAR(255), ";
-        $sql .= "name VARCHAR(50) )";
+        $sql .= "name VARCHAR(50), ";
+        $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table bookmarks Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'bookmarks');
     }
 
     // PERMISSIONS
@@ -378,12 +371,8 @@ class Database {
         $sql .= "name VARCHAR(50), ";
         $sql .= "description VARCHAR(255) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table permissions Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'permissions');
     }
 
     // ------ Lookup Table Creation ----------
@@ -396,12 +385,8 @@ class Database {
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table posts_to_media_content Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'posts_to_media_content');
     }
 
     // POSTS TO TAGS
@@ -412,12 +397,8 @@ class Database {
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table posts_to_tags Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'posts_to_tags');
     }
 
     // POSTS TO LABELS
@@ -428,12 +409,8 @@ class Database {
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table posts_to_labels Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'posts_to_labels');
     }
 
     // POSTS TO CATEGORIES
@@ -444,12 +421,8 @@ class Database {
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table posts_to_categories Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'posts_to_categories');
     }
 
     // MEDIA CONTENT TO TAGS
@@ -460,12 +433,8 @@ class Database {
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table media_content_to_tags Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'media_content_to_tags');
     }
 
     // MEDIA CONTENT TO LABELS
@@ -476,12 +445,8 @@ class Database {
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table media_content_to_labels Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'media_content_to_labels');
     }
 
     // MEDIA CONTENT TO CATEGORIES
@@ -492,28 +457,23 @@ class Database {
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table media_content_to_categories Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'media_content_to_categories');
     }
 
     // CONTENT TO TAGS
     public function createContentToTagsTable() {
+        // Turn OFF foreign key checks
+        $this->toggleForeignKeyChecks(FALSE);
+
         $sql = "CREATE TABLE IF NOT EXISTS content_to_tags ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table content_to_tags Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'content_to_tags');
     }
 
     // CONTENT TO LABELS
@@ -524,12 +484,8 @@ class Database {
         $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table content_to_labels Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'content_to_labels');
     }
 
     // CONTENT TO CATEGORIES
@@ -540,35 +496,26 @@ class Database {
         $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table content_to_categories Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'content_to_categories');
     }
 
     // USER TO PERMISSIONS
     public function createUserToPermissionsTable() {
-        $sql = "CREATE TABLE IF NOT EXISTS user_to_permissions ( ";
+        $sql = "CREATE TABLE IF NOT EXISTS users_to_permissions ( ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "permissionId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "FOREIGN KEY (userId) REFERENCES users(id), ";
         $sql .= "FOREIGN KEY (permissionId) REFERENCES permissions(id) )";
 
-        if ($this->dbConnection->query($sql) === TRUE) {
-            return "Table user_to_permissions Created Successfully";
-        } else {
-            array_push($this->errors_array, $this->dbConnection->error);
-            return false;
-        }
+        // Execute the query then return the result
+        return $this->executeCreateQuery($sql, 'users_to_permissions');
     }
 
     // ===================================================== TABLE DROP FUNCTIONS ==================================================================
     public function dropTable($tablename) {
         // Remove foreign key checks in preparation to drop the tables
-        $sql = "SET FOREIGN_KEY_CHECKS = 0";
-        $this->dbConnection->query($sql);
+        $this->toggleForeignKeyChecks(FALSE);
 
         if ($tablename === 'all') {
             $listOfTables = $this->show_all_tables();
@@ -588,8 +535,7 @@ class Database {
 
         if ($this->dbConnection->query($sql) === TRUE) {
             // Turn on foreign key checks after dropping the tables
-            $sql = "SET FOREIGN_KEY_CHECKS = 1";
-            $this->dbConnection->query($sql);
+            $this->toggleForeignKeyChecks(TRUE);
 
             return "Table(s) " . $tablename . " Dropped Successfully!";
 
