@@ -78,7 +78,7 @@ $successMessage = false;
 
 <div class="update-notes">
     <ul>
-        <li></li>
+        <li>2/19/2019 - Logic for all tables added to the database. Dropping/Creating Tables functional. Error/Success feedback in place.</li>
     </ul>
 </div>
 <br>
