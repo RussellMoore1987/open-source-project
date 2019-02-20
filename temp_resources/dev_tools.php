@@ -25,41 +25,41 @@ $successMessage = false;
             $successMessage = $Database->createMediaContentTable();
         } elseif ($_GET['createtable'] == 'comments') {
             $successMessage = $Database->createCommentsTable();
-        } elseif ($_GET['createTable'] == 'todo') {
+        } elseif ($_GET['createtable'] == 'todo') {
             $successMessage = $Database->createTodoTable();
-        } elseif ($_GET['createTable'] == 'main_settings') {
+        } elseif ($_GET['createtable'] == 'main_settings') {
             $successMessage = $Database->createMainSettingsTable();
-        } elseif ($_GET['createTable'] == 'personal_settings') {
+        } elseif ($_GET['createtable'] == 'personal_settings') {
             $successMessage = $Database->createPersonalSettingsTable();
-        } elseif ($_GET['createTable'] == 'style_settings') {
+        } elseif ($_GET['createtable'] == 'style_settings') {
             $successMessage = $Database->createStyleSettingsTable();
-        } elseif ($_GET['createTable'] == 'content') {
+        } elseif ($_GET['createtable'] == 'content') {
             $successMessage = $Database->createContentTable();
-        } elseif ($_GET['createTable'] == 'bookmarks') {
+        } elseif ($_GET['createtable'] == 'bookmarks') {
             $successMessage = $Database->createBookmarksTable();
-        } elseif ($_GET['createTable'] == 'permissions') {
+        } elseif ($_GET['createtable'] == 'permissions') {
             $successMessage = $Database->createPermissionsTable();
 
         // ------ Lookup Tables ---------
-        } elseif ($_GET['createTable'] == 'posts_to_media_content') {
+        } elseif ($_GET['createtable'] == 'posts_to_media_content') {
             $successMessage = $Database->createPostsToMediaContentTable();
-        } elseif ($_GET['createTable'] == 'posts_to_tags') {
+        } elseif ($_GET['createtable'] == 'posts_to_tags') {
             $successMessage = $Database->createPostsToTagsTable();
-        } elseif ($_GET['createTable'] == 'posts_to_labels') {
+        } elseif ($_GET['createtable'] == 'posts_to_labels') {
             $successMessage = $Database->createPoststoLabelsTable();
-        } elseif ($_GET['createTable'] == 'posts_to_categories') {
+        } elseif ($_GET['createtable'] == 'posts_to_categories') {
             $successMessage = $Database->createPostsToCategoriesTable();
-        } elseif ($_GET['createTable'] == 'media_content_to_tags') {
+        } elseif ($_GET['createtable'] == 'media_content_to_tags') {
             $successMessage = $Database->createMediaContentToTagsTable();
-        } elseif ($_GET['createTable'] == 'media_content_to_categories') {
+        } elseif ($_GET['createtable'] == 'media_content_to_categories') {
             $successMessage = $Database->createMediaContenttoCategoriesTable();
-        } elseif ($_GET['createTable'] == 'content_to_tags') {
+        } elseif ($_GET['createtable'] == 'content_to_tags') {
             $successMessage = $Database->createContentToTagsTable();
-        } elseif ($_GET['createTable'] == 'content_to_labels') {
+        } elseif ($_GET['createtable'] == 'content_to_labels') {
             $successMessage = $Database->createContentToLabelsTable();
-        } elseif ($_GET['createTable'] == 'content_to_categories') {
+        } elseif ($_GET['createtable'] == 'content_to_categories') {
             $successMessage = $Database->createContentToCategoriesTable();
-        } elseif ($_GET['createTable'] == 'user_to_permissions') {
+        } elseif ($_GET['createtable'] == 'user_to_permissions') {
             $successMessage = $Database->createUserToPermissionsTable();
         }
 
