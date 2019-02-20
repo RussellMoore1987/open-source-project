@@ -9,6 +9,8 @@ $successMessage = false;
     if (isset($_GET['createtable'])) {
         if ($_GET['createtable'] == 'all') {
             $successMessage = $Database->createAllTables();
+
+        // -------- Base Tables --------
         } elseif ($_GET['createtable'] == 'posts') {
             $successMessage = $Database->createPostsTable();
         } elseif ($_GET['createtable'] == 'tags') {
@@ -37,6 +39,28 @@ $successMessage = false;
             $successMessage = $Database->createBookmarksTable();
         } elseif ($_GET['createTable'] == 'permissions') {
             $successMessage = $Database->createPermissionsTable();
+
+        // ------ Lookup Tables ---------
+        } elseif ($_GET['createTable'] == 'posts_to_media_content') {
+            $successMessage = $Database->createPostsToMediaContentTable();
+        } elseif ($_GET['createTable'] == 'posts_to_tags') {
+            $successMessage = $Database->createPostsToTagsTable();
+        } elseif ($_GET['createTable'] == 'posts_to_labels') {
+            $successMessage = $Database->createPoststoLabelsTable();
+        } elseif ($_GET['createTable'] == 'posts_to_categories') {
+            $successMessage = $Database->createPostsToCategoriesTable();
+        } elseif ($_GET['createTable'] == 'media_content_to_tags') {
+            $successMessage = $Database->createMediaContentToTagsTable();
+        } elseif ($_GET['createTable'] == 'media_content_to_categories') {
+            $successMessage = $Database->createMediaContenttoCategoriesTable();
+        } elseif ($_GET['createTable'] == 'content_to_tags') {
+            $successMessage = $Database->createContentToTagsTable();
+        } elseif ($_GET['createTable'] == 'content_to_labels') {
+            $successMessage = $Database->createContentToLabelsTable();
+        } elseif ($_GET['createTable'] == 'content_to_categories') {
+            $successMessage = $Database->createContentToCategoriesTable();
+        } elseif ($_GET['createTable'] == 'user_to_permissions') {
+            $successMessage = $Database->createUserToPermissionsTable();
         }
 
     } elseif (isset($_GET['droptable'])) {
@@ -102,47 +126,83 @@ $successMessage = false;
 <a style ="color: darkgreen; padding: 10px; border: 1px solid darkgreen"href="dev_tools.php?createtable=all">CREATE ALL TABLES</a>
 <a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkred;" href="dev_tools.php?droptable=all">DROP ALL TABLES</a>
 <br>
+<h2>-------- Base Tables --------</h2>
+<br>
 <h2>Posts Table</h2>
-<a href="dev_tools.php?createtable=posts">Create Posts Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts">Drop Posts Table</a>
+<a href="dev_tools.php?createtable=posts">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts">Drop</a>
 <br>
 <h2>Tags Table</h2>
-<a href="dev_tools.php?createtable=tags">Create Tags Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=tags">Drop Tags Table</a>
+<a href="dev_tools.php?createtable=tags">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=tags">Drop</a>
 <br>
 <h2>Labels Table</h2>
-<a href="dev_tools.php?createtable=labels">Create Labels Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=labels">Drop Labels Table</a>
+<a href="dev_tools.php?createtable=labels">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=labels">Drop</a>
 <h2>Users Table</h2>
-<a href="dev_tools.php?createtable=users">Create Users Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=users">Drop Users Table</a>
+<a href="dev_tools.php?createtable=users">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=users">Drop</a>
 <h2>Categories Table</h2>
-<a href="dev_tools.php?createtable=categories">Create Categories Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=categories">Drop Categories Table</a>
+<a href="dev_tools.php?createtable=categories">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=categories">Drop</a>
 <h2>Media Content Table</h2>
-<a href="dev_tools.php?createtable=media_content">Create Media Content Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content">Drop Media Content Table</a>
+<a href="dev_tools.php?createtable=media_content">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content">Drop</a>
 <h2>Comments Table</h2>
-<a href="dev_tools.php?createtable=comments">Create Comments Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=comments">Drop Comments Table</a>
+<a href="dev_tools.php?createtable=comments">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=comments">Drop</a>
 <h2>Todo Table</h2>
-<a href="dev_tools.php?createtable=todo">Create Todo Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=todo">Drop Todo Table</a>
+<a href="dev_tools.php?createtable=todo">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=todo">Drop</a>
 <h2>Main Settings Table</h2>
-<a href="dev_tools.php?createtable=main_settings">Create Main Settings Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=main_settings">Drop Main Settings Table</a>
+<a href="dev_tools.php?createtable=main_settings">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=main_settings">Drop</a>
 <h2>Personal Settings Table</h2>
-<a href="dev_tools.php?createtable=personal_settings">Create Personal Settings Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=personal_settings">Drop Personal Settings Table</a>
+<a href="dev_tools.php?createtable=personal_settings">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=personal_settings">Drop</a>
 <h2>Style Settings Table</h2>
-<a href="dev_tools.php?createtable=style_settings">Create Style Settings Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=style_settings">Drop Style Settings Table</a>
+<a href="dev_tools.php?createtable=style_settings">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=style_settings">Drop</a>
 <h2>Content Table</h2>
-<a href="dev_tools.php?createtable=content">Create Content Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content">Drop Content Table</a>
+<a href="dev_tools.php?createtable=content">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content">Drop</a>
 <h2>Bookmarks Table</h2>
-<a href="dev_tools.php?createtable=bookmarks">Create Bookmarks Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=bookmarks">Drop Bookmarks Table</a>
+<a href="dev_tools.php?createtable=bookmarks">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=bookmarks">Drop</a>
 <h2>Permissions Table</h2>
-<a href="dev_tools.php?createtable=permissions">Create Permissions Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=permissions">Drop Permissions Table</a>
+<a href="dev_tools.php?createtable=permissions">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=permissions">Drop</a>
+<br>
+<hr>
+<br>
+<h2>-------- Lookup Tables --------</h2>
+<h2>Posts To Media Content Table</h2>
+<a href="dev_tools.php?createtable=posts_to_media_content">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_media_content">Drop</a>
+<h2>Posts To Tags Table</h2>
+<a href="dev_tools.php?createtable=posts_to_tags">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_tags">Drop</a>
+<h2>Posts To Labels Table</h2>
+<a href="dev_tools.php?createtable=posts_to_labels">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_labels">Drop</a>
+<h2>Posts To Categories Table</h2>
+<a href="dev_tools.php?createtable=posts_to_categories">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_categories">Drop</a>
+<h2>Media Content To Tags Table</h2>
+<a href="dev_tools.php?createtable=media_content_to_tags">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_tags">Drop</a>
+<h2>Media Content To Categories Table</h2>
+<a href="dev_tools.php?createtable=media_content_to_categories">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_categories">Drop</a>
+<h2>Content To Tags Table</h2>
+<a href="dev_tools.php?createtable=content_to_tags">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content_to_tags">Drop</a>
+<h2>Content To Labels Table</h2>
+<a href="dev_tools.php?createtable=content_to_labels">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_labels">Drop</a>
+<h2>Content To Categories Table</h2>
+<a href="dev_tools.php?createtable=content_to_categories">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_categories">Drop</a>
+<h2>User To Permissions Table</h2>
+<a href="dev_tools.php?createtable=user_to_permissions">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=user_to_permissions">Drop</a>

@@ -98,6 +98,8 @@ class Database {
     // CREATE ALL TABLES
     public function createAllTables() {
         $results = [];
+
+        // Base Tables
         array_push($results, $this->createCategoriesTable());
         array_push($results, $this->createCommentsTable());
         array_push($results, $this->createPostsTable());
@@ -111,6 +113,18 @@ class Database {
         array_push($results, $this->createContentTable());
         array_push($results, $this->createBookmarksTable());
         array_push($results, $this->createPermissionsTable());
+
+        // Lookup Tables
+        array_push($results, $this->createPostsToMediaContentTable());
+        array_push($results, $this->createPostsToTagsTable());
+        array_push($results, $this->createPostsToLabelsTable());
+        array_push($results, $this->createPostsToCategoriesTable());
+        array_push($results, $this->createMediaContentToTagsTable());
+        array_push($results, $this->createMediaContentToCategoriesTable());
+        array_push($results, $this->createContentToTagsTable());
+        array_push($results, $this->createContentToLabelsTable());
+        array_push($results, $this->createContentToCategoriesTable());
+        array_push($results, $this->createUserToPermissionsTable());
 
         foreach ($results as $result) {
             if ($result === false) {
@@ -366,6 +380,162 @@ class Database {
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table permissions Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // ------ Lookup Table Creation ----------
+
+    // POSTS TO MEDIA CONTENT
+    public function createPostsToMediaContentTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS posts_to_media_content ( ";
+        $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table posts_to_media_content Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // POSTS TO TAGS
+    public function createPostsToTagsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS posts_to_tags ( ";
+        $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "tagId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table posts_to_tags Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // POSTS TO LABELS
+    public function createPostsToLabelsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS posts_to_labels ( ";
+        $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "labelId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table posts_to_labels Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // POSTS TO CATEGORIES
+    public function createPostsToCategoriesTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS posts_to_categories ( ";
+        $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "categoryId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table posts_to_categories Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // MEDIA CONTENT TO TAGS
+    public function createMediaContentToTagsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS media_content_to_tags ( ";
+        $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "tagId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table media_content_to_tags Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // MEDIA CONTENT TO LABELS
+    public function createMediaContentToLabelsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS media_content_to_labels ( ";
+        $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "labelId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table media_content_to_labels Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // MEDIA CONTENT TO CATEGORIES
+    public function createMediaContentToCategoriesTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS media_content_to_categories ( ";
+        $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "categoryId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table media_content_to_categories Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // CONTENT TO TAGS
+    public function createContentToTagsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS content_to_tags ( ";
+        $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "tagId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table content_to_tags Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // CONTENT TO LABELS
+    public function createContentToLabelsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS content_to_labels ( ";
+        $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "labelId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table content_to_labels Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // CONTENT TO CATEGORIES
+    public function createContentToCategoriesTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS content_to_categories ( ";
+        $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "categoryId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table content_to_categories Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // USER TO PERMISSIONS
+    public function createUserToPermissionsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS user_to_permissions ( ";
+        $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "permissionId INT(10) UNSIGNED NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table user_to_permissions Created Successfully";
         } else {
             array_push($this->errors_array, $this->dbConnection->error);
             return false;
