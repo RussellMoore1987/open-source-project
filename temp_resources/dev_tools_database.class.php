@@ -392,7 +392,9 @@ class Database {
     public function createPostsToMediaContentTable() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_media_content ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
+        $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table posts_to_media_content Created Successfully";
@@ -406,7 +408,9 @@ class Database {
     public function createPostsToTagsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_tags ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "tagId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
+        $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table posts_to_tags Created Successfully";
@@ -420,7 +424,9 @@ class Database {
     public function createPostsToLabelsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_labels ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "labelId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
+        $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table posts_to_labels Created Successfully";
@@ -434,7 +440,9 @@ class Database {
     public function createPostsToCategoriesTable() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_categories ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "categoryId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
+        $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table posts_to_categories Created Successfully";
@@ -448,7 +456,9 @@ class Database {
     public function createMediaContentToTagsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_tags ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "tagId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
+        $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table media_content_to_tags Created Successfully";
@@ -462,7 +472,9 @@ class Database {
     public function createMediaContentToLabelsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_labels ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "labelId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
+        $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table media_content_to_labels Created Successfully";
@@ -476,7 +488,9 @@ class Database {
     public function createMediaContentToCategoriesTable() {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_categories ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "categoryId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
+        $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table media_content_to_categories Created Successfully";
@@ -490,7 +504,9 @@ class Database {
     public function createContentToTagsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_tags ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "tagId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
+        $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table content_to_tags Created Successfully";
@@ -504,7 +520,9 @@ class Database {
     public function createContentToLabelsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_labels ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "labelId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
+        $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table content_to_labels Created Successfully";
@@ -518,7 +536,9 @@ class Database {
     public function createContentToCategoriesTable() {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_categories ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "categoryId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
+        $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table content_to_categories Created Successfully";
@@ -532,7 +552,9 @@ class Database {
     public function createUserToPermissionsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS user_to_permissions ( ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
-        $sql .= "permissionId INT(10) UNSIGNED NOT NULL )";
+        $sql .= "permissionId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "FOREIGN KEY (userId) REFERENCES users(id), ";
+        $sql .= "FOREIGN KEY (permissionId) REFERENCES permissions(id) )";
 
         if ($this->dbConnection->query($sql) === TRUE) {
             return "Table user_to_permissions Created Successfully";
@@ -544,6 +566,10 @@ class Database {
 
     // ===================================================== TABLE DROP FUNCTIONS ==================================================================
     public function dropTable($tablename) {
+        // Remove foreign key checks in preparation to drop the tables
+        $sql = "SET FOREIGN_KEY_CHECKS = 0";
+        $this->dbConnection->query($sql);
+
         if ($tablename === 'all') {
             $listOfTables = $this->show_all_tables();
             $sql = "DROP TABLE IF EXISTS ";
@@ -561,7 +587,12 @@ class Database {
         }
 
         if ($this->dbConnection->query($sql) === TRUE) {
+            // Turn on foreign key checks after dropping the tables
+            $sql = "SET FOREIGN_KEY_CHECKS = 1";
+            $this->dbConnection->query($sql);
+
             return "Table(s) " . $tablename . " Dropped Successfully!";
+
         } else {
             array_push($this->errors_array, $this->dbConnection->error);
             return false;
