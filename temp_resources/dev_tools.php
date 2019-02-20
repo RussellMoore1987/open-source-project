@@ -6,8 +6,10 @@
 $successMessage = false;
 
     // Check for any GET requests performed by clicking on the linkgs
-    if(isset($_GET['createtable'])) {
-        if ($_GET['createtable'] == 'posts') {
+    if (isset($_GET['createtable'])) {
+        if ($_GET['createtable'] == 'all') {
+            $successMessage = $Database->createAllTables();
+        } elseif ($_GET['createtable'] == 'posts') {
             $successMessage = $Database->createPostsTable();
         } elseif ($_GET['createtable'] == 'tags') {
             $successMessage = $Database->createTagsTable();
@@ -17,12 +19,27 @@ $successMessage = false;
             $successMessage = $Database->createUsersTable();
         } elseif ($_GET['createtable'] == 'categories') {
             $successMessage = $Database->createCategoriesTable();
-        } elseif ($_GET['createtable'] == 'mediaContent') {
+        } elseif ($_GET['createtable'] == 'media_content') {
             $successMessage = $Database->createMediaContentTable();
         } elseif ($_GET['createtable'] == 'comments') {
             $successMessage = $Database->createCommentsTable();
+        } elseif ($_GET['createTable'] == 'todo') {
+            $successMessage = $Database->createTodoTable();
+        } elseif ($_GET['createTable'] == 'main_settings') {
+            $successMessage = $Database->createMainSettingsTable();
+        } elseif ($_GET['createTable'] == 'personal_settings') {
+            $successMessage = $Database->createPersonalSettingsTable();
+        } elseif ($_GET['createTable'] == 'style_settings') {
+            $successMessage = $Database->createStyleSettingsTable();
+        } elseif ($_GET['createTable'] == 'content') {
+            $successMessage = $Database->createContentTable();
+        } elseif ($_GET['createTable'] == 'bookmarks') {
+            $successMessage = $Database->createBookmarksTable();
+        } elseif ($_GET['createTable'] == 'permissions') {
+            $successMessage = $Database->createPermissionsTable();
         }
-    } elseif(isset($_GET['droptable'])) {
+
+    } elseif (isset($_GET['droptable'])) {
         if ($_GET['droptable'] == 'all') {
             $successMessage = $Database->dropTable('all');
         } else {
@@ -82,7 +99,8 @@ $successMessage = false;
 <br>
 <h2>Please see the options below: </h2>
 <br>
-<a style="color: darkred; padding: 20px; border: 1ps solid darkred;" href="dev_tools.php?droptable=all">DROP ALL TABLES</a>
+<a style ="color: darkgreen; padding: 10px; border: 1px solid darkgreen"href="dev_tools.php?createtable=all">CREATE ALL TABLES</a>
+<a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkred;" href="dev_tools.php?droptable=all">DROP ALL TABLES</a>
 <br>
 <h2>Posts Table</h2>
 <a href="dev_tools.php?createtable=posts">Create Posts Table</a>
@@ -102,8 +120,29 @@ $successMessage = false;
 <a href="dev_tools.php?createtable=categories">Create Categories Table</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=categories">Drop Categories Table</a>
 <h2>Media Content Table</h2>
-<a href="dev_tools.php?createtable=mediaContent">Create Media Content Table</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=mediaContent">Drop Media Content Table</a>
+<a href="dev_tools.php?createtable=media_content">Create Media Content Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content">Drop Media Content Table</a>
 <h2>Comments Table</h2>
 <a href="dev_tools.php?createtable=comments">Create Comments Table</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=comments">Drop Comments Table</a>
+<h2>Todo Table</h2>
+<a href="dev_tools.php?createtable=todo">Create Todo Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=todo">Drop Todo Table</a>
+<h2>Main Settings Table</h2>
+<a href="dev_tools.php?createtable=main_settings">Create Main Settings Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=main_settings">Drop Main Settings Table</a>
+<h2>Personal Settings Table</h2>
+<a href="dev_tools.php?createtable=personal_settings">Create Personal Settings Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=personal_settings">Drop Personal Settings Table</a>
+<h2>Style Settings Table</h2>
+<a href="dev_tools.php?createtable=style_settings">Create Style Settings Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=style_settings">Drop Style Settings Table</a>
+<h2>Content Table</h2>
+<a href="dev_tools.php?createtable=content">Create Content Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content">Drop Content Table</a>
+<h2>Bookmarks Table</h2>
+<a href="dev_tools.php?createtable=bookmarks">Create Bookmarks Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=bookmarks">Drop Bookmarks Table</a>
+<h2>Permissions Table</h2>
+<a href="dev_tools.php?createtable=permissions">Create Permissions Table</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=permissions">Drop Permissions Table</a>

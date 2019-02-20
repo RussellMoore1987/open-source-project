@@ -94,7 +94,36 @@ class Database {
         }
     }
 
-    // TABLE CREATION FUNCTIONS
+    // ========================================== TABLE CREATION FUNCTIONS ===============================================================
+    // CREATE ALL TABLES
+    public function createAllTables() {
+        $results = [];
+        array_push($results, $this->createCategoriesTable());
+        array_push($results, $this->createCommentsTable());
+        array_push($results, $this->createPostsTable());
+        array_push($results, $this->createTagsTable());
+        array_push($results, $this->createLabelsTable());
+        array_push($results, $this->createUsersTable());
+        array_push($results, $this->createMediaContentTable());
+        array_push($results, $this->createTodoTable());
+        array_push($results, $this->createMainSettingsTable());
+        array_push($results, $this->createStyleSettingsTable());
+        array_push($results, $this->createContentTable());
+        array_push($results, $this->createBookmarksTable());
+        array_push($results, $this->createPermissionsTable());
+
+        foreach ($results as $result) {
+            if ($result === false) {
+                return false;
+                break;
+            } else {
+                continue;
+            }
+
+            return "All tables created successfully!";
+        }
+    }
+
     // POSTS
     public function createPostsTable() {
         $sql = "CREATE TABLE IF NOT EXISTS posts ( ";
@@ -192,7 +221,7 @@ class Database {
 
     // MEDIA CONTENT
     public function createMediaContentTable() {
-        $sql = "CREATE TABLE IF NOT EXISTS mediaContent ( ";
+        $sql = "CREATE TABLE IF NOT EXISTS media_content ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "name VARCHAR(150) NOT NULL, ";
         $sql .= "type VARCHAR(25) NOT NULL, ";
@@ -231,7 +260,119 @@ class Database {
         }
     }
 
-    // TABLE DROP FUNCTION
+    // TODO
+    public function createTodoTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS todo ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "todo VARCHAR(255) )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table todo Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // MAIN SETTINGS
+    public function createMainSettingsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS main_settings ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "changedDate DATE, ";
+        $sql .= "apiUse VARCHAR(255) NOT NULL, ";
+        $sql .= "apiKey VARCHAR(255), ";
+        $sql .= "commentKey VARCHAR(255), ";
+        $sql .= "contentKey VARCHAR(255), ";
+        $sql .= "mainSettings JSON NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table main_settings Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // PERSONAL SETTINGS
+    public function createPersonalSettingsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS personal_settings ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "changedDate DATE, ";
+        $sql .= "personalSettings JSON NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table personal_settings Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // STYLE SETTINGS
+    public function createStyleSettingsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS style_settings ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "changedDate DATE, ";
+        $sql .= "styleSettings JSON NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table style_settings Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // CONTENT
+    public function createContentTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS content ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "createdBy INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "changedDate DATE, ";
+        $sql .= "content JSON NOT NULL )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table content Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // BOOKMARKS
+    public function createBookmarksTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS bookmarks ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "url VARCHAR(255), ";
+        $sql .= "name VARCHAR(50) )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table bookmarks Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // PERMISSIONS
+    public function createPermissionsTable() {
+        $sql = "CREATE TABLE IF NOT EXISTS permissions ( ";
+        $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        $sql .= "name VARCHAR(50), ";
+        $sql .= "description VARCHAR(255) )";
+
+        if ($this->dbConnection->query($sql) === TRUE) {
+            return "Table permissions Created Successfully";
+        } else {
+            array_push($this->errors_array, $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // ===================================================== TABLE DROP FUNCTIONS ==================================================================
     public function dropTable($tablename) {
         if ($tablename === 'all') {
             $listOfTables = $this->show_all_tables();
