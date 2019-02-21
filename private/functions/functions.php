@@ -49,4 +49,20 @@ function is_get_request() {
   return $_SERVER['REQUEST_METHOD'] == 'GET';
 }
 
+// creates an array of key value pairs, relating to possible tags, categories, and labels. mostly used in classes
+function get_key_value_array($obj_array) {
+  // empty array
+  $array = [];
+  // loop through result to create a key value pair array
+  while ($record = $obj_array) {
+      $id = $obj_array->id; 
+      $title = $obj_array->title; 
+      $array[$id] = $title; 
+  }
+  // sort array alphabetically by title
+  natcasesort($array);
+  // return array
+  return $array;
+}
+
 ?>

@@ -37,12 +37,12 @@
 
   // get default functions
   require_once('functions/functions.php');
+  require_once('functions/validation_functions.php');
   require_once('db/db_functions.php');
-
+  
   // db connection
   require_once('db/db_credentials.php');
   $db = db_connect();
-
-  // ? need to move, only use when needed
-  // Post::set_database($db);
+  // set db connection
+  DatabaseObject::set_database($db);
 ?>
