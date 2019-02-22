@@ -10,7 +10,7 @@ $successMessage = false;
         if ($_GET['createtable'] == 'all') {
             $successMessage = $Database->createAllTables();
 
-        // -------- Base Tables --------
+        // -------- Base Table Creation --------
         } elseif ($_GET['createtable'] == 'posts') {
             $successMessage = $Database->createPostsTable();
         } elseif ($_GET['createtable'] == 'tags') {
@@ -40,7 +40,7 @@ $successMessage = false;
         } elseif ($_GET['createtable'] == 'permissions') {
             $successMessage = $Database->createPermissionsTable();
 
-        // ------ Lookup Tables ---------
+        // ------ Lookup Table Creation ---------
         } elseif ($_GET['createtable'] == 'posts_to_media_content') {
             $successMessage = $Database->createPostsToMediaContentTable();
         } elseif ($_GET['createtable'] == 'posts_to_tags') {
@@ -63,6 +63,7 @@ $successMessage = false;
             $successMessage = $Database->createUserToPermissionsTable();
         }
 
+        // Dropping Tables
     } elseif (isset($_GET['droptable'])) {
         if ($_GET['droptable'] == 'all') {
             $successMessage = $Database->dropTable('all');
@@ -70,7 +71,21 @@ $successMessage = false;
             $tableToDrop = $_GET['droptable'];
             $successMessage = $Database->dropTable($tableToDrop);
         }
+
+        // Inserting into Tables
+    } elseif (isset($_GET['inserttable'])) {
+        if ($_GET['inserttable'] == 'posts') {
+            $successMessage = $Database->insertIntoPosts();
+        }
+
+        // Selecting from Tables
+    } elseif (isset($_GET['selecttable'])) {
+        $tableSelect = $_GET['selecttable'];
+        $successMessage = $Database->selectFromTable($tableSelect);
     }
+
+    // Get the latest selecion data
+    $select_array = $Database->latest_selection_array;
 
     // Get the database tables
     $tables_array = $Database->show_all_tables();
@@ -91,7 +106,7 @@ $successMessage = false;
     <h3>Maintained by John Peterson</h3>
 </div>
 <br>
-<div style="color: red; border: 1px solid black;">
+<div style="border: 1px solid black;">
     <h2>Errors / Messages </h2>
     <?php
     if (!empty($Database->errors_array)) {
@@ -106,15 +121,24 @@ $successMessage = false;
     ?>
 </div>
 <br>
-<div style="color: black; border: 1px solid black;">
+<div style="color: black; border: 1px solid black; position: relative">
     <h2>Current Tables in Database</h2>
     <?php
         if(!empty($tables_array)) {
             foreach($tables_array as $table) {
-                echo "<h3>" . $table . "</h3>";
+                echo "<a href='dev_tools.php?getsample=" . $table .  "'>" . $table . "</a>";
             }
         }
     ?>
+    <div style="position: absolute; right: 0%; top: 0%; border: 1px solid black; background-color: lightgrey; width: 60%;">
+        <h2 style="text-align: center; vertical-align: top; margin-bottom: 5px; ">Sample Data:</h2>
+        <h4 style="text-align: center; vertical-align: top; margin-top: 0px;">(Click on a table to see a sample of the data contained)</h4>
+        <?php
+            if(!empty($select_array)) {
+                
+            }
+        ?>
+    </div>
 </div>
 <br>
 <h2>Please use the code listed below to make sure you have the correct user in your Database</h2>
@@ -131,6 +155,7 @@ $successMessage = false;
 <h2>Posts Table</h2>
 <a href="dev_tools.php?createtable=posts">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=posts">Insert</a>
 <br>
 <h2>Tags Table</h2>
 <a href="dev_tools.php?createtable=tags">Create</a>

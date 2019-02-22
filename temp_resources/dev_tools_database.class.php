@@ -1,6 +1,8 @@
 <?php
 // The dev tools used for our project, mostly for database management
 
+// Get the faker library for inserting data
+require_once("../vendor/fzaninotto/faker/src/autoload.php");
 // ============ START OF DB DEV TOOLS CLASS ===================
 class Database {
 
@@ -9,8 +11,12 @@ class Database {
     private $PASSWORD;
     private $DBNAME;
 
+    private $Faker;
+
     public $errors_array = [];
     public $dbConnection;
+    public $latest_selection_array = [];
+    public $select_table_name = NULL;
 
     public function __construct($args) {
         // Set the variables for the connection
@@ -28,6 +34,9 @@ class Database {
         }
 
         $this->set_use_database();
+
+        // Create the faker object for loading random data
+        $this->$Faker = Faker\Factory::create();
     }
 
     private function connect_to_database() {
@@ -108,7 +117,7 @@ class Database {
         }
     }
 
-    // Function to execute sql queries
+    // Function to execute table create sql queries
     private function executeCreateQuery($query, $tablename=NULL) {
         // DISABLE Foreign key checks in preparation
         $this->toggleForeignKeyChecks(FALSE);
@@ -122,6 +131,16 @@ class Database {
             // ENABLE Foreign key checks when finished
             $this->toggleForeignKeyChecks(TRUE);
 
+            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // Function to execute insert sql queries
+    private function executeInsertQuery($query, $tablename=NULL) {
+        if ($this->dbConnection->query($query) === TRUE) {
+            return mysql_affected_rows() . " rows inserted into " . $tablename .  " successfully!";
+        } else {
             array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
             return false;
         }
@@ -244,7 +263,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS categories ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "title VARCHAR(50) NOT NULL, ";
-        $sql .= "sudCatId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+        $sql .= "subCatId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
         // TODO: What does the SudCatId reference?
         // $sql .= "FOREIGN KEY (sudCatId) REFERENCES ?(?) )";
@@ -545,7 +564,57 @@ class Database {
         }
     }
 
+    // ===================================================== TABLE SELECT FUNCTIONS ==================================================================
+
+    public function selectFromTable($numRecords = 10, $tablename = NULL) {
+
+        $sql = "SELECT * FROM " . $tablename . " LIMIT " . $numRecords;
+
+        $result = $this->dbConnection->query($query);
+
+        if ($this->dbConnection->query($query) === TRUE) {
+
+            // Loop through the records and store them in our array
+            while ($row = $result->fetch_assoc()) {
+                array_push($this->latest_selection_array, $row);
+            }
+
+            return "Selected " . mysql_affected_rows() . " rows from " . $tablename .  " successfully!";
+
+        } else {
+            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            return false;
+        }
+    }
+
+    // ===================================================== TABLE INSERT FUNCTIONS ==================================================================
     
+    // Insert into posts
+    public function insertIntoPosts($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO posts ( ";
+        $sql .= "author, authorName, comments, content, createdBy, ";
+        $sql .= "createdDate, postDate, status, title ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+            $sql .= "( " . $this->$Faker->numberBetween(1, $maxId) . ", ";
+            $sql .= $this->$Faker->name . ", " . $this->$Faker->snumberBetween(1, $maxId) . ", ";
+            $sql .= $this->$Faker->paragraph($this->$Faker->numberBetween(1, $maxId)) . ", ";
+            $sql .= $this->$Faker->snumberBetween(1, $maxId) . $this->$Faker->dateTimeThisYear($max = 'now') . ", ";
+            $sql .= $this->$Faker->dateTimeThisYear($max = 'now') . ", " . $this->$Faker->snumberBetween(0, 1) . ", ";
+            $sql .= $this->$Faker->sentence($nbWords = 3, $variableNbWords = true) . " )";
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'posts');
+    }
 }
 // ================= END OF DB DEV TOOLS CLASS ==============================
 ?>
