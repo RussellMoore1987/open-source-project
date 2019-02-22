@@ -126,7 +126,7 @@ $successMessage = false;
     <?php
         if(!empty($tables_array)) {
             foreach($tables_array as $table) {
-                echo "<a href='dev_tools.php?getsample=" . $table .  "'>" . $table . "</a>";
+                echo "<a style='display: block; font-size: 20px; margin-bottom: 5px; text-decoration: none;' href='dev_tools.php?getsample=" . $table .  "'>" . $table . "</a>";
             }
         }
     ?>
@@ -134,8 +134,32 @@ $successMessage = false;
         <h2 style="text-align: center; vertical-align: top; margin-bottom: 5px; ">Sample Data:</h2>
         <h4 style="text-align: center; vertical-align: top; margin-top: 0px;">(Click on a table to see a sample of the data contained)</h4>
         <?php
+            // Show the table of sample data
             if(!empty($select_array)) {
-                
+                echo "<h3>" . $tableSelect . " Table</h3>";
+                echo "<table>";
+
+                // fr Just to control if we get the keys as the table headers
+                $fr = TRUE;
+                for ($i = 0; $i < sizeof($select_array); $i++) {
+                    echo "<tr>";
+                    // On the first iteration get the table headers
+                    if ($fr === TRUE) {
+                        $keys = array_keys($select_array[$i]);
+                        foreach($keys as $key) {
+                            echo "<th>" . $key . "</th>";
+                        }
+                        $fr = FALSE;
+
+                    // On all other iterations just fill the table with data
+                    } else {
+                        foreach ($select_array[$i] as $record) {
+                            echo "<td>" . $record . "</td>";
+                        }
+                    }
+                    echo "</tr>";
+                }
+                echo "</table>";
             }
         ?>
     </div>

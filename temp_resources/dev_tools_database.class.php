@@ -3,6 +3,8 @@
 
 // Get the faker library for inserting data
 require_once("../vendor/fzaninotto/faker/src/autoload.php");
+require_once("../vendor/fzaninotto/faker/src/Faker/Factory.php");
+
 // ============ START OF DB DEV TOOLS CLASS ===================
 class Database {
 
