@@ -1,9 +1,6 @@
 <?php
 // The dev tools used for our project, mostly for database management
-
-// Get the faker library for inserting data
 require_once("../vendor/fzaninotto/faker/src/autoload.php");
-require_once("../vendor/fzaninotto/faker/src/Faker/Factory.php");
 
 // ============ START OF DB DEV TOOLS CLASS ===================
 class Database {
@@ -37,8 +34,8 @@ class Database {
 
         $this->set_use_database();
 
-        // Create the faker object for loading random data
-        $this->$Faker = Faker\Factory::create();
+        // Create a Faker object for user with populating random data
+        $this->Faker = Faker\Factory::create();
     }
 
     private function connect_to_database() {
@@ -140,12 +137,26 @@ class Database {
 
     // Function to execute insert sql queries
     private function executeInsertQuery($query, $tablename=NULL) {
+        // DISABLE Foreign key checks in preparation
+        $this->toggleForeignKeyChecks(FALSE);
+
         if ($this->dbConnection->query($query) === TRUE) {
-            return mysql_affected_rows() . " rows inserted into " . $tablename .  " successfully!";
+            // ENABLE Foreign key checks when finished
+            $this->toggleForeignKeyChecks(TRUE);
+
+            return $this->dbConnection->affected_rows . " rows inserted into " . $tablename .  " successfully!";
         } else {
+            // ENABLE Foreign key checks when finished
+            $this->toggleForeignKeyChecks(TRUE);
+
             array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
             return false;
         }
+    }
+
+    // Function to escape strings
+    public function escape($string) {
+        return $this->dbConnection->escape_string($string);
     }
 
     // ========================================== TABLE CREATION FUNCTIONS ===============================================================
@@ -568,25 +579,31 @@ class Database {
 
     // ===================================================== TABLE SELECT FUNCTIONS ==================================================================
 
-    public function selectFromTable($numRecords = 10, $tablename = NULL) {
+    public function selectFromTable($tablename, $numRecords = 10) {
 
         $sql = "SELECT * FROM " . $tablename . " LIMIT " . $numRecords;
 
-        $result = $this->dbConnection->query($query);
+        $result = $this->dbConnection->query($sql);
 
-        if ($this->dbConnection->query($query) === TRUE) {
+        if ($result) {
 
             // Loop through the records and store them in our array
             while ($row = $result->fetch_assoc()) {
                 array_push($this->latest_selection_array, $row);
             }
 
-            return "Selected " . mysql_affected_rows() . " rows from " . $tablename .  " successfully!";
+            return "Selected " . $this->dbConnection->affected_rows . " rows from " . $tablename .  " successfully!";
 
         } else {
             array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
             return false;
         }
+    }
+
+    // ===================================================== TABLE CLEAR DATA FUNCTIONS ==================================================================
+
+    public function clearDataFromTable() {
+        
     }
 
     // ===================================================== TABLE INSERT FUNCTIONS ==================================================================
@@ -601,12 +618,24 @@ class Database {
 
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
-            $sql .= "( " . $this->$Faker->numberBetween(1, $maxId) . ", ";
-            $sql .= $this->$Faker->name . ", " . $this->$Faker->snumberBetween(1, $maxId) . ", ";
-            $sql .= $this->$Faker->paragraph($this->$Faker->numberBetween(1, $maxId)) . ", ";
-            $sql .= $this->$Faker->snumberBetween(1, $maxId) . $this->$Faker->dateTimeThisYear($max = 'now') . ", ";
-            $sql .= $this->$Faker->dateTimeThisYear($max = 'now') . ", " . $this->$Faker->snumberBetween(0, 1) . ", ";
-            $sql .= $this->$Faker->sentence($nbWords = 3, $variableNbWords = true) . " )";
+
+            $author = $this->Faker->numberBetween(1, $maxId);
+            $authorName = $this->escape($this->Faker->name);
+            $comments = $this->Faker->numberBetween(1, $maxId);
+            $content = $this->escape($this->Faker->paragraph($this->Faker->numberBetween(1, $maxId)));
+            $createdBy = $this->Faker->numberBetween(1, $maxId);
+            $createdDate = $this->Faker->dateTimeThisYear($max = 'now')->format('Y-m-d');
+            $postDate = $this->Faker->dateTimeThisYear($max = 'now')->format('Y-m-d');
+            $status = $this->Faker->numberBetween(0, 1);
+            $title = $this->escape($this->Faker->sentence($nbWords = 3, $variableNbWords = true));
+
+
+            $sql .= "( " . $author . ", ";
+            $sql .= "'" . $authorName . "', " . $comments . ", ";
+            $sql .= "'" . $content . "', ";
+            $sql .=  $createdBy . ", " . "'" .  $createdDate . "', ";
+            $sql .= "'" . $postDate . "', " . $status . ", ";
+            $sql .= "'" . $title . "' )";
 
             // If we are not on the last iteration then add a comma for the next statement to be inserted
             if ($i != $numRecords - 1) {

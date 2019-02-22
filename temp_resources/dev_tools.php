@@ -5,7 +5,7 @@
 
 $successMessage = false;
 
-    // Check for any GET requests performed by clicking on the linkgs
+    // Check for any GET requests performed by clicking on the links
     if (isset($_GET['createtable'])) {
         if ($_GET['createtable'] == 'all') {
             $successMessage = $Database->createAllTables();
@@ -92,6 +92,7 @@ $successMessage = false;
 ?>
 
 <div class="update-notes">
+<br>
     <ul>
         <li>2/19/2019 - Logic for all tables added to the database. Dropping/Creating Tables functional. Error/Success feedback in place.</li>
     </ul>
@@ -126,36 +127,37 @@ $successMessage = false;
     <?php
         if(!empty($tables_array)) {
             foreach($tables_array as $table) {
-                echo "<a style='display: block; font-size: 20px; margin-bottom: 5px; text-decoration: none;' href='dev_tools.php?getsample=" . $table .  "'>" . $table . "</a>";
+                echo "<a style='display: block; font-size: 20px; margin-bottom: 5px; text-decoration: none;' href='dev_tools.php?selecttable=" . $table .  "'>" . $table . "</a>";
             }
         }
     ?>
-    <div style="position: absolute; right: 0%; top: 0%; border: 1px solid black; background-color: lightgrey; width: 60%;">
+    <div style="position: absolute; right: 0%; top: 0%; background-color: lightgrey; width: 75%; max-height: 100%; overflow-y: scroll;">
         <h2 style="text-align: center; vertical-align: top; margin-bottom: 5px; ">Sample Data:</h2>
         <h4 style="text-align: center; vertical-align: top; margin-top: 0px;">(Click on a table to see a sample of the data contained)</h4>
         <?php
             // Show the table of sample data
             if(!empty($select_array)) {
-                echo "<h3>" . $tableSelect . " Table</h3>";
-                echo "<table>";
+                echo "<h3 style='text-align: center;'>" . $tableSelect . " Table</h3>";
+                echo "<table border='1'>";
 
                 // fr Just to control if we get the keys as the table headers
                 $fr = TRUE;
                 for ($i = 0; $i < sizeof($select_array); $i++) {
-                    echo "<tr>";
                     // On the first iteration get the table headers
                     if ($fr === TRUE) {
+                        echo "<tr>";
                         $keys = array_keys($select_array[$i]);
                         foreach($keys as $key) {
-                            echo "<th>" . $key . "</th>";
+                            echo "<th style='text-align: center;'>" . $key . "</th>";
                         }
                         $fr = FALSE;
+                        echo "</tr>";
+                    } 
 
                     // On all other iterations just fill the table with data
-                    } else {
-                        foreach ($select_array[$i] as $record) {
-                            echo "<td>" . $record . "</td>";
-                        }
+                    echo "<tr>";
+                    foreach ($select_array[$i] as $record) {
+                        echo "<td style='text-align: center;'>" . $record . "</td>";
                     }
                     echo "</tr>";
                 }
@@ -165,7 +167,7 @@ $successMessage = false;
     </div>
 </div>
 <br>
-<h2>Please use the code listed below to make sure you have the correct user in your Database</h2>
+<h2 style="width: 30%;">Please use the code listed below to make sure you have the correct user in your Database</h2>
 <h3 style="color: blue;">CREATE USER 'devteam'@''127.0.0.1' IDENTIFIED BY 'devPass1!';</h3>
 <h3 style="color: blue;">GRANT ALL ON developmentdb.* TO 'devteam'@'127.0.0.1';</h3>
 <br>
