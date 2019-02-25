@@ -102,26 +102,7 @@
         // Need to re-write for OOP
     }
 
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // val_validation('abcd', 'Post Title', ['type' => 'num'/'str'/'int', 'num_min' => 1, 'num_max' => 10, 'min' => 3, 'max' => 5, 'exact' => 5, 'required' => 'yes'/'no', 'html' => 'yes'/'no'/'full')
-    // *** copy this if you need a reference, val_validation($value, ['name' => 'human readable name', 'type' => 'num'/'str'/'int', 'num_min' => 1, 'num_max' => 10, 'min' => 3, 'max' => 5, 'exact' => 5, 'required' => 'yes'/'no', 'html' => 'yes'/'no'/'full']);
-    // * $value The value of the thing being checked
-    // validate string length, min, max, exactly
-    // Trims before checking
+    // db validation, validation_options located at: root/private/reference_information.php
     function val_validation($value, $options = []) {
 
         // Set defaults
@@ -157,6 +138,17 @@
             if (!isset($value) || trim($value) === '') {
                 // error message
                 $errors[] = "The value \"{$name}\" is a required value. This value was either not submitted or is blank.";
+            }
+        }
+
+        // Validating is date
+        if (isset($options['date']) && $options['date'] == "yes") {
+            try {
+                new \DateTime($value);
+                // Passed validation message
+            } catch (\Exception $e) {
+                // return error message
+                $errors[] =  "The value of \"{$name}\" must be a valid date. For example 1/6/18 or 2017-01-06.";
             }
         }
 
@@ -235,7 +227,6 @@
         // return error message
         return "The value \"{$name}\" excludes certain types of html. The text in question is \" {$val_in_question} \".";
     }
-
 
     // Checking to see if it is a date
     function isDate($value, $name) {

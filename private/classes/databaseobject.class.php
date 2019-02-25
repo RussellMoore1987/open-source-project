@@ -7,11 +7,9 @@
         public $errors = [];
 
         // @ ----- START OF ACTIVE RECORD CODE -----
-            // todo: ???? ***list of ids or lots of query's or list of post ids then an OR JOIN?????
             // possible extended info, list loop method
-            // todo: ?????? type = 0 = all tags, 1 = post, 2 = media content, 3 = users, 4 = content
-            // get all possible tags, type = 0 = all tags, 1 = post, 2 = media content, 3 = users, 4 = content
-                static public function get_possible_tags($type = 0) {
+            // get all possible tags, $type = collection_type_reference, located at: root/private/reference_information.php
+                static public function get_possible_tags(int $type = 0) {
                     // if not set get info
                     if (!isset(static::$possibleTags)) {
                         // get all possible tags 
@@ -24,8 +22,8 @@
                 }
                 // possible tags
                 static protected $possibleTags;
-            // get all possible labels, type = 0 = all tags, 1 = post, 2 = media content, 3 = users, 4 = content
-                static public function get_possible_labels($type = 0) {
+            // get all possible labels, $type = collection_type_reference, located at: root/private/reference_information.php 
+                static public function get_possible_labels(int $type = 0) {
                     // if not set get info
                     if (!isset(static::$possibleLabels)) {
                         // get all possible Labels 
@@ -38,8 +36,8 @@
                 }
                 // possible labels
                 static protected $possibleLabels;
-            // get all possible categories, type = 0 = all tags, 1 = post, 2 = media content, 3 = users, 4 = content
-                static public function get_possible_categories($type = 0) {
+            // get all possible categories, $type = collection_type_reference, located at: root/private/reference_information.php
+                static public function get_possible_categories(int $type = 0) {
                     // if not set get info
                     if (!isset(static::$possibleCategories)) {
                         // get all possible categories
@@ -54,12 +52,12 @@
             static protected $possibleCategories;
 
             // set up local reference for the database
-            static public function set_database($database) {
+            static public function set_database(object $database) {
                 self::$database = $database;
             }
 
             // Helper function, object creator
-            static protected function instantiate($record) {
+            static protected function instantiate(array $record) {
                 // load the object
                 $object = new static($record);
                 // return the object
@@ -70,17 +68,13 @@
             static public function find_by_sql($sql) {
                 $result = self::$database->query($sql);
                 // error handling
-                if (!$result) {
-                    exit("Query Failed!!!: " . self::$database->error);
-                } 
+                $result = db_error_check_and_free_result($result);
                 // turn results into an array of objects
                 $object_array = [];
                 // loop through query
                 while ($record = $result->fetch_assoc()) {
                     $object_array[] = static::instantiate($record);    
                 }
-                //free up query result
-                $result->free();
                 // return an array of populated objects
                 return $object_array;   
             }
@@ -95,20 +89,16 @@
             static public function count_all() {
                 $sql = "SELECT COUNT(*) FROM " . static::$tableName;
                 $result = self::$database->query($sql);
-                // error handling
-                if (!$result) {
-                    exit("Query Failed!!!: " . self::$database->error);
-                } 
                 // get row, only one there
                 $row = $result->fetch_array();
-                //free up query result
-                $result->free();
+                // error handling
+                db_error_check_and_free_result($result);
                 // return count 
                 return array_shift($row);
             }
 
             // find by id
-            static public function find_by_id($id) {
+            static public function find_by_id(int $id) {
                 // sql
                 $sql = "SELECT * FROM " . static::$tableName . " ";
                 $sql .= "WHERE id='" . self::db_escape($id) . "'";
@@ -123,14 +113,23 @@
                 }
             }
 
-            protected function validate(){
+            // runs validation on all possible columns in create, null properties excluded on update
+            protected function validate($type = "update"){
                 // reset error array for a clean slate
                 $this->errors = [];
                 // get class attributes, brings back an associative array
                 $attributes = $this->attributes();
                 // loop over and validate
                 foreach ($attributes as $key => $value) {
-                    if (property_exists($this, $key) && !is_null($value)) {
+                    if ($type == "create" && property_exists($this, $key)) {
+                        // run validation on property value
+                        $errors_array = val_validation($value, static::$validation_columns[$key]);
+                        // check to see if there are any errors in the array, if yes merge it with the errors array
+                        if (count($errors_array) > 0) {
+                            // merge arrays
+                            $this->errors = array_merge($this->errors, $errors_array);
+                        }
+                    } elseif (property_exists($this, $key) && !is_null($value)) {
                         // run validation on property value
                         $errors_array = val_validation($value, static::$validation_columns[$key]);
                         // check to see if there are any errors in the array, if yes merge it with the errors array
@@ -148,7 +147,7 @@
             // Create a new instance/record
             protected function create() {
                 // validate
-                $this->validate();
+                $this->validate("create");
                 // if errors return false, don't continue
                 if (!empty($this->errors)) { return false; }
 
@@ -169,8 +168,12 @@
                     // add the new id to the obj
                     $this->id = self::$database->insert_id;
                 }
+                // saving result so we can free up connection
+                $temp_result = $result;
+                //free up query result
+                $result->free();
                 // return true
-                return $result;
+                return $temp_result;
             }
 
             // update existing record
@@ -195,7 +198,9 @@
                 $sql .= " WHERE id='" . self::db_escape($this->id) . "'";
                 $sql .= " LIMIT 1";
                 $result = self::$database->query($sql);
-                // return true
+                // error handling
+                $result = db_error_check_and_free_result($result);
+                // return result
                 return $result;
             }
 
@@ -214,11 +219,14 @@
                 $sql .= " WHERE id='" . self::db_escape($this->id) . "'";
                 $sql .= " LIMIT 1";
                 $result = self::$database->query($sql);
+                // error handling
+                $result = db_error_check_and_free_result($result);
+                // return result
                 return $result;
             }
 
             // merge properties
-            public function merge_attributes($args=[]) {
+            public function merge_attributes(array $args=[]) {
                 foreach ($args as $key => $value) {
                     if (property_exists($this, $key) && !is_null($value)) {
                         $this->$key = $value;
@@ -233,7 +241,7 @@
                     // skip id
                     if ($column == 'id') { continue; }
                     // construct attribute list with object values
-                    $attributes = [$column] = $this->$column;
+                    $attributes[$column] = $this->$column;
                 }
                 // return array of attributes
                 return $attributes;
@@ -248,11 +256,28 @@
                 return $sanitized_array;
             }
 
+        // @ ----- END OF ACTIVE RECORD CODE -----
+
+        // @ class functionality methods start
             // stands for database escape, you sanitized data, and to protect against my SQL injection
             static protected function db_escape($db_field){
                 return self::$database->escape_string($db_field);
             }
-        // @ ----- END OF ACTIVE RECORD CODE -----
+
+            // checks for database errors and frees up result, can return true
+            static protected function db_error_check_and_free_result(object $result){
+                // error handling
+                if (!$result) {
+                    exit("Query Failed!!!: " . self::$database->error);
+                } 
+                // saving result so we can free up connection
+                $temp_result = $result;
+                //free up query result
+                $result->free();
+                // return result
+                return $temp_result;
+            }
+        // @ class functionality methods end
     }
     
 ?>
