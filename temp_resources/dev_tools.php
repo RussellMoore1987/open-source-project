@@ -62,6 +62,14 @@ $successMessage = false;
         } elseif ($_GET['createtable'] == 'user_to_permissions') {
             $successMessage = $Database->createUserToPermissionsTable();
         }
+        
+        // Inserting into Tables
+    } elseif (isset($_GET['inserttable'])) {
+        if ($_GET['inserttable'] == 'all') {
+           // TODO: Add the query to insert into all tables
+        } elseif ($_GET['inserttable'] == 'posts') {
+            $successMessage = $Database->insertIntoPosts();
+        }
 
         // Dropping Tables
     } elseif (isset($_GET['droptable'])) {
@@ -72,10 +80,13 @@ $successMessage = false;
             $successMessage = $Database->dropTable($tableToDrop);
         }
 
-        // Inserting into Tables
-    } elseif (isset($_GET['inserttable'])) {
-        if ($_GET['inserttable'] == 'posts') {
-            $successMessage = $Database->insertIntoPosts();
+        // Truncating Tables
+    } elseif (isset($_GET['truncatetable'])) {
+        if ($_GET['truncatetable'] == 'all') {
+            $successMessage = $Database->truncateTable('all');
+        } else {
+            $tableTruncate = $_GET['truncatetable'];
+            $successMessage = $Database->truncateTable($tableTruncate);
         }
 
         // Selecting from Tables
@@ -175,8 +186,8 @@ $successMessage = false;
 <br>
 <a style ="color: darkgreen; padding: 10px; border: 1px solid darkgreen"href="dev_tools.php?createtable=all">CREATE ALL TABLES</a>
 <a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkred;" href="dev_tools.php?droptable=all">DROP ALL TABLES</a>
-<a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkyellow;" href="dev_tools.php?inserttable=all">INSERT INTO ALL TABLES</a>
-<a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkyellow;" href="dev_tools.php?truncatetable=all">TRUNCATE ALL TABLES</a>
+<a style="color: darkgreen; margin-lefT: 50px; padding: 10px; border: 1px solid darkgreen;" href="dev_tools.php?inserttable=all">INSERT INTO ALL TABLES</a>
+<a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkred;" href="dev_tools.php?truncatetable=all">TRUNCATE ALL TABLES</a>
 <br>
 <h2>-------- Base Tables --------</h2>
 <br>
@@ -184,60 +195,74 @@ $successMessage = false;
 <a href="dev_tools.php?createtable=posts">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=posts">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=posts">Truncate</a>
 <br>
 <h2>Tags Table</h2>
 <a href="dev_tools.php?createtable=tags">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=tags">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=tags">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=tags">Truncate</a>
 <br>
 <h2>Labels Table</h2>
 <a href="dev_tools.php?createtable=labels">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=labels">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=labels">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=labels">Truncate</a>
 <h2>Users Table</h2>
 <a href="dev_tools.php?createtable=users">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=users">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=users">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=users">Truncate</a>
 <h2>Categories Table</h2>
 <a href="dev_tools.php?createtable=categories">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=categories">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=categories">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=categories">Truncate</a>
 <h2>Media Content Table</h2>
 <a href="dev_tools.php?createtable=media_content">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=media_content">Truncate</a>
 <h2>Comments Table</h2>
 <a href="dev_tools.php?createtable=comments">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=comments">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=comments">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=comments">Truncate</a>
 <h2>Todo Table</h2>
 <a href="dev_tools.php?createtable=todo">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=todo">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=todo">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=todo">Truncate</a>
 <h2>Main Settings Table</h2>
 <a href="dev_tools.php?createtable=main_settings">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=main_settings">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=main_settings">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=main_settings">Truncate</a>
 <h2>Personal Settings Table</h2>
 <a href="dev_tools.php?createtable=personal_settings">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=personal_settings">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=personal_settings">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=personal_settings">Truncate</a>
 <h2>Style Settings Table</h2>
 <a href="dev_tools.php?createtable=style_settings">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=style_settings">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=style_settings">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=style_settings">Truncate</a>
 <h2>Content Table</h2>
 <a href="dev_tools.php?createtable=content">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=content">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=content">Truncate</a>
 <h2>Bookmarks Table</h2>
 <a href="dev_tools.php?createtable=bookmarks">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=bookmarks">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=bookmarks">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=bookmarks">Truncate</a>
 <h2>Permissions Table</h2>
 <a href="dev_tools.php?createtable=permissions">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=permissions">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=permissions">Insert</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?truncatetable=permissions">Truncate</a>
 <br>
 <hr>
 <br>
@@ -282,3 +307,6 @@ $successMessage = false;
 <a href="dev_tools.php?createtable=user_to_permissions">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=user_to_permissions">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=user_to_permissions">Insert</a>
+
+
+

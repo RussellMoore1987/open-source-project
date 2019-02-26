@@ -621,8 +621,21 @@ class Database {
 
     // ===================================================== TABLE CLEAR DATA FUNCTIONS ==================================================================
 
-    public function clearDataFromTable($tablename) {
-        $sql = "TRUNCATE TABLE " . $tablename;
+    public function truncateTable($tablename) {
+        $sql = "TRUNCATE TABLE ";
+
+        if ($tablename == 'all') {
+            $tables = $this->show_all_tables();
+            foreach($tables as $table) {
+                if ($table == end($tables)) {
+                    $sql .= $table;
+                } else {
+                    $sql .= $table . ", ";
+                }
+            }
+        } else {
+            $sql = "TRUNCATE TABLE " . $tablename;
+        }
 
         $this->executeTruncateQuery($sql, $tablename);
     }
@@ -668,6 +681,8 @@ class Database {
         return  $this->executeInsertQuery($sql, 'posts');
     }
 }
+
+    // INSERT INTO 
 // ================= END OF DB DEV TOOLS CLASS ==============================
 ?>
 
