@@ -175,6 +175,8 @@ $successMessage = false;
 <br>
 <a style ="color: darkgreen; padding: 10px; border: 1px solid darkgreen"href="dev_tools.php?createtable=all">CREATE ALL TABLES</a>
 <a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkred;" href="dev_tools.php?droptable=all">DROP ALL TABLES</a>
+<a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkyellow;" href="dev_tools.php?inserttable=all">INSERT INTO ALL TABLES</a>
+<a style="color: darkred; margin-lefT: 50px; padding: 10px; border: 1px solid darkyellow;" href="dev_tools.php?truncatetable=all">TRUNCATE ALL TABLES</a>
 <br>
 <h2>-------- Base Tables --------</h2>
 <br>
@@ -186,43 +188,56 @@ $successMessage = false;
 <h2>Tags Table</h2>
 <a href="dev_tools.php?createtable=tags">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=tags">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=tags">Insert</a>
 <br>
 <h2>Labels Table</h2>
 <a href="dev_tools.php?createtable=labels">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=labels">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=labels">Insert</a>
 <h2>Users Table</h2>
 <a href="dev_tools.php?createtable=users">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=users">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=users">Insert</a>
 <h2>Categories Table</h2>
 <a href="dev_tools.php?createtable=categories">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=categories">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=categories">Insert</a>
 <h2>Media Content Table</h2>
 <a href="dev_tools.php?createtable=media_content">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content">Insert</a>
 <h2>Comments Table</h2>
 <a href="dev_tools.php?createtable=comments">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=comments">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=comments">Insert</a>
 <h2>Todo Table</h2>
 <a href="dev_tools.php?createtable=todo">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=todo">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=todo">Insert</a>
 <h2>Main Settings Table</h2>
 <a href="dev_tools.php?createtable=main_settings">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=main_settings">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=main_settings">Insert</a>
 <h2>Personal Settings Table</h2>
 <a href="dev_tools.php?createtable=personal_settings">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=personal_settings">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=personal_settings">Insert</a>
 <h2>Style Settings Table</h2>
 <a href="dev_tools.php?createtable=style_settings">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=style_settings">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=style_settings">Insert</a>
 <h2>Content Table</h2>
 <a href="dev_tools.php?createtable=content">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=content">Insert</a>
 <h2>Bookmarks Table</h2>
 <a href="dev_tools.php?createtable=bookmarks">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=bookmarks">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=bookmarks">Insert</a>
 <h2>Permissions Table</h2>
 <a href="dev_tools.php?createtable=permissions">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=permissions">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=permissions">Insert</a>
 <br>
 <hr>
 <br>
@@ -230,30 +245,40 @@ $successMessage = false;
 <h2>Posts To Media Content Table</h2>
 <a href="dev_tools.php?createtable=posts_to_media_content">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_media_content">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=posts_to_media_content">Insert</a>
 <h2>Posts To Tags Table</h2>
 <a href="dev_tools.php?createtable=posts_to_tags">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_tags">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=posts_to_tags">Insert</a>
 <h2>Posts To Labels Table</h2>
 <a href="dev_tools.php?createtable=posts_to_labels">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_labels">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=posts_to_labels">Insert</a>
 <h2>Posts To Categories Table</h2>
 <a href="dev_tools.php?createtable=posts_to_categories">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=posts_to_categories">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=posts_to_categories">Insert</a>
 <h2>Media Content To Tags Table</h2>
 <a href="dev_tools.php?createtable=media_content_to_tags">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_tags">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content_to_tags">Insert</a>
 <h2>Media Content To Categories Table</h2>
 <a href="dev_tools.php?createtable=media_content_to_categories">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_categories">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content_to_categories">Insert</a>
 <h2>Content To Tags Table</h2>
 <a href="dev_tools.php?createtable=content_to_tags">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content_to_tags">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=content_to_tags">Insert</a>
 <h2>Content To Labels Table</h2>
 <a href="dev_tools.php?createtable=content_to_labels">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_labels">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content_to_labels">Insert</a>
 <h2>Content To Categories Table</h2>
 <a href="dev_tools.php?createtable=content_to_categories">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_categories">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content_to_categories">Insert</a>
 <h2>User To Permissions Table</h2>
 <a href="dev_tools.php?createtable=user_to_permissions">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=user_to_permissions">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=user_to_permissions">Insert</a>

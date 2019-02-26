@@ -135,6 +135,25 @@ class Database {
         }
     }
 
+    // Function to execute truncate table sql queries
+    private function executeTruncateQuery($query, $tablename=NULL) {
+        // DISABLE Foreign key checks in preparation
+        $this->toggleForeignKeyChecks(FALSE);
+
+        if ($this->dbConnection->query($query) === TRUE) {
+            // ENABLE Foreign key checks when finished
+            $this->toggleForeignKeyChecks(TRUE);
+
+            return  $tablename .  " truncated successfully!";
+        } else {
+            // ENABLE Foreign key checks when finished
+            $this->toggleForeignKeyChecks(TRUE);
+
+            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            return false;
+        }
+    }
+
     // Function to execute insert sql queries
     private function executeInsertQuery($query, $tablename=NULL) {
         // DISABLE Foreign key checks in preparation
@@ -602,8 +621,10 @@ class Database {
 
     // ===================================================== TABLE CLEAR DATA FUNCTIONS ==================================================================
 
-    public function clearDataFromTable() {
-        
+    public function clearDataFromTable($tablename) {
+        $sql = "TRUNCATE TABLE " . $tablename;
+
+        $this->executeTruncateQuery($sql, $tablename);
     }
 
     // ===================================================== TABLE INSERT FUNCTIONS ==================================================================
