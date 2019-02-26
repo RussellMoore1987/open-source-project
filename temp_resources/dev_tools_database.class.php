@@ -680,9 +680,195 @@ class Database {
         // Execute the query
         return  $this->executeInsertQuery($sql, 'posts');
     }
-}
 
-    // INSERT INTO 
+    // INSERT INTO bookmarks
+    public function insertIntoBookmarks($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO bookmarks ( ";
+        $sql .= "userId, url, name ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $userId = $this->Faker->numberBetween(1, $maxId);
+            $url = $this->escape($this->Faker->url());
+            $name = $this->escape($this->Faker->domainword());
+
+            $sql .= "( " . $userId . ", ";
+            $sql .= "'" . $url . "', ";
+            $sql .= "'" . $name . "' )";
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'bookmarks');
+    }
+
+    // INSERT INTO categories
+    public function insertIntoCategories($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO categories ( ";
+        $sql .= "title, sudCatId, note ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $title = $this->escape($this->Faker->numberBetween(1, $maxId));
+            $sudCatId = $this->Faker->numerBetween(1, $maxId);
+            $note = $this->escape($this->Faker->sentence());
+
+            $sql .= "( '" . $title . "', ";
+            $sql .= "" . $sudCatId . ", ";
+            $sql .= "'" . $note . "' )";
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'categories');
+    }
+
+    // INSERT INTO comments
+    public function insertIntoComments($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO comments ( ";
+        $sql .= "title, createdDate, comment, status, name, createdBy, approvedBy, postId ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $title = $this->escape($this->Faker->title());
+            $createdDate = $this->escape($this->Faker->dateTime($max = 'now'));
+            $comment = $this->escape($this->Faker->sentence());
+            $status = $this->Faker->boolean();
+            $name = $this->escape($this->Faker->title());
+            $createdBy = $this->Faker->numberBetween(1, $maxId);
+            $approvedBy = $this->Faker->numberBetween(1, $maxId);
+            $postId = $this->Faker->numberBetween(1, $maxId);
+
+            $sql .= "( '" . $title . "', ";
+            $sql .= "'" . $createdDate . "', ";
+            $sql .= "'" . $comment . "', ";
+            $sql .= $status . ", ";
+            $sql .= "'" . $name . "', ";
+            $sql .= $createdBy . ", ";
+            $sql .= $approvedBy . ", ";
+            $sql .= $postId . " )";
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'comments');
+    }
+
+    // INSERT INTO content
+    public function insertIntoContent($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO content ( ";
+        $sql .= " createdBy, changedDate, content ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $changedDate = $this->escape($this->Faker->dateTime($max = 'now'));
+            $content = "{}";
+            $createdBy = $this->Faker->numberBetween(1, $maxId);
+
+            $sql .= "( " . $createdBy . ", ";
+            $sql .= "'" . $changedDate . "', ";
+            $sql .= $content . " )";
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'content');
+    }
+
+    // INSERT INTO labels OR tags
+    public function insertIntoLabelsOrTags($tablename= 'labels', $numRecords = 10, $maxId = 3) { // $tablename can be 'labels or tags'
+        if ($tablename != 'labels' || $tablename != 'tags') {
+            return FALSE;
+        }
+
+        $sql = "INSERT INTO " . $tablename . " ( ";
+        $sql .= "title, note ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $title = $this->escape($this->Faker->title());
+            $note = $this->escape($this->Faker->sentence());
+
+            $sql .= "( '" . $title . "', ";
+            $sql .= "'" . $note . "' )";
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, $tablename);
+    }
+
+    // INSERT INTO media_content
+    public function insertIntoMediaContent($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO media_content ( ";
+        $sql .= " name, type, note, alt, createdBy, createdDate ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $name = $this->escape($this->Faker->name());
+            $type = $this->escape($this->Faker->word());
+            $note = $this->escape($this->Faker->sentence());
+            $alt = $this->escape($this->Faker->word());
+            $createdBy = $this->Faker->numberBetween(1, $maxId);
+            $createdDate = $this->escape($this->Faker->dateTime($max = 'now'));
+
+            $sql .= "( '" . $name . "', ";
+            $sql .= "'" . $type . "', ";
+            $sql .= "'" . $note . "', ";
+            $sql .= "'" . $alt . "', ";
+            $sql .= $createdBy . ", ";
+            $sql .= "'" . $createdDate . "' ) ";
+
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'media_content');
+    }
+
+}
+    
 // ================= END OF DB DEV TOOLS CLASS ==============================
 ?>
 
