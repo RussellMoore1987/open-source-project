@@ -36,7 +36,7 @@
 
   // get default functions
   require_once('functions/functions.php');
-  require_once('functions/validation_functions.php');
+  require_once('security/validation_functions.php');
   require_once('db/db_functions.php');
   
   // db connection

@@ -16,7 +16,7 @@
         require_once(PUBLIC_PATH . 'includes/sidebar.php');
 
         // include body/page
-        require_once(PUBLIC_PATH . 'pages/dashboard.php');
+        require_once(PUBLIC_PATH . 'pages/...');
 
         // include bottom
         require_once(PUBLIC_PATH . 'includes/bottom.php');
