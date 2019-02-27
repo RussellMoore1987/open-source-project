@@ -13,7 +13,7 @@ class Database {
     private $Faker;
 
     public $errors_array = [];
-    public $dbConnection;
+    public $mysqli;
     public $latest_selection_array = [];
     public $select_table_name = NULL;
 
@@ -46,19 +46,19 @@ class Database {
 
         // Connect to the database without a name
         } else if (is_null($this->DBNAME)) {
-            $this->dbConnection = new mysqli($this->SERVERNAME, $this->USERNAME, $this->PASSWORD);
-            if ($this->dbConnection->connect_error) {
-                die($this->dbConnection);
+            $this->mysqli = new mysqli($this->SERVERNAME, $this->USERNAME, $this->PASSWORD);
+            if ($this->mysqli->connect_error) {
+                die($this->mysqli);
                 array_push($this->errors_array, "Database Connection Error");
                 return false;
             }
 
         // Connect to the database with a name
         } else {
-            $this->dbConnection = new mysqli($this->SERVERNAME, $this->USERNAME, $this->PASSWORD, $this->DBNAME);
-            if ($this->dbConnection->connect_error) {
-                die($this->dbConnection);
-                array_push($this->errors_array, $this->dbConnection->connect_error);
+            $this->mysqli = new mysqli($this->SERVERNAME, $this->USERNAME, $this->PASSWORD, $this->DBNAME);
+            if ($this->mysqli->connect_error) {
+                die($this->mysqli);
+                array_push($this->errors_array, $this->mysqli->connect_error);
                 return false;
             }
         }
@@ -67,7 +67,7 @@ class Database {
     // Function to show all tables
     public function show_all_tables() {
         $sql = "SHOW tables";
-        $result = $this->dbConnection->query($sql);
+        $result = $this->mysqli->query($sql);
         if ($result !== FALSE) {
             $tableList = [];
             while($row = $result->fetch_array()) {
@@ -75,7 +75,7 @@ class Database {
             }
             return $tableList;
         } else {
-            array_push($this->errors_array, $this->dbConnection->error);
+            array_push($this->errors_array, $this->mysqli->error);
             return false;
         }
     }
@@ -83,10 +83,10 @@ class Database {
     // Function to create the database name
     private function create_database_name() {
         $sql = "CREATE DATABASE developmentdb";
-        if ($this->dbConnection->query($sql) === TRUE) {
+        if ($this->mysqli->query($sql) === TRUE) {
             return true;
         } else {
-            array_push($this->errors_array, $this->dbConnection->error);
+            array_push($this->errors_array, $this->mysqli->error);
             return false;
         }
     }
@@ -94,10 +94,10 @@ class Database {
     // Function to set the database that will be used by subsiquent requests.
     private function set_use_database() {
         $sql = "USE " . $this->DBNAME;
-        if ($this->dbConnection->query($sql) === TRUE) {
+        if ($this->mysqli->query($sql) === TRUE) {
             return true;
         } else {
-            array_push($this->errors_array, $this->dbConnection->error);
+            array_push($this->errors_array, $this->mysqli->error);
             return false;
         }
     }
@@ -107,12 +107,12 @@ class Database {
         // Toggle the key checks OFF
         if ($toggle === false) {
             $sql = "SET FOREIGN_KEY_CHECKS = 0";
-            $this->dbConnection->query($sql);
+            $this->mysqli->query($sql);
 
         // Toggle the key checks ON
         } else {
             $sql = "SET FOREIGN_KEY_CHECKS = 1";
-            $this->dbConnection->query($sql);
+            $this->mysqli->query($sql);
         }
     }
 
@@ -121,7 +121,7 @@ class Database {
         // DISABLE Foreign key checks in preparation
         $this->toggleForeignKeyChecks(FALSE);
 
-        if ($this->dbConnection->query($query) === TRUE) {
+        if ($this->mysqli->query($query) === TRUE) {
             // ENABLE Foreign key checks when finished
             $this->toggleForeignKeyChecks(TRUE);
 
@@ -130,7 +130,7 @@ class Database {
             // ENABLE Foreign key checks when finished
             $this->toggleForeignKeyChecks(TRUE);
 
-            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            array_push($this->errors_array, $tablename . " CREATE ERROR : " . $this->mysqli->error);
             return false;
         }
     }
@@ -140,7 +140,7 @@ class Database {
         // DISABLE Foreign key checks in preparation
         $this->toggleForeignKeyChecks(FALSE);
 
-        if ($this->dbConnection->query($query) === TRUE) {
+        if ($this->mysqli->query($query) === TRUE) {
             // ENABLE Foreign key checks when finished
             $this->toggleForeignKeyChecks(TRUE);
 
@@ -149,26 +149,26 @@ class Database {
             // ENABLE Foreign key checks when finished
             $this->toggleForeignKeyChecks(TRUE);
 
-            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            array_push($this->errors_array, $tablename . " TRUNCATE ERROR: " . $this->mysqli->error);
             return false;
         }
     }
 
     // Function to execute insert sql queries
-    private function executeInsertQuery($query, $tablename=NULL) {
+    private function executeInsertQuery($query, $tablename=NULL, $numRecords = 10) {
         // DISABLE Foreign key checks in preparation
         $this->toggleForeignKeyChecks(FALSE);
 
-        if ($this->dbConnection->query($query) === TRUE) {
+        if ($this->mysqli->query($query) === TRUE) {
             // ENABLE Foreign key checks when finished
             $this->toggleForeignKeyChecks(TRUE);
 
-            return $this->dbConnection->affected_rows . " rows inserted into " . $tablename .  " successfully!";
+            return $numRecords . " rows inserted into " . $tablename .  " successfully!";
         } else {
             // ENABLE Foreign key checks when finished
             $this->toggleForeignKeyChecks(TRUE);
 
-            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            array_push($this->errors_array, $tablename . " INSERT ERROR: " . $this->mysqli->error);
             return false;
         }
     }
@@ -183,7 +183,7 @@ class Database {
         } else {
             $sql = "SELECT id FROM " . $tablename;
 
-            $result = $this->dbConnection->query($sql);
+            $result = $this->mysqli->query($sql);
 
             if ($result) {
                 // Loop through the records and store the ids in our array
@@ -206,8 +206,8 @@ class Database {
         if ($lookupTable == 'posts_to_media_content') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('posts');
-            $args['table2_ids'] = getTableIds('media_content');
+            $args['table1_ids'] = $this->getTableIds('posts');
+            $args['table2_ids'] = $this->getTableIds('media_content');
             $args['field1'] = 'postId';
             $args['field2'] = 'mediaContentId';
 
@@ -217,8 +217,8 @@ class Database {
         } elseif ($lookupTable == 'posts_to_tags') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('posts');
-            $args['table2_ids'] = getTableIds('tags');
+            $args['table1_ids'] = $this->getTableIds('posts');
+            $args['table2_ids'] = $this->getTableIds('tags');
             $args['field1'] = 'postId';
             $args['field2'] = 'tagId';
 
@@ -228,8 +228,8 @@ class Database {
         } elseif ($lookupTable == 'posts_to_labels') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('posts');
-            $args['table2_ids'] = getTableIds('labels');
+            $args['table1_ids'] = $this->getTableIds('posts');
+            $args['table2_ids'] = $this->getTableIds('labels');
             $args['field1'] = 'postId';
             $args['field2'] = 'labelId';
 
@@ -239,8 +239,8 @@ class Database {
         } elseif ($lookupTable == 'posts_to_categories') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('posts');
-            $args['table2_ids'] = getTableIds('categories');
+            $args['table1_ids'] = $this->getTableIds('posts');
+            $args['table2_ids'] = $this->getTableIds('categories');
             $args['field1'] = 'postId';
             $args['field2'] = 'categoryId';
 
@@ -250,8 +250,8 @@ class Database {
         } elseif ($lookupTable == 'content_to_tags') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('content');
-            $args['table2_ids'] = getTableIds('tags');
+            $args['table1_ids'] = $this->getTableIds('content');
+            $args['table2_ids'] = $this->getTableIds('tags');
             $args['field1'] = 'contentId';
             $args['field2'] = 'tagId';
 
@@ -261,8 +261,8 @@ class Database {
         } elseif ($lookupTable == 'content_to_categories') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('content');
-            $args['table2_ids'] = getTableIds('categories');
+            $args['table1_ids'] = $this->getTableIds('content');
+            $args['table2_ids'] = $this->getTableIds('categories');
             $args['field1'] = 'contentId';
             $args['field2'] = 'categoryId';
 
@@ -272,8 +272,8 @@ class Database {
         } elseif ($lookupTable == 'media_content_to_tags') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('media_content');
-            $args['table2_ids'] = getTableIds('tags');
+            $args['table1_ids'] = $this->getTableIds('media_content');
+            $args['table2_ids'] = $this->getTableIds('tags');
             $args['field1'] = 'mediaContentId';
             $args['field2'] = 'tagId';
 
@@ -283,8 +283,8 @@ class Database {
         } elseif ($lookupTable == 'media_content_to_categories') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('media_content');
-            $args['table2_ids'] = getTableIds('categories');
+            $args['table1_ids'] = $this->getTableIds('media_content');
+            $args['table2_ids'] = $this->getTableIds('categories');
             $args['field1'] = 'mediaContentId';
             $args['field2'] = 'categoryId';
 
@@ -294,8 +294,8 @@ class Database {
         } elseif ($lookupTable == 'content_to_labels') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('content');
-            $args['table2_ids'] = getTableIds('labels');
+            $args['table1_ids'] = $this->getTableIds('content');
+            $args['table2_ids'] = $this->getTableIds('labels');
             $args['field1'] = 'contentId';
             $args['field2'] = 'labelId';
 
@@ -305,8 +305,8 @@ class Database {
         } elseif ($lookupTable = 'users_to_permissions') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = getTableIds('users');
-            $args['table2_ids'] = getTableIds('permissions');
+            $args['table1_ids'] = $this->getTableIds('users');
+            $args['table2_ids'] = $this->getTableIds('permissions');
             $args['field1'] = 'userId';
             $args['field2'] = 'permissionId';
 
@@ -318,7 +318,7 @@ class Database {
 
     // Function to escape strings
     public function escape($string) {
-        return $this->dbConnection->escape_string($string);
+        return $this->mysqli->escape_string($string);
     }
 
     // ========================================== TABLE CREATION FUNCTIONS ===============================================================
@@ -725,14 +725,14 @@ class Database {
             $sql = "DROP TABLE IF EXISTS " . $tablename;
         }
 
-        if ($this->dbConnection->query($sql) === TRUE) {
+        if ($this->mysqli->query($sql) === TRUE) {
             // Turn on foreign key checks after dropping the tables
             $this->toggleForeignKeyChecks(TRUE);
 
             return "Table(s) " . $tablename . " Dropped Successfully!";
 
         } else {
-            array_push($this->errors_array, $this->dbConnection->error);
+            array_push($this->errors_array, $this->mysqli->error);
             return false;
         }
     }
@@ -743,7 +743,7 @@ class Database {
 
         $sql = "SELECT * FROM " . $tablename . " LIMIT " . $numRecords;
 
-        $result = $this->dbConnection->query($sql);
+        $result = $this->mysqli->query($sql);
 
         if ($result) {
 
@@ -752,10 +752,10 @@ class Database {
                 array_push($this->latest_selection_array, $row);
             }
 
-            return "Selected " . $this->dbConnection->affected_rows . " rows from " . $tablename .  " successfully!";
+            return "Selected " . $this->mysqli->affected_rows . " rows from " . $tablename .  " successfully!";
 
         } else {
-            array_push($this->errors_array, $tablename . ": " . $this->dbConnection->error);
+            array_push($this->errors_array, $tablename . ": " . $this->mysqli->error);
             return false;
         }
     }
@@ -778,7 +778,7 @@ class Database {
             $sql = "TRUNCATE TABLE " . $tablename;
         }
 
-        $this->executeTruncateQuery($sql, $tablename);
+        return $this->executeTruncateQuery($sql, $tablename);
     }
 
     // ===================================================== TABLE INSERT FUNCTIONS ==================================================================
@@ -853,7 +853,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'posts');
+        return  $this->executeInsertQuery($sql, 'posts', $numRecords);
     }
 
     // INSERT INTO bookmarks
@@ -881,25 +881,25 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'bookmarks');
+        return  $this->executeInsertQuery($sql, 'bookmarks', $numRecords);
     }
 
     // INSERT INTO categories
     public function insertIntoCategories($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO categories ( ";
-        $sql .= "title, sudCatId, note ) ";
+        $sql .= "title, subCatId, note ) ";
         $sql .= "VALUES ";
 
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
             $title = $this->escape($this->Faker->title());
-            $sudCatId = $this->Faker->numerBetween(1, $maxId);
+            $subCatId = $this->Faker->numberBetween(1, $maxId);
             $note = $this->escape($this->Faker->sentence());
 
             $sql .= "( '" . $title . "', ";
-            $sql .= "" . $sudCatId . ", ";
+            $sql .= "" . $subCatId . ", ";
             $sql .= "'" . $note . "' )";
 
             // If we are not on the last iteration then add a comma for the next statement to be inserted
@@ -909,7 +909,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'categories');
+        return  $this->executeInsertQuery($sql, 'categories', $numRecords);
     }
 
     // INSERT INTO comments
@@ -923,7 +923,7 @@ class Database {
         for ($i = 0; $i < $numRecords; $i++) {
 
             $title = $this->escape($this->Faker->title());
-            $createdDate = $this->escape($this->Faker->dateTime($max = 'now'));
+            $createdDate = $this->Faker->dateTime($max = 'now')->format('Y-m-d');
             $comment = $this->escape($this->Faker->sentence());
             $status = $this->Faker->boolean();
             $name = $this->escape($this->Faker->title());
@@ -947,7 +947,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'comments');
+        return  $this->executeInsertQuery($sql, 'comments', $numRecords);
     }
 
     // INSERT INTO content
@@ -960,7 +960,7 @@ class Database {
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
-            $changedDate = $this->escape($this->Faker->dateTime($max = 'now'));
+            $changedDate = $this->Faker->dateTime($max = 'now')->format('Y-m-d');
             $content = "{}";
             $createdBy = $this->Faker->numberBetween(1, $maxId);
 
@@ -975,7 +975,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'content');
+        return  $this->executeInsertQuery($sql, 'content', $numRecords);
     }
 
     // INSERT INTO labels OR tags
@@ -1004,7 +1004,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, $tablename);
+        return  $this->executeInsertQuery($sql, $tablename, $numRecords);
     }
 
     // INSERT INTO media_content
@@ -1022,7 +1022,7 @@ class Database {
             $note = $this->escape($this->Faker->sentence());
             $alt = $this->escape($this->Faker->word());
             $createdBy = $this->Faker->numberBetween(1, $maxId);
-            $createdDate = $this->escape($this->Faker->dateTime($max = 'now'));
+            $createdDate = $this->Faker->dateTime($max = 'now')->format('Y-m-d');
 
             $sql .= "( '" . $name . "', ";
             $sql .= "'" . $type . "', ";
@@ -1039,7 +1039,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'media_content');
+        return  $this->executeInsertQuery($sql, 'media_content', $numRecords);
     }
 
     // INSERT INTO users
@@ -1063,13 +1063,13 @@ class Database {
             $mediaContent = $this->Faker->numberBetween(1, $maxId);
             $adminNote = $this->escape($this->Faker->sentence());
             $note = $this->escape($this->Faker->sentence());
-            $showOnweb = $this->Faker->boolean();
+            $showOnWeb = $this->Faker->boolean();
             $createdBy = $this->Faker->numberBetween(1, $maxId);
 
             $sql .= "( '" . $username . "', ";
             $sql .= "'" . $password . "', ";
-            $sql .= "'" . $firstname . "', ";
-            $sql .= "'" . $lastname . "', ";
+            $sql .= "'" . $firstName . "', ";
+            $sql .= "'" . $lastName . "', ";
             $sql .= "'" . $address . "', ";
             $sql .= $phoneNumber . ", ";
             $sql .= "'" . $emailAddress . "', ";
@@ -1088,7 +1088,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'users');
+        return  $this->executeInsertQuery($sql, 'users', $numRecords);
     }
 
     // INSERT INTO permissions
@@ -1115,7 +1115,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'permissions');
+        return  $this->executeInsertQuery($sql, 'permissions', $numRecords);
     }
 
     // INSERT INTO any lookuptable. Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
