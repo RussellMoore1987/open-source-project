@@ -174,7 +174,7 @@ class Database {
     }
 
     // Function to get a list of IDs from a table
-    private function getTableIds($tablename = NULL) {
+    public function getTableIds($tablename = NULL) {
         $id_array = [];
 
         if ($tablename == NULL) {
@@ -1119,15 +1119,19 @@ class Database {
     // Connections are between one table and another. eg: 1 to 2, 1 to 1, 1 to 3, are all one connection because they come from the same table
     // Relationships are between 1 id and another. eg 1 to 2, 1 to 1, 1 to 3 are each a separate relationship. 3 relationships are listed
     // One connection can contain one or more relationships
-    private function insertIntoLookupTable($args = []) {
+    public function insertIntoLookupTable($args = []) {
         $connections = NULL;
         $relationships = NULL;
-        
+
+        // Sort the IDs initially in ascending order
+        sort($args['table1_ids']);
+        sort($args['table2_ids']);
+
         // Check to see if we have enough ids to form the number of requested connections
         if ($args['connections'] > max($args['table1_ids'])) {
             $connections = max($args['table1_ids']);
         } else {
-            $connectons = $args['connections'];
+            $connections = $args['connections'];
         }
 
         // Check to see if we have enough ids to form the number of requested relationships
@@ -1144,19 +1148,19 @@ class Database {
 
         for ($i = 0; $i < $connections; $i++) {
 
-            // Add a comma between each connection
-            if ($i != 0) {
-                $sql .= ", ";
-            }
-
             for ($j = 0; $j < $relationships; $j++) {
 
                 $sql .= "( " . $args['table1_ids'][$i] . ", " . $args['table2_ids'][$j] . " )";
 
                 // Insert a comma between each value
-                if ($j == $relationships - 1) {
+                if ($j != $relationships - 1) {
                     $sql .= ", ";
                 }
+            }
+
+            // Add a comma between each connection
+            if ($i != $connections - 1) {
+                $sql .= ", ";
             }
         }
 

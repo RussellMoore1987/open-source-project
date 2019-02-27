@@ -70,6 +70,8 @@ $successMessage = false;
         if ($_GET['inserttable'] == 'all') {
            // TODO: Add the query to insert into all tables
            $successMessage = $Database->insertIntoAllTables();
+
+           // ------- Base Table Inserts --------------
         } elseif ($_GET['inserttable'] == 'posts') {
             $successMessage = $Database->insertIntoPosts();
         } elseif ($_GET['inserttable'] == 'tags') {
@@ -90,6 +92,19 @@ $successMessage = false;
             $successMessage = $Database->insertIntoUsers();
         } elseif ($_GET['inserttable'] == 'permissions') {
             $successMessage = $Database->insertIntoPermissions();
+
+        // ---------- Lookup Table Inserts -----------
+        // Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
+        } elseif ($_GET['inserttable'] == 'posts_to_media_content') {
+            $successMessage = $Database->insertIntoLookupTable([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'postId',
+                'field2' => 'mediaContentId',
+                'table1_ids' => $Database->getTableIds('posts'),
+                'table2_ids' => $Database->getTableIds('media_content'),
+                'connections' => 3,
+                'relationships' => 4
+            ]);
         }
 
         // Dropping Tables
