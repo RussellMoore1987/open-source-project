@@ -46,13 +46,15 @@ $successMessage = false;
         } elseif ($_GET['createtable'] == 'posts_to_tags') {
             $successMessage = $Database->createPostsToTagsTable();
         } elseif ($_GET['createtable'] == 'posts_to_labels') {
-            $successMessage = $Database->createPoststoLabelsTable();
+            $successMessage = $Database->createPostsToLabelsTable();
         } elseif ($_GET['createtable'] == 'posts_to_categories') {
             $successMessage = $Database->createPostsToCategoriesTable();
         } elseif ($_GET['createtable'] == 'media_content_to_tags') {
             $successMessage = $Database->createMediaContentToTagsTable();
         } elseif ($_GET['createtable'] == 'media_content_to_categories') {
-            $successMessage = $Database->createMediaContenttoCategoriesTable();
+            $successMessage = $Database->createMediaContentToCategoriesTable();
+        } elseif ($_GET['createtable'] == 'media_content_to_labels') {
+            $successMessage = $Database->createMediaContentToLabelsTable();
         } elseif ($_GET['createtable'] == 'content_to_tags') {
             $successMessage = $Database->createContentToTagsTable();
         } elseif ($_GET['createtable'] == 'content_to_labels') {
@@ -67,6 +69,7 @@ $successMessage = false;
     } elseif (isset($_GET['inserttable'])) {
         if ($_GET['inserttable'] == 'all') {
            // TODO: Add the query to insert into all tables
+           $successMessage = $Database->insertIntoAllTables();
         } elseif ($_GET['inserttable'] == 'posts') {
             $successMessage = $Database->insertIntoPosts();
         } elseif ($_GET['inserttable'] == 'tags') {
@@ -83,6 +86,10 @@ $successMessage = false;
             $successMessage = $Database->insertIntoContent();
         } elseif ($_GET['inserttable'] == 'bookmarks') {
             $successMessage = $Database->insertIntoBookmarks();
+        } elseif ($_GET['inserttable'] == 'users') {
+            $successMessage = $Database->insertIntoUsers();
+        } elseif ($_GET['inserttable'] == 'permissions') {
+            $successMessage = $Database->insertIntoPermissions();
         }
 
         // Dropping Tables
@@ -305,6 +312,10 @@ $successMessage = false;
 <a href="dev_tools.php?createtable=media_content_to_categories">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_categories">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content_to_categories">Insert</a>
+<h2>Media Content To Labels Table</h2>
+<a href="dev_tools.php?createtable=media_content_to_labels">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_labels">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content_to_labels">Insert</a>
 <h2>Content To Tags Table</h2>
 <a href="dev_tools.php?createtable=content_to_tags">Create</a>
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=content_to_tags">Drop</a>

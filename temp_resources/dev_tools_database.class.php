@@ -197,7 +197,7 @@ class Database {
 
     // Function to randomize the number of connections in a lookup table
     // Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
-    private function createRandomConnections($connections = 2, $relationships = 3, $lookupTable) {
+    private function createLookupTableConnections($lookupTable, $connections = 2, $relationships = 3) {
         // Set the initial argument values
         $args['connections'] = $connections;
         $args['relationships'] = $relationships;
@@ -349,6 +349,7 @@ class Database {
         array_push($results, $this->createPostsToCategoriesTable());
         array_push($results, $this->createMediaContentToTagsTable());
         array_push($results, $this->createMediaContentToCategoriesTable());
+        array_push($results, $this->createMediaContentToLabelsTable());
         array_push($results, $this->createContentToTagsTable());
         array_push($results, $this->createContentToLabelsTable());
         array_push($results, $this->createContentToCategoriesTable());
@@ -657,9 +658,6 @@ class Database {
 
     // CONTENT TO TAGS
     public function createContentToTagsTable() {
-        // Turn OFF foreign key checks
-        $this->toggleForeignKeyChecks(FALSE);
-
         $sql = "CREATE TABLE IF NOT EXISTS content_to_tags ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
@@ -785,6 +783,40 @@ class Database {
 
     // ===================================================== TABLE INSERT FUNCTIONS ==================================================================
     
+    // INSERT INTO ALL TABLES
+    public function insertIntoAllTables($numRecords = 10, $maxId = 3) {
+        $results = [];
+
+        array_push($results, $this->insertIntoPosts($numRecords));
+        array_push($results, $this->insertIntoBookmarks($numRecords));
+        array_push($results, $this->insertIntoCategories($numRecords));
+        array_push($results, $this->insertIntoComments($numRecords));
+        array_push($results, $this->insertIntoContent($numRecords));
+        array_push($results, $this->insertIntoLabelsOrTags('labels', $numRecords));
+        array_push($results, $this->insertIntoLabelsOrTags('tags', $numRecords));
+        array_push($results, $this->insertIntoMediaContent($numRecords));
+        array_push($results, $this->insertIntoUsers($numRecords));
+        array_push($results, $this->insertIntoPermissions($numRecords));
+
+        // Use the lookupTablesArray to go through and create the connections by inserting into each lookup table
+        $lookupTablesArray = ['posts_to_media_content', 'posts_to_tags', 'posts_to_labels', 'posts_to_categories', 'media_content_to_tags', 'media_content_to_labels', 'media_content_to_categories', 'content_to_tags', 'content_to_labels', 'content_to_categories', 'users_to_permissions'];
+
+        foreach($lookupTablesArray as $table) {
+            array_push($results, $this->createLookupTableConnections($table));
+        }
+
+        foreach ($results as $result) {
+            if ($result === false) {
+                return false;
+                break;
+            } else {
+                // Do Nothing
+            }
+        }
+        
+        return "All data inserted successfully!";
+    }
+
     // Insert into posts
     public function insertIntoPosts($numRecords = 10, $maxId = 3) {
 
@@ -862,7 +894,7 @@ class Database {
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
-            $title = $this->escape($this->Faker->numberBetween(1, $maxId));
+            $title = $this->escape($this->Faker->title());
             $sudCatId = $this->Faker->numerBetween(1, $maxId);
             $note = $this->escape($this->Faker->sentence());
 
@@ -1034,12 +1066,19 @@ class Database {
             $showOnweb = $this->Faker->boolean();
             $createdBy = $this->Faker->numberBetween(1, $maxId);
 
-            $sql .= "( '" . $name . "', ";
-            $sql .= "'" . $type . "', ";
+            $sql .= "( '" . $username . "', ";
+            $sql .= "'" . $password . "', ";
+            $sql .= "'" . $firstname . "', ";
+            $sql .= "'" . $lastname . "', ";
+            $sql .= "'" . $address . "', ";
+            $sql .= $phoneNumber . ", ";
+            $sql .= "'" . $emailAddress . "', ";
+            $sql .= "'" . $title . "', ";
+            $sql .= $mediaContent . ", ";
+            $sql .= "'" . $adminNote . "', ";
             $sql .= "'" . $note . "', ";
-            $sql .= "'" . $alt . "', ";
-            $sql .= $createdBy . ", ";
-            $sql .= "'" . $createdDate . "' ) ";
+            $sql .= $showOnWeb . ", ";
+            $sql .= $createdBy . " )";
 
 
             // If we are not on the last iteration then add a comma for the next statement to be inserted
@@ -1049,7 +1088,34 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'media_content');
+        return  $this->executeInsertQuery($sql, 'users');
+    }
+
+    // INSERT INTO permissions
+    public function insertIntoPermissions($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO permissions ( ";
+        $sql .= " name, description";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $name = $this->escape($this->Faker->title());
+            $description = $this->escape($this->Faker->sentence());
+
+            $sql .= "( '" . $name . "', ";
+            $sql .= "'" . $description . "' )";
+
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'permissions');
     }
 
     // INSERT INTO any lookuptable. Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
