@@ -147,7 +147,13 @@ $successMessage = false;
             echo "<h3 style='color: red;'>" . $error . "</h3>";
         }
     } elseif ($successMessage != false) {
-        echo "<h3 style='color: green;'>" . $successMessage . "</h3>";
+        if (is_array($successMessage)) {
+            foreach($successMessage as $message) {
+                echo "<h3 style='color: green;'>" . $message . "</h3>";
+            }
+        } else {
+            echo "<h3 style='color: green;'>" . $successMessage . "</h3>";
+        }
     } else {
         echo "<h3 style='color: green;'>No Errors Detected</h3>";
     }

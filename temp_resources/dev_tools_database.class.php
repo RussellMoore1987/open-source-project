@@ -763,22 +763,22 @@ class Database {
     // ===================================================== TABLE CLEAR DATA FUNCTIONS ==================================================================
 
     public function truncateTable($tablename) {
-        $sql = "TRUNCATE TABLE ";
+        
+        $messages = [];
 
         if ($tablename == 'all') {
             $tables = $this->show_all_tables();
             foreach($tables as $table) {
-                if ($table == end($tables)) {
-                    $sql .= $table;
-                } else {
-                    $sql .= $table . ", ";
-                }
+                $sql = "TRUNCATE TABLE " . $table;
+                array_push($messages, $this->executeTruncateQuery($sql, $table));
             }
+
+            return $messages;
         } else {
             $sql = "TRUNCATE TABLE " . $tablename;
+            return $this->executeTruncateQuery($sql, $tablename);
         }
 
-        return $this->executeTruncateQuery($sql, $tablename);
     }
 
     // ===================================================== TABLE INSERT FUNCTIONS ==================================================================
@@ -836,7 +836,7 @@ class Database {
             $createdDate = $this->Faker->dateTimeThisYear($max = 'now')->format('Y-m-d');
             $postDate = $this->Faker->dateTimeThisYear($max = 'now')->format('Y-m-d');
             $status = $this->Faker->numberBetween(0, 1);
-            $title = $this->escape($this->Faker->sentence($nbWords = 3, $variableNbWords = true));
+            $title = $this->escape($this->Faker->sentence(rand(1, 5)));
 
 
             $sql .= "( " . $author . ", ";
@@ -894,7 +894,7 @@ class Database {
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
-            $title = $this->escape($this->Faker->title());
+            $title = $this->escape($this->Faker->word());
             $subCatId = $this->Faker->numberBetween(1, $maxId);
             $note = $this->escape($this->Faker->sentence());
 
@@ -922,11 +922,11 @@ class Database {
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
-            $title = $this->escape($this->Faker->title());
+            $title = $this->escape($this->Faker->word());
             $createdDate = $this->Faker->dateTime($max = 'now')->format('Y-m-d');
             $comment = $this->escape($this->Faker->sentence());
-            $status = $this->Faker->boolean();
-            $name = $this->escape($this->Faker->title());
+            $status = (int) $this->Faker->boolean();
+            $name = $this->escape($this->Faker->sentence(rand(1, 3)));
             $createdBy = $this->Faker->numberBetween(1, $maxId);
             $approvedBy = $this->Faker->numberBetween(1, $maxId);
             $postId = $this->Faker->numberBetween(1, $maxId);
@@ -980,9 +980,6 @@ class Database {
 
     // INSERT INTO labels OR tags
     public function insertIntoLabelsOrTags($tablename= 'labels', $numRecords = 10, $maxId = 3) { // $tablename can be 'labels or tags'
-        if ($tablename != 'labels' || $tablename != 'tags') {
-            return FALSE;
-        }
 
         $sql = "INSERT INTO " . $tablename . " ( ";
         $sql .= "title, note ) ";
@@ -991,7 +988,7 @@ class Database {
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
-            $title = $this->escape($this->Faker->title());
+            $title = $this->escape($this->Faker->sentence(rand(1, 3)));
             $note = $this->escape($this->Faker->sentence());
 
             $sql .= "( '" . $title . "', ";
@@ -1057,13 +1054,13 @@ class Database {
             $firstName = $this->escape($this->Faker->firstName());
             $lastName = $this->escape($this->Faker->lastName());
             $address = $this->escape($this->Faker->address());
-            $phoneNumber = $this->escape($this->Faker->phoneNumber());
+            $phoneNumber = $this->escape($this->Faker->tollFreePhoneNumber());
             $emailAddress = $this->escape($this->Faker->email());
             $title = $this->escape($this->Faker->title());
             $mediaContent = $this->Faker->numberBetween(1, $maxId);
             $adminNote = $this->escape($this->Faker->sentence());
             $note = $this->escape($this->Faker->sentence());
-            $showOnWeb = $this->Faker->boolean();
+            $showOnWeb = (int) $this->Faker->boolean();
             $createdBy = $this->Faker->numberBetween(1, $maxId);
 
             $sql .= "( '" . $username . "', ";
@@ -1071,7 +1068,7 @@ class Database {
             $sql .= "'" . $firstName . "', ";
             $sql .= "'" . $lastName . "', ";
             $sql .= "'" . $address . "', ";
-            $sql .= $phoneNumber . ", ";
+            $sql .= "'" . $phoneNumber . "', ";
             $sql .= "'" . $emailAddress . "', ";
             $sql .= "'" . $title . "', ";
             $sql .= $mediaContent . ", ";
@@ -1095,13 +1092,13 @@ class Database {
     public function insertIntoPermissions($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO permissions ( ";
-        $sql .= " name, description";
+        $sql .= " name, description ) ";
         $sql .= "VALUES ";
 
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
-            $name = $this->escape($this->Faker->title());
+            $name = $this->escape($this->Faker->word());
             $description = $this->escape($this->Faker->sentence());
 
             $sql .= "( '" . $name . "', ";
@@ -1123,6 +1120,9 @@ class Database {
     // Relationships are between 1 id and another. eg 1 to 2, 1 to 1, 1 to 3 are each a separate relationship. 3 relationships are listed
     // One connection can contain one or more relationships
     private function insertIntoLookupTable($args = []) {
+        $connections = NULL;
+        $relationships = NULL;
+        
         // Check to see if we have enough ids to form the number of requested connections
         if ($args['connections'] > max($args['table1_ids'])) {
             $connections = max($args['table1_ids']);
