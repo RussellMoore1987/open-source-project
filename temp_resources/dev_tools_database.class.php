@@ -178,7 +178,8 @@ class Database {
         $id_array = [];
 
         if ($tablename == NULL) {
-            return FALSE;
+            $id_array[0] = 1;
+            return $id_array;
         } else {
             $sql = "SELECT id FROM " . $tablename;
 
@@ -195,26 +196,122 @@ class Database {
     }
 
     // Function to randomize the number of connections in a lookup table
-    private function createRandomConnections($min = 1, $max = 5, $lookupTable) {
+    // Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
+    private function createRandomConnections($connections = 2, $relationships = 3, $lookupTable) {
+        // Set the initial argument values
+        $args['connections'] = $connections;
+        $args['relationships'] = $relationships;
+        $args['tablename'] = $lookupTable;
+
         if ($lookupTable == 'posts_to_media_content') {
-            
+
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('posts');
+            $args['table2_ids'] = getTableIds('media_content');
+            $args['field1'] = 'postId';
+            $args['field2'] = 'mediaContentId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
+
         } elseif ($lookupTable == 'posts_to_tags') {
+
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('posts');
+            $args['table2_ids'] = getTableIds('tags');
+            $args['field1'] = 'postId';
+            $args['field2'] = 'tagId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
 
         } elseif ($lookupTable == 'posts_to_labels') {
 
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('posts');
+            $args['table2_ids'] = getTableIds('labels');
+            $args['field1'] = 'postId';
+            $args['field2'] = 'labelId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
+
         } elseif ($lookupTable == 'posts_to_categories') {
+
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('posts');
+            $args['table2_ids'] = getTableIds('categories');
+            $args['field1'] = 'postId';
+            $args['field2'] = 'categoryId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
 
         } elseif ($lookupTable == 'content_to_tags') {
 
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('content');
+            $args['table2_ids'] = getTableIds('tags');
+            $args['field1'] = 'contentId';
+            $args['field2'] = 'tagId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
+
         } elseif ($lookupTable == 'content_to_categories') {
+
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('content');
+            $args['table2_ids'] = getTableIds('categories');
+            $args['field1'] = 'contentId';
+            $args['field2'] = 'categoryId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
 
         } elseif ($lookupTable == 'media_content_to_tags') {
 
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('media_content');
+            $args['table2_ids'] = getTableIds('tags');
+            $args['field1'] = 'mediaContentId';
+            $args['field2'] = 'tagId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
+
         } elseif ($lookupTable == 'media_content_to_categories') {
+
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('media_content');
+            $args['table2_ids'] = getTableIds('categories');
+            $args['field1'] = 'mediaContentId';
+            $args['field2'] = 'categoryId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
 
         } elseif ($lookupTable == 'content_to_labels') {
 
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('content');
+            $args['table2_ids'] = getTableIds('labels');
+            $args['field1'] = 'contentId';
+            $args['field2'] = 'labelId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
+
         } elseif ($lookupTable = 'users_to_permissions') {
+
+            // Get the ids and set the field values of the lookup table
+            $args['table1_ids'] = getTableIds('users');
+            $args['table2_ids'] = getTableIds('permissions');
+            $args['field1'] = 'userId';
+            $args['field2'] = 'permissionId';
+
+            // Create the connection in the lookup table by inserting the IDs
+            return $this->insertIntoLookupTable($args);
 
         }
     }
@@ -955,22 +1052,51 @@ class Database {
         return  $this->executeInsertQuery($sql, 'media_content');
     }
 
-    // INSERT INTO any lookuptable. Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'numconnections', 'table1_maxid', 'table2_maxid'
+    // INSERT INTO any lookuptable. Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
+    // Connections are between one table and another. eg: 1 to 2, 1 to 1, 1 to 3, are all one connection because they come from the same table
+    // Relationships are between 1 id and another. eg 1 to 2, 1 to 1, 1 to 3 are each a separate relationship. 3 relationships are listed
+    // One connection can contain one or more relationships
     private function insertIntoLookupTable($args = []) {
+        // Check to see if we have enough ids to form the number of requested connections
+        if ($args['connections'] > max($args['table1_ids'])) {
+            $connections = max($args['table1_ids']);
+        } else {
+            $connectons = $args['connections'];
+        }
+
+        // Check to see if we have enough ids to form the number of requested relationships
+        if ($args['relationships'] > max($args['table2_ids'])) {
+            $relationships = max($args['table2_ids']);
+        } else {
+            $relationships = $args['relationships'];
+        }
+
+
         $sql = "INSERT INTO " . $args['tablename'] . " ( ";
         $sql .= $args['field1'] . ", " . $args['field2'] . ") ";
-        $sql .= "VALUES ( ";
+        $sql .= "VALUES ";
 
-        for ($i = 0, $i < $args['numconnections'], $i++) {
-            if ($i == $args['numconnections'] - 1) {
-                $sql .= $args['table1_ids'][0]
-            } else {
+        for ($i = 0; $i < $connections; $i++) {
 
+            // Add a comma between each connection
+            if ($i != 0) {
+                $sql .= ", ";
+            }
+
+            for ($j = 0; $j < $relationships; $j++) {
+
+                $sql .= "( " . $args['table1_ids'][$i] . ", " . $args['table2_ids'][$j] . " )";
+
+                // Insert a comma between each value
+                if ($j == $relationships - 1) {
+                    $sql .= ", ";
+                }
             }
         }
 
+        // Execute the query
+        return  $this->executeInsertQuery($sql, $args['tablename']);
     }
-
 }
     
 // ================= END OF DB DEV TOOLS CLASS ==============================
