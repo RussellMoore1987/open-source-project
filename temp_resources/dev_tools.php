@@ -69,6 +69,20 @@ $successMessage = false;
            // TODO: Add the query to insert into all tables
         } elseif ($_GET['inserttable'] == 'posts') {
             $successMessage = $Database->insertIntoPosts();
+        } elseif ($_GET['inserttable'] == 'tags') {
+            $successMessage = $Database->insertIntoLabelsOrTags('tags');
+        } elseif ($_GET['inserttable'] == 'labels') {
+            $successMessage = $Database->insertIntoLabelsOrTags('labels');
+        } elseif ($_GET['inserttable'] == 'categories') {
+            $successMessage = $Database->insertIntoCategories();
+        } elseif ($_GET['inserttable'] == 'media_content') {
+            $successMessage = $Database->insertIntoMediaContent();
+        } elseif ($_GET['inserttable'] == 'comments') {
+            $successMessage = $Database->insertIntoComments();
+        } elseif ($_GET['inserttable'] == 'content') {
+            $successMessage = $Database->insertIntoContent();
+        } elseif ($_GET['inserttable'] == 'bookmarks') {
+            $successMessage = $Database->insertIntoBookmarks();
         }
 
         // Dropping Tables

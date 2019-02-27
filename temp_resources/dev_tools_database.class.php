@@ -173,6 +173,52 @@ class Database {
         }
     }
 
+    // Function to get a list of IDs from a table
+    private function getTableIds($tablename = NULL) {
+        $id_array = [];
+
+        if ($tablename == NULL) {
+            return FALSE;
+        } else {
+            $sql = "SELECT id FROM " . $tablename;
+
+            $result = $this->dbConnection->query($sql);
+
+            if ($result) {
+                // Loop through the records and store the ids in our array
+                while ($row = $result->fetch_assoc()) {
+                    array_push($id_array, $row['id']);
+                }
+            }
+            return $id_array;
+        }
+    }
+
+    // Function to randomize the number of connections in a lookup table
+    private function createRandomConnections($min = 1, $max = 5, $lookupTable) {
+        if ($lookupTable == 'posts_to_media_content') {
+            
+        } elseif ($lookupTable == 'posts_to_tags') {
+
+        } elseif ($lookupTable == 'posts_to_labels') {
+
+        } elseif ($lookupTable == 'posts_to_categories') {
+
+        } elseif ($lookupTable == 'content_to_tags') {
+
+        } elseif ($lookupTable == 'content_to_categories') {
+
+        } elseif ($lookupTable == 'media_content_to_tags') {
+
+        } elseif ($lookupTable == 'media_content_to_categories') {
+
+        } elseif ($lookupTable == 'content_to_labels') {
+
+        } elseif ($lookupTable = 'users_to_permissions') {
+
+        }
+    }
+
     // Function to escape strings
     public function escape($string) {
         return $this->dbConnection->escape_string($string);
@@ -865,6 +911,64 @@ class Database {
 
         // Execute the query
         return  $this->executeInsertQuery($sql, 'media_content');
+    }
+
+    // INSERT INTO users
+    public function insertIntoUsers($numRecords = 10, $maxId = 3) {
+
+        $sql = "INSERT INTO users ( ";
+        $sql .= " username, password, firstName, lastName, address, phoneNumber, emailAddress, title, mediaContent, adminNote, note, showOnWeb, createdBy ) ";
+        $sql .= "VALUES ";
+
+        // Populate the dynamic data into the query
+        for ($i = 0; $i < $numRecords; $i++) {
+
+            $username = $this->escape($this->Faker->username());
+            $password = $this->escape($this->Faker->password());
+            $firstName = $this->escape($this->Faker->firstName());
+            $lastName = $this->escape($this->Faker->lastName());
+            $address = $this->escape($this->Faker->address());
+            $phoneNumber = $this->escape($this->Faker->phoneNumber());
+            $emailAddress = $this->escape($this->Faker->email());
+            $title = $this->escape($this->Faker->title());
+            $mediaContent = $this->Faker->numberBetween(1, $maxId);
+            $adminNote = $this->escape($this->Faker->sentence());
+            $note = $this->escape($this->Faker->sentence());
+            $showOnweb = $this->Faker->boolean();
+            $createdBy = $this->Faker->numberBetween(1, $maxId);
+
+            $sql .= "( '" . $name . "', ";
+            $sql .= "'" . $type . "', ";
+            $sql .= "'" . $note . "', ";
+            $sql .= "'" . $alt . "', ";
+            $sql .= $createdBy . ", ";
+            $sql .= "'" . $createdDate . "' ) ";
+
+
+            // If we are not on the last iteration then add a comma for the next statement to be inserted
+            if ($i != $numRecords - 1) {
+                $sql .= ", ";
+            }
+        }
+
+        // Execute the query
+        return  $this->executeInsertQuery($sql, 'media_content');
+    }
+
+    // INSERT INTO any lookuptable. Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'numconnections', 'table1_maxid', 'table2_maxid'
+    private function insertIntoLookupTable($args = []) {
+        $sql = "INSERT INTO " . $args['tablename'] . " ( ";
+        $sql .= $args['field1'] . ", " . $args['field2'] . ") ";
+        $sql .= "VALUES ( ";
+
+        for ($i = 0, $i < $args['numconnections'], $i++) {
+            if ($i == $args['numconnections'] - 1) {
+                $sql .= $args['table1_ids'][0]
+            } else {
+
+            }
+        }
+
     }
 
 }
