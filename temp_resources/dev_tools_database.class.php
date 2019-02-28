@@ -103,7 +103,7 @@ class Database {
     }
 
     // Function to disable/enable foreign key constraints for table creation and drop
-    private function toggleForeignKeyChecks($toggle) {
+    private function toggle_foreign_key_checks($toggle) {
         // Toggle the key checks OFF
         if ($toggle === false) {
             $sql = "SET FOREIGN_KEY_CHECKS = 0";
@@ -117,18 +117,18 @@ class Database {
     }
 
     // Function to execute table create sql queries
-    private function executeCreateQuery($query, $tablename=NULL) {
+    private function execute_create_query($query, $tablename=NULL) {
         // DISABLE Foreign key checks in preparation
-        $this->toggleForeignKeyChecks(FALSE);
+        $this->toggle_foreign_key_checks(FALSE);
 
         if ($this->mysqli->query($query) === TRUE) {
             // ENABLE Foreign key checks when finished
-            $this->toggleForeignKeyChecks(TRUE);
+            $this->toggle_foreign_key_checks(TRUE);
 
             return "Table " . $tablename . " created successfully!";
         } else {
             // ENABLE Foreign key checks when finished
-            $this->toggleForeignKeyChecks(TRUE);
+            $this->toggle_foreign_key_checks(TRUE);
 
             array_push($this->errors_array, $tablename . " CREATE ERROR : " . $this->mysqli->error);
             return false;
@@ -136,18 +136,18 @@ class Database {
     }
 
     // Function to execute truncate table sql queries
-    private function executeTruncateQuery($query, $tablename=NULL) {
+    private function execute_truncate_query($query, $tablename=NULL) {
         // DISABLE Foreign key checks in preparation
-        $this->toggleForeignKeyChecks(FALSE);
+        $this->toggle_foreign_key_checks(FALSE);
 
         if ($this->mysqli->query($query) === TRUE) {
             // ENABLE Foreign key checks when finished
-            $this->toggleForeignKeyChecks(TRUE);
+            $this->toggle_foreign_key_checks(TRUE);
 
             return  $tablename .  " truncated successfully!";
         } else {
             // ENABLE Foreign key checks when finished
-            $this->toggleForeignKeyChecks(TRUE);
+            $this->toggle_foreign_key_checks(TRUE);
 
             array_push($this->errors_array, $tablename . " TRUNCATE ERROR: " . $this->mysqli->error);
             return false;
@@ -155,18 +155,18 @@ class Database {
     }
 
     // Function to execute insert sql queries
-    private function executeInsertQuery($query, $tablename=NULL, $numRecords = 10) {
+    private function execute_insert_query($query, $tablename=NULL, $numRecords = 10) {
         // DISABLE Foreign key checks in preparation
-        $this->toggleForeignKeyChecks(FALSE);
+        $this->toggle_foreign_key_checks(FALSE);
 
         if ($this->mysqli->query($query) === TRUE) {
             // ENABLE Foreign key checks when finished
-            $this->toggleForeignKeyChecks(TRUE);
+            $this->toggle_foreign_key_checks(TRUE);
 
             return $numRecords . " rows inserted into " . $tablename .  " successfully!";
         } else {
             // ENABLE Foreign key checks when finished
-            $this->toggleForeignKeyChecks(TRUE);
+            $this->toggle_foreign_key_checks(TRUE);
 
             array_push($this->errors_array, $tablename . " INSERT ERROR: " . $this->mysqli->error);
             return false;
@@ -174,7 +174,7 @@ class Database {
     }
 
     // Function to get a list of IDs from a table
-    public function getTableIds($tablename = NULL) {
+    public function get_table_ids($tablename = NULL) {
         $id_array = [];
 
         if ($tablename == NULL) {
@@ -197,7 +197,7 @@ class Database {
 
     // Function to randomize the number of connections in a lookup table
     // Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
-    private function createLookupTableConnections($lookupTable, $connections = 2, $relationships = 3) {
+    private function create_lookup_table_connections($lookupTable, $connections = 2, $relationships = 3) {
         // Set the initial argument values
         $args['connections'] = $connections;
         $args['relationships'] = $relationships;
@@ -206,112 +206,112 @@ class Database {
         if ($lookupTable == 'posts_to_media_content') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('posts');
-            $args['table2_ids'] = $this->getTableIds('media_content');
+            $args['table1_ids'] = $this->get_table_ids('posts');
+            $args['table2_ids'] = $this->get_table_ids('media_content');
             $args['field1'] = 'postId';
             $args['field2'] = 'mediaContentId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'posts_to_tags') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('posts');
-            $args['table2_ids'] = $this->getTableIds('tags');
+            $args['table1_ids'] = $this->get_table_ids('posts');
+            $args['table2_ids'] = $this->get_table_ids('tags');
             $args['field1'] = 'postId';
             $args['field2'] = 'tagId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'posts_to_labels') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('posts');
-            $args['table2_ids'] = $this->getTableIds('labels');
+            $args['table1_ids'] = $this->get_table_ids('posts');
+            $args['table2_ids'] = $this->get_table_ids('labels');
             $args['field1'] = 'postId';
             $args['field2'] = 'labelId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'posts_to_categories') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('posts');
-            $args['table2_ids'] = $this->getTableIds('categories');
+            $args['table1_ids'] = $this->get_table_ids('posts');
+            $args['table2_ids'] = $this->get_table_ids('categories');
             $args['field1'] = 'postId';
             $args['field2'] = 'categoryId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'content_to_tags') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('content');
-            $args['table2_ids'] = $this->getTableIds('tags');
+            $args['table1_ids'] = $this->get_table_ids('content');
+            $args['table2_ids'] = $this->get_table_ids('tags');
             $args['field1'] = 'contentId';
             $args['field2'] = 'tagId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'content_to_categories') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('content');
-            $args['table2_ids'] = $this->getTableIds('categories');
+            $args['table1_ids'] = $this->get_table_ids('content');
+            $args['table2_ids'] = $this->get_table_ids('categories');
             $args['field1'] = 'contentId';
             $args['field2'] = 'categoryId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'media_content_to_tags') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('media_content');
-            $args['table2_ids'] = $this->getTableIds('tags');
+            $args['table1_ids'] = $this->get_table_ids('media_content');
+            $args['table2_ids'] = $this->get_table_ids('tags');
             $args['field1'] = 'mediaContentId';
             $args['field2'] = 'tagId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'media_content_to_categories') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('media_content');
-            $args['table2_ids'] = $this->getTableIds('categories');
+            $args['table1_ids'] = $this->get_table_ids('media_content');
+            $args['table2_ids'] = $this->get_table_ids('categories');
             $args['field1'] = 'mediaContentId';
             $args['field2'] = 'categoryId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable == 'content_to_labels') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('content');
-            $args['table2_ids'] = $this->getTableIds('labels');
+            $args['table1_ids'] = $this->get_table_ids('content');
+            $args['table2_ids'] = $this->get_table_ids('labels');
             $args['field1'] = 'contentId';
             $args['field2'] = 'labelId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         } elseif ($lookupTable = 'users_to_permissions') {
 
             // Get the ids and set the field values of the lookup table
-            $args['table1_ids'] = $this->getTableIds('users');
-            $args['table2_ids'] = $this->getTableIds('permissions');
+            $args['table1_ids'] = $this->get_table_ids('users');
+            $args['table2_ids'] = $this->get_table_ids('permissions');
             $args['field1'] = 'userId';
             $args['field2'] = 'permissionId';
 
             // Create the connection in the lookup table by inserting the IDs
-            return $this->insertIntoLookupTable($args);
+            return $this->insert_into_lookup_table($args);
 
         }
     }
@@ -323,37 +323,37 @@ class Database {
 
     // ========================================== TABLE CREATION FUNCTIONS ===============================================================
     // CREATE ALL TABLES
-    public function createAllTables() {
+    public function create_all_tables() {
         $results = [];
 
         // Base Tables
-        array_push($results, $this->createCategoriesTable());
-        array_push($results, $this->createCommentsTable());
-        array_push($results, $this->createPostsTable());
-        array_push($results, $this->createTagsTable());
-        array_push($results, $this->createLabelsTable());
-        array_push($results, $this->createUsersTable());
-        array_push($results, $this->createMediaContentTable());
-        array_push($results, $this->createTodoTable());
-        array_push($results, $this->createMainSettingsTable());
-        array_push($results, $this->createStyleSettingsTable());
-        array_push($results, $this->createPersonalSettingsTable());
-        array_push($results, $this->createContentTable());
-        array_push($results, $this->createBookmarksTable());
-        array_push($results, $this->createPermissionsTable());
+        array_push($results, $this->create_categories_table());
+        array_push($results, $this->create_comments_table());
+        array_push($results, $this->create_posts_table());
+        array_push($results, $this->create_tags_table());
+        array_push($results, $this->create_labels_table());
+        array_push($results, $this->create_users_table());
+        array_push($results, $this->create_media_content_table());
+        array_push($results, $this->create_todo_table());
+        array_push($results, $this->create_main_settings_table());
+        array_push($results, $this->create_style_settings_table());
+        array_push($results, $this->create_personal_settings_table());
+        array_push($results, $this->create_content_table());
+        array_push($results, $this->create_bookmarks_table());
+        array_push($results, $this->create_permissions_table());
 
         // Lookup Tables
-        array_push($results, $this->createPostsToMediaContentTable());
-        array_push($results, $this->createPostsToTagsTable());
-        array_push($results, $this->createPostsToLabelsTable());
-        array_push($results, $this->createPostsToCategoriesTable());
-        array_push($results, $this->createMediaContentToTagsTable());
-        array_push($results, $this->createMediaContentToCategoriesTable());
-        array_push($results, $this->createMediaContentToLabelsTable());
-        array_push($results, $this->createContentToTagsTable());
-        array_push($results, $this->createContentToLabelsTable());
-        array_push($results, $this->createContentToCategoriesTable());
-        array_push($results, $this->createUserToPermissionsTable());
+        array_push($results, $this->create_posts_to_media_content());
+        array_push($results, $this->create_posts_to_tags_table());
+        array_push($results, $this->create_posts_to_labels_table());
+        array_push($results, $this->create_posts_to_categories_table());
+        array_push($results, $this->create_media_content_to_tags_table());
+        array_push($results, $this->create_media_content_to_categories_table());
+        array_push($results, $this->create_media_content_to_labels_table());
+        array_push($results, $this->create_content_to_tags_table());
+        array_push($results, $this->create_content_to_labels_table());
+        array_push($results, $this->create_content_to_categories_table());
+        array_push($results, $this->create_user_to_permissions_table());
 
         foreach ($results as $result) {
             if ($result === false) {
@@ -368,7 +368,7 @@ class Database {
     }
 
     // POSTS
-    public function createPostsTable() {
+    public function create_posts_table() {
         $sql = "CREATE TABLE IF NOT EXISTS posts ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "author INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
@@ -384,33 +384,33 @@ class Database {
         $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'posts');
+        return $this->execute_create_query($sql, 'posts');
     }
 
     // TAGS
-    public function createTagsTable() {
+    public function create_tags_table() {
         $sql = "CREATE TABLE IF NOT EXISTS tags ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "title VARCHAR(50) NOT NULL, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'tags');
+        return $this->execute_create_query($sql, 'tags');
     }
 
     // LABELS
-    public function createLabelsTable() {
+    public function create_labels_table() {
         $sql = "CREATE TABLE IF NOT EXISTS labels ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "title VARCHAR(50) NOT NULL, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'labels');
+        return $this->execute_create_query($sql, 'labels');
     }
 
     // USERS
-    public function createUsersTable() {
+    public function create_users_table() {
         $sql = "CREATE TABLE IF NOT EXISTS users ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "username VARCHAR(35) NOT NULL, ";
@@ -431,11 +431,11 @@ class Database {
 
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'users');
+        return $this->execute_create_query($sql, 'users');
     }
 
     // CATEGORIES
-    public function createCategoriesTable() {
+    public function create_categories_table() {
         $sql = "CREATE TABLE IF NOT EXISTS categories ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "title VARCHAR(50) NOT NULL, ";
@@ -445,11 +445,11 @@ class Database {
         // $sql .= "FOREIGN KEY (sudCatId) REFERENCES ?(?) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'categories');
+        return $this->execute_create_query($sql, 'categories');
     }
 
     // MEDIA CONTENT
-    public function createMediaContentTable() {
+    public function create_media_content_table() {
         $sql = "CREATE TABLE IF NOT EXISTS media_content ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "name VARCHAR(150) NOT NULL, ";
@@ -461,12 +461,12 @@ class Database {
         $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'media_content');
+        return $this->execute_create_query($sql, 'media_content');
     }
     
 
     // COMMENTS
-    public function createCommentsTable() {
+    public function create_comments_table() {
         $sql = "CREATE TABLE IF NOT EXISTS comments ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "title VARCHAR(50) NOT NULL, ";
@@ -479,11 +479,11 @@ class Database {
         $sql .= "postId INT(10) UNSIGNED NOT NULL )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'comments');
+        return $this->execute_create_query($sql, 'comments');
     }
 
     // TODO
-    public function createTodoTable() {
+    public function create_todo_table() {
         $sql = "CREATE TABLE IF NOT EXISTS todo ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
@@ -491,11 +491,11 @@ class Database {
         $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'todo');
+        return $this->execute_create_query($sql, 'todo');
     }
 
     // MAIN SETTINGS
-    public function createMainSettingsTable() {
+    public function create_main_settings_table() {
         $sql = "CREATE TABLE IF NOT EXISTS main_settings ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "changedDate DATE, ";
@@ -506,22 +506,22 @@ class Database {
         $sql .= "mainSettings JSON NOT NULL )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'main_settings');
+        return $this->execute_create_query($sql, 'main_settings');
     }
 
     // PERSONAL SETTINGS
-    public function createPersonalSettingsTable() {
+    public function create_personal_settings_table() {
         $sql = "CREATE TABLE IF NOT EXISTS personal_settings ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "changedDate DATE, ";
         $sql .= "personalSettings JSON NOT NULL )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'personal_settings');
+        return $this->execute_create_query($sql, 'personal_settings');
     }
 
     // STYLE SETTINGS
-    public function createStyleSettingsTable() {
+    public function create_style_settings_table() {
         $sql = "CREATE TABLE IF NOT EXISTS style_settings ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
@@ -530,11 +530,11 @@ class Database {
         $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'style_settings');
+        return $this->execute_create_query($sql, 'style_settings');
     }
 
     // CONTENT
-    public function createContentTable() {
+    public function create_content_table() {
         $sql = "CREATE TABLE IF NOT EXISTS content ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "createdBy INT(10) UNSIGNED NOT NULL, ";
@@ -543,11 +543,11 @@ class Database {
         $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'content');
+        return $this->execute_create_query($sql, 'content');
     }
 
     // BOOKMARKS
-    public function createBookmarksTable() {
+    public function create_bookmarks_table() {
         $sql = "CREATE TABLE IF NOT EXISTS bookmarks ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
@@ -556,24 +556,24 @@ class Database {
         $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'bookmarks');
+        return $this->execute_create_query($sql, 'bookmarks');
     }
 
     // PERMISSIONS
-    public function createPermissionsTable() {
+    public function create_permissions_table() {
         $sql = "CREATE TABLE IF NOT EXISTS permissions ( ";
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "name VARCHAR(50), ";
         $sql .= "description VARCHAR(255) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'permissions');
+        return $this->execute_create_query($sql, 'permissions');
     }
 
     // ------ Lookup Table Creation ----------
 
     // POSTS TO MEDIA CONTENT
-    public function createPostsToMediaContentTable() {
+    public function create_posts_to_media_content() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_media_content ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
@@ -581,11 +581,11 @@ class Database {
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'posts_to_media_content');
+        return $this->execute_create_query($sql, 'posts_to_media_content');
     }
 
     // POSTS TO TAGS
-    public function createPostsToTagsTable() {
+    public function create_posts_to_tags_table() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_tags ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
@@ -593,11 +593,11 @@ class Database {
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'posts_to_tags');
+        return $this->execute_create_query($sql, 'posts_to_tags');
     }
 
     // POSTS TO LABELS
-    public function createPostsToLabelsTable() {
+    public function create_posts_to_labels_table() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_labels ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
@@ -605,11 +605,11 @@ class Database {
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'posts_to_labels');
+        return $this->execute_create_query($sql, 'posts_to_labels');
     }
 
     // POSTS TO CATEGORIES
-    public function createPostsToCategoriesTable() {
+    public function create_posts_to_categories_table() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_categories ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
@@ -617,11 +617,11 @@ class Database {
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'posts_to_categories');
+        return $this->execute_create_query($sql, 'posts_to_categories');
     }
 
     // MEDIA CONTENT TO TAGS
-    public function createMediaContentToTagsTable() {
+    public function create_media_content_to_tags_table() {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_tags ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
@@ -629,11 +629,11 @@ class Database {
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'media_content_to_tags');
+        return $this->execute_create_query($sql, 'media_content_to_tags');
     }
 
     // MEDIA CONTENT TO LABELS
-    public function createMediaContentToLabelsTable() {
+    public function create_media_content_to_labels_table() {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_labels ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
@@ -641,11 +641,11 @@ class Database {
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'media_content_to_labels');
+        return $this->execute_create_query($sql, 'media_content_to_labels');
     }
 
     // MEDIA CONTENT TO CATEGORIES
-    public function createMediaContentToCategoriesTable() {
+    public function create_media_content_to_categories_table() {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_categories ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
@@ -653,11 +653,11 @@ class Database {
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'media_content_to_categories');
+        return $this->execute_create_query($sql, 'media_content_to_categories');
     }
 
     // CONTENT TO TAGS
-    public function createContentToTagsTable() {
+    public function create_content_to_tags_table() {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_tags ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
@@ -665,11 +665,11 @@ class Database {
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'content_to_tags');
+        return $this->execute_create_query($sql, 'content_to_tags');
     }
 
     // CONTENT TO LABELS
-    public function createContentToLabelsTable() {
+    public function create_content_to_labels_table() {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_labels ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
@@ -677,11 +677,11 @@ class Database {
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'content_to_labels');
+        return $this->execute_create_query($sql, 'content_to_labels');
     }
 
     // CONTENT TO CATEGORIES
-    public function createContentToCategoriesTable() {
+    public function create_content_to_categories_table() {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_categories ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
@@ -689,11 +689,11 @@ class Database {
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'content_to_categories');
+        return $this->execute_create_query($sql, 'content_to_categories');
     }
 
     // USER TO PERMISSIONS
-    public function createUserToPermissionsTable() {
+    public function create_user_to_permissions_table() {
         $sql = "CREATE TABLE IF NOT EXISTS users_to_permissions ( ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "permissionId INT(10) UNSIGNED NOT NULL, ";
@@ -701,13 +701,13 @@ class Database {
         $sql .= "FOREIGN KEY (permissionId) REFERENCES permissions(id) )";
 
         // Execute the query then return the result
-        return $this->executeCreateQuery($sql, 'users_to_permissions');
+        return $this->execute_create_query($sql, 'users_to_permissions');
     }
 
     // ===================================================== TABLE DROP FUNCTIONS ==================================================================
-    public function dropTable($tablename) {
+    public function drop_table($tablename) {
         // Remove foreign key checks in preparation to drop the tables
-        $this->toggleForeignKeyChecks(FALSE);
+        $this->toggle_foreign_key_checks(FALSE);
 
         if ($tablename === 'all') {
             $listOfTables = $this->show_all_tables();
@@ -727,7 +727,7 @@ class Database {
 
         if ($this->mysqli->query($sql) === TRUE) {
             // Turn on foreign key checks after dropping the tables
-            $this->toggleForeignKeyChecks(TRUE);
+            $this->toggle_foreign_key_checks(TRUE);
 
             return "Table(s) " . $tablename . " Dropped Successfully!";
 
@@ -739,7 +739,7 @@ class Database {
 
     // ===================================================== TABLE SELECT FUNCTIONS ==================================================================
 
-    public function selectFromTable($tablename, $numRecords = 10) {
+    public function select_from_table($tablename, $numRecords = 10) {
 
         $sql = "SELECT * FROM " . $tablename . " LIMIT " . $numRecords;
 
@@ -762,7 +762,7 @@ class Database {
 
     // ===================================================== TABLE CLEAR DATA FUNCTIONS ==================================================================
 
-    public function truncateTable($tablename) {
+    public function truncate_table($tablename) {
         
         $messages = [];
 
@@ -770,13 +770,13 @@ class Database {
             $tables = $this->show_all_tables();
             foreach($tables as $table) {
                 $sql = "TRUNCATE TABLE " . $table;
-                array_push($messages, $this->executeTruncateQuery($sql, $table));
+                array_push($messages, $this->execute_truncate_query($sql, $table));
             }
 
             return $messages;
         } else {
             $sql = "TRUNCATE TABLE " . $tablename;
-            return $this->executeTruncateQuery($sql, $tablename);
+            return $this->execute_truncate_query($sql, $tablename);
         }
 
     }
@@ -784,25 +784,25 @@ class Database {
     // ===================================================== TABLE INSERT FUNCTIONS ==================================================================
     
     // INSERT INTO ALL TABLES
-    public function insertIntoAllTables($numRecords = 10, $maxId = 3) {
+    public function insert_into_all_tables($numRecords = 10, $maxId = 3) {
         $results = [];
 
-        array_push($results, $this->insertIntoPosts($numRecords));
-        array_push($results, $this->insertIntoBookmarks($numRecords));
-        array_push($results, $this->insertIntoCategories($numRecords));
-        array_push($results, $this->insertIntoComments($numRecords));
-        array_push($results, $this->insertIntoContent($numRecords));
-        array_push($results, $this->insertIntoLabelsOrTags('labels', $numRecords));
-        array_push($results, $this->insertIntoLabelsOrTags('tags', $numRecords));
-        array_push($results, $this->insertIntoMediaContent($numRecords));
-        array_push($results, $this->insertIntoUsers($numRecords));
-        array_push($results, $this->insertIntoPermissions($numRecords));
+        array_push($results, $this->insert_into_posts($numRecords));
+        array_push($results, $this->insert_into_bookmarks($numRecords));
+        array_push($results, $this->insert_into_categories($numRecords));
+        array_push($results, $this->insert_into_comments($numRecords));
+        array_push($results, $this->insert_into_content($numRecords));
+        array_push($results, $this->insert_into_labels_or_tags('labels', $numRecords));
+        array_push($results, $this->insert_into_labels_or_tags('tags', $numRecords));
+        array_push($results, $this->insert_into_media_content($numRecords));
+        array_push($results, $this->insert_into_users($numRecords));
+        array_push($results, $this->insert_into_permissions($numRecords));
 
         // Use the lookupTablesArray to go through and create the connections by inserting into each lookup table
         $lookupTablesArray = ['posts_to_media_content', 'posts_to_tags', 'posts_to_labels', 'posts_to_categories', 'media_content_to_tags', 'media_content_to_labels', 'media_content_to_categories', 'content_to_tags', 'content_to_labels', 'content_to_categories', 'users_to_permissions'];
 
         foreach($lookupTablesArray as $table) {
-            array_push($results, $this->createLookupTableConnections($table));
+            array_push($results, $this->create_lookup_table_connections($table));
         }
 
         foreach ($results as $result) {
@@ -818,7 +818,7 @@ class Database {
     }
 
     // Insert into posts
-    public function insertIntoPosts($numRecords = 10, $maxId = 3) {
+    public function insert_into_posts($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO posts ( ";
         $sql .= "author, authorName, comments, content, createdBy, ";
@@ -853,11 +853,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'posts', $numRecords);
+        return  $this->execute_insert_query($sql, 'posts', $numRecords);
     }
 
     // INSERT INTO bookmarks
-    public function insertIntoBookmarks($numRecords = 10, $maxId = 3) {
+    public function insert_into_bookmarks($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO bookmarks ( ";
         $sql .= "userId, url, name ) ";
@@ -881,11 +881,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'bookmarks', $numRecords);
+        return  $this->execute_insert_query($sql, 'bookmarks', $numRecords);
     }
 
     // INSERT INTO categories
-    public function insertIntoCategories($numRecords = 10, $maxId = 3) {
+    public function insert_into_categories($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO categories ( ";
         $sql .= "title, subCatId, note ) ";
@@ -909,11 +909,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'categories', $numRecords);
+        return  $this->execute_insert_query($sql, 'categories', $numRecords);
     }
 
     // INSERT INTO comments
-    public function insertIntoComments($numRecords = 10, $maxId = 3) {
+    public function insert_into_comments($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO comments ( ";
         $sql .= "title, createdDate, comment, status, name, createdBy, approvedBy, postId ) ";
@@ -947,11 +947,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'comments', $numRecords);
+        return  $this->execute_insert_query($sql, 'comments', $numRecords);
     }
 
     // INSERT INTO content
-    public function insertIntoContent($numRecords = 10, $maxId = 3) {
+    public function insert_into_content($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO content ( ";
         $sql .= " createdBy, changedDate, content ) ";
@@ -975,11 +975,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'content', $numRecords);
+        return  $this->execute_insert_query($sql, 'content', $numRecords);
     }
 
     // INSERT INTO labels OR tags
-    public function insertIntoLabelsOrTags($tablename= 'labels', $numRecords = 10, $maxId = 3) { // $tablename can be 'labels or tags'
+    public function insert_into_labels_or_tags($tablename= 'labels', $numRecords = 10, $maxId = 3) { // $tablename can be 'labels or tags'
 
         $sql = "INSERT INTO " . $tablename . " ( ";
         $sql .= "title, note ) ";
@@ -1001,11 +1001,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, $tablename, $numRecords);
+        return  $this->execute_insert_query($sql, $tablename, $numRecords);
     }
 
     // INSERT INTO media_content
-    public function insertIntoMediaContent($numRecords = 10, $maxId = 3) {
+    public function insert_into_media_content($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO media_content ( ";
         $sql .= " name, type, note, alt, createdBy, createdDate ) ";
@@ -1036,11 +1036,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'media_content', $numRecords);
+        return  $this->execute_insert_query($sql, 'media_content', $numRecords);
     }
 
     // INSERT INTO users
-    public function insertIntoUsers($numRecords = 10, $maxId = 3) {
+    public function insert_into_users($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO users ( ";
         $sql .= " username, password, firstName, lastName, address, phoneNumber, emailAddress, title, mediaContent, adminNote, note, showOnWeb, createdBy ) ";
@@ -1085,11 +1085,11 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'users', $numRecords);
+        return  $this->execute_insert_query($sql, 'users', $numRecords);
     }
 
     // INSERT INTO permissions
-    public function insertIntoPermissions($numRecords = 10, $maxId = 3) {
+    public function insert_into_permissions($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO permissions ( ";
         $sql .= " name, description ) ";
@@ -1112,14 +1112,14 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, 'permissions', $numRecords);
+        return  $this->execute_insert_query($sql, 'permissions', $numRecords);
     }
 
     // INSERT INTO any lookuptable. Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
     // Connections are between one table and another. eg: 1 to 2, 1 to 1, 1 to 3, are all one connection because they come from the same table
     // Relationships are between 1 id and another. eg 1 to 2, 1 to 1, 1 to 3 are each a separate relationship. 3 relationships are listed
     // One connection can contain one or more relationships
-    public function insertIntoLookupTable($args = []) {
+    public function insert_into_lookup_table($args = []) {
         $connections = NULL;
         $relationships = NULL;
 
@@ -1165,7 +1165,7 @@ class Database {
         }
 
         // Execute the query
-        return  $this->executeInsertQuery($sql, $args['tablename']);
+        return  $this->execute_insert_query($sql, $args['tablename']);
     }
 }
     

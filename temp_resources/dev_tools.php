@@ -8,100 +8,100 @@ $successMessage = false;
     // Check for any GET requests performed by clicking on the links
     if (isset($_GET['createtable'])) {
         if ($_GET['createtable'] == 'all') {
-            $successMessage = $Database->createAllTables();
+            $successMessage = $Database->create_all_tables();
 
         // -------- Base Table Creation --------
         } elseif ($_GET['createtable'] == 'posts') {
-            $successMessage = $Database->createPostsTable();
+            $successMessage = $Database->create_posts_table();
         } elseif ($_GET['createtable'] == 'tags') {
-            $successMessage = $Database->createTagsTable();
+            $successMessage = $Database->create_tags_table();
         } elseif ($_GET['createtable'] == 'labels') {
-            $successMessage = $Database->createLabelsTable();
+            $successMessage = $Database->create_labels_table();
         } elseif ($_GET['createtable'] == 'users') {
-            $successMessage = $Database->createUsersTable();
+            $successMessage = $Database->create_users_table();
         } elseif ($_GET['createtable'] == 'categories') {
-            $successMessage = $Database->createCategoriesTable();
+            $successMessage = $Database->create_categories_table();
         } elseif ($_GET['createtable'] == 'media_content') {
-            $successMessage = $Database->createMediaContentTable();
+            $successMessage = $Database->create_media_content_table();
         } elseif ($_GET['createtable'] == 'comments') {
-            $successMessage = $Database->createCommentsTable();
+            $successMessage = $Database->create_comments_table();
         } elseif ($_GET['createtable'] == 'todo') {
-            $successMessage = $Database->createTodoTable();
+            $successMessage = $Database->create_todo_table();
         } elseif ($_GET['createtable'] == 'main_settings') {
-            $successMessage = $Database->createMainSettingsTable();
+            $successMessage = $Database->create_main_settings_table();
         } elseif ($_GET['createtable'] == 'personal_settings') {
-            $successMessage = $Database->createPersonalSettingsTable();
+            $successMessage = $Database->create_personal_settings_table();
         } elseif ($_GET['createtable'] == 'style_settings') {
-            $successMessage = $Database->createStyleSettingsTable();
+            $successMessage = $Database->create_style_settings_table();
         } elseif ($_GET['createtable'] == 'content') {
-            $successMessage = $Database->createContentTable();
+            $successMessage = $Database->create_content_table();
         } elseif ($_GET['createtable'] == 'bookmarks') {
-            $successMessage = $Database->createBookmarksTable();
+            $successMessage = $Database->create_bookmarks_table();
         } elseif ($_GET['createtable'] == 'permissions') {
-            $successMessage = $Database->createPermissionsTable();
+            $successMessage = $Database->create_permissions_table();
 
         // ------ Lookup Table Creation ---------
         } elseif ($_GET['createtable'] == 'posts_to_media_content') {
-            $successMessage = $Database->createPostsToMediaContentTable();
+            $successMessage = $Database->create_posts_to_media_content_table();
         } elseif ($_GET['createtable'] == 'posts_to_tags') {
-            $successMessage = $Database->createPostsToTagsTable();
+            $successMessage = $Database->create_posts_to_tags_table();
         } elseif ($_GET['createtable'] == 'posts_to_labels') {
-            $successMessage = $Database->createPostsToLabelsTable();
+            $successMessage = $Database->create_posts_to_labels_table();
         } elseif ($_GET['createtable'] == 'posts_to_categories') {
-            $successMessage = $Database->createPostsToCategoriesTable();
+            $successMessage = $Database->create_posts_to_categories_table();
         } elseif ($_GET['createtable'] == 'media_content_to_tags') {
-            $successMessage = $Database->createMediaContentToTagsTable();
+            $successMessage = $Database->create_media_content_to_tags_table();
         } elseif ($_GET['createtable'] == 'media_content_to_categories') {
-            $successMessage = $Database->createMediaContentToCategoriesTable();
+            $successMessage = $Database->create_media_content_to_categories_table();
         } elseif ($_GET['createtable'] == 'media_content_to_labels') {
-            $successMessage = $Database->createMediaContentToLabelsTable();
+            $successMessage = $Database->create_media_content_to_labels_table();
         } elseif ($_GET['createtable'] == 'content_to_tags') {
-            $successMessage = $Database->createContentToTagsTable();
+            $successMessage = $Database->create_content_to_tags_table();
         } elseif ($_GET['createtable'] == 'content_to_labels') {
-            $successMessage = $Database->createContentToLabelsTable();
+            $successMessage = $Database->create_content_to_labels_table();
         } elseif ($_GET['createtable'] == 'content_to_categories') {
-            $successMessage = $Database->createContentToCategoriesTable();
+            $successMessage = $Database->create_content_to_categories_table();
         } elseif ($_GET['createtable'] == 'user_to_permissions') {
-            $successMessage = $Database->createUserToPermissionsTable();
+            $successMessage = $Database->create_user_to_permissions_table();
         }
         
         // Inserting into Tables
     } elseif (isset($_GET['inserttable'])) {
         if ($_GET['inserttable'] == 'all') {
            // TODO: Add the query to insert into all tables
-           $successMessage = $Database->insertIntoAllTables();
+           $successMessage = $Database->insert_into_all_tables();
 
            // ------- Base Table Inserts --------------
         } elseif ($_GET['inserttable'] == 'posts') {
-            $successMessage = $Database->insertIntoPosts();
+            $successMessage = $Database->insert_into_posts();
         } elseif ($_GET['inserttable'] == 'tags') {
-            $successMessage = $Database->insertIntoLabelsOrTags('tags');
+            $successMessage = $Database->insert_into_labels_or_tags('tags');
         } elseif ($_GET['inserttable'] == 'labels') {
-            $successMessage = $Database->insertIntoLabelsOrTags('labels');
+            $successMessage = $Database->insert_into_labels_or_tags('labels');
         } elseif ($_GET['inserttable'] == 'categories') {
-            $successMessage = $Database->insertIntoCategories();
+            $successMessage = $Database->insert_into_categories();
         } elseif ($_GET['inserttable'] == 'media_content') {
-            $successMessage = $Database->insertIntoMediaContent();
+            $successMessage = $Database->insert_into_media_content();
         } elseif ($_GET['inserttable'] == 'comments') {
-            $successMessage = $Database->insertIntoComments();
+            $successMessage = $Database->insert_into_comments();
         } elseif ($_GET['inserttable'] == 'content') {
-            $successMessage = $Database->insertIntoContent();
+            $successMessage = $Database->insert_into_content();
         } elseif ($_GET['inserttable'] == 'bookmarks') {
-            $successMessage = $Database->insertIntoBookmarks();
+            $successMessage = $Database->insert_into_bookmarks();
         } elseif ($_GET['inserttable'] == 'users') {
-            $successMessage = $Database->insertIntoUsers();
+            $successMessage = $Database->insert_into_users();
         } elseif ($_GET['inserttable'] == 'permissions') {
-            $successMessage = $Database->insertIntoPermissions();
+            $successMessage = $Database->insert_into_permissions();
 
         // ---------- Lookup Table Inserts -----------
         // Expected args: 'tablename', 'field1', 'field2', 'table1_ids', 'table2_ids', 'connections', 'relationships'
         } elseif ($_GET['inserttable'] == 'posts_to_media_content') {
-            $successMessage = $Database->insertIntoLookupTable([
+            $successMessage = $Database->insert_into_lookup_table([
                 'tablename' => $_GET['inserttable'],
                 'field1' => 'postId',
                 'field2' => 'mediaContentId',
-                'table1_ids' => $Database->getTableIds('posts'),
-                'table2_ids' => $Database->getTableIds('media_content'),
+                'table1_ids' => $Database->get_table_ids('posts'),
+                'table2_ids' => $Database->get_table_ids('media_content'),
                 'connections' => 3,
                 'relationships' => 4
             ]);
@@ -110,25 +110,25 @@ $successMessage = false;
         // Dropping Tables
     } elseif (isset($_GET['droptable'])) {
         if ($_GET['droptable'] == 'all') {
-            $successMessage = $Database->dropTable('all');
+            $successMessage = $Database->drop_table('all');
         } else {
             $tableToDrop = $_GET['droptable'];
-            $successMessage = $Database->dropTable($tableToDrop);
+            $successMessage = $Database->drop_table($tableToDrop);
         }
 
         // Truncating Tables
     } elseif (isset($_GET['truncatetable'])) {
         if ($_GET['truncatetable'] == 'all') {
-            $successMessage = $Database->truncateTable('all');
+            $successMessage = $Database->truncate_table('all');
         } else {
             $tableTruncate = $_GET['truncatetable'];
-            $successMessage = $Database->truncateTable($tableTruncate);
+            $successMessage = $Database->truncate_table($tableTruncate);
         }
 
         // Selecting from Tables
     } elseif (isset($_GET['selecttable'])) {
         $tableSelect = $_GET['selecttable'];
-        $successMessage = $Database->selectFromTable($tableSelect);
+        $successMessage = $Database->select_from_table($tableSelect);
     }
 
     // Get the latest selecion data
