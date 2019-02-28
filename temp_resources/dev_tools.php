@@ -3,7 +3,12 @@
     require_once("dev_tools_database.class.php");
     $Database = new Database(["servername"=>"127.0.0.1", "username"=>'devteam', "password"=>"devPass1!", "dbname"=>"developmentdb"]);
 
-$successMessage = false;
+    // Use these to set the number of records to create
+    $numSelectRecords = 50;
+    $connections = 3;
+    $relationships = 4;
+
+    $successMessage = false;
 
     // Check for any GET requests performed by clicking on the links
     if (isset($_GET['createtable'])) {
@@ -62,13 +67,12 @@ $successMessage = false;
         } elseif ($_GET['createtable'] == 'content_to_categories') {
             $successMessage = $Database->create_content_to_categories_table();
         } elseif ($_GET['createtable'] == 'user_to_permissions') {
-            $successMessage = $Database->create_user_to_permissions_table();
+            $successMessage = $Database->create_users_to_permissions_table();
         }
         
         // Inserting into Tables
     } elseif (isset($_GET['inserttable'])) {
         if ($_GET['inserttable'] == 'all') {
-           // TODO: Add the query to insert into all tables
            $successMessage = $Database->insert_into_all_tables();
 
            // ------- Base Table Inserts --------------
@@ -102,8 +106,108 @@ $successMessage = false;
                 'field2' => 'mediaContentId',
                 'table1_ids' => $Database->get_table_ids('posts'),
                 'table2_ids' => $Database->get_table_ids('media_content'),
-                'connections' => 3,
-                'relationships' => 4
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'posts_to_tags') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'postId',
+                'field2' => 'tagId',
+                'table1_ids' => $Database->get_table_ids('posts'),
+                'table2_ids' => $Database->get_table_ids('tags'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'posts_to_labels') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'postId',
+                'field2' => 'labelId',
+                'table1_ids' => $Database->get_table_ids('posts'),
+                'table2_ids' => $Database->get_table_ids('labels'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'posts_to_categories') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'postId',
+                'field2' => 'categoryId',
+                'table1_ids' => $Database->get_table_ids('posts'),
+                'table2_ids' => $Database->get_table_ids('categories'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'media_content_to_tags') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'mediaContentId',
+                'field2' => 'tagId',
+                'table1_ids' => $Database->get_table_ids('media_content'),
+                'table2_ids' => $Database->get_table_ids('tags'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'media_content_to_categories') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'mediaContentId',
+                'field2' => 'categoryId',
+                'table1_ids' => $Database->get_table_ids('media_content'),
+                'table2_ids' => $Database->get_table_ids('categories'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'media_content_to_labels') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'mediaContentId',
+                'field2' => 'labelId',
+                'table1_ids' => $Database->get_table_ids('media_content'),
+                'table2_ids' => $Database->get_table_ids('labels'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'content_to_tags') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'contentId',
+                'field2' => 'tagId',
+                'table1_ids' => $Database->get_table_ids('content'),
+                'table2_ids' => $Database->get_table_ids('tags'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'content_to_labels') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'contentId',
+                'field2' => 'labelId',
+                'table1_ids' => $Database->get_table_ids('content'),
+                'table2_ids' => $Database->get_table_ids('labels'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'content_to_categories') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'contentId',
+                'field2' => 'categoryId',
+                'table1_ids' => $Database->get_table_ids('content'),
+                'table2_ids' => $Database->get_table_ids('categories'),
+                'connections' => $connections,
+                'relationships' => $relationships
+            ]);
+        } elseif ($_GET['inserttable'] == 'users_to_permissions') {
+            $successMessage = $Database->insert_into_lookup_table([
+                'tablename' => $_GET['inserttable'],
+                'field1' => 'userId',
+                'field2' => 'permissionId',
+                'table1_ids' => $Database->get_table_ids('users'),
+                'table2_ids' => $Database->get_table_ids('permissions'),
+                'connections' => $connections,
+                'relationships' => $relationships
             ]);
         }
 
@@ -128,7 +232,7 @@ $successMessage = false;
         // Selecting from Tables
     } elseif (isset($_GET['selecttable'])) {
         $tableSelect = $_GET['selecttable'];
-        $successMessage = $Database->select_from_table($tableSelect);
+        $successMessage = $Database->select_from_table($tableSelect, $numSelectRecords);
     }
 
     // Get the latest selecion data
@@ -350,9 +454,9 @@ $successMessage = false;
 <a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=media_content_to_categories">Drop</a>
 <a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=media_content_to_categories">Insert</a>
 <h2>User To Permissions Table</h2>
-<a href="dev_tools.php?createtable=user_to_permissions">Create</a>
-<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=user_to_permissions">Drop</a>
-<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=user_to_permissions">Insert</a>
+<a href="dev_tools.php?createtable=users_to_permissions">Create</a>
+<a style="color: darkred; padding-left: 50px;" href="dev_tools.php?droptable=users_to_permissions">Drop</a>
+<a style="color: darkgreen; padding-left: 50px;" href="dev_tools.php?inserttable=users_to_permissions">Insert</a>
 
 
 

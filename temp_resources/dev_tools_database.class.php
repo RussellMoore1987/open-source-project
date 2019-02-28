@@ -127,10 +127,12 @@ class Database {
 
             return "Table " . $tablename . " created successfully!";
         } else {
+
+            array_push($this->errors_array, $tablename . " CREATE ERROR : " . $this->mysqli->error);
+
             // ENABLE Foreign key checks when finished
             $this->toggle_foreign_key_checks(TRUE);
 
-            array_push($this->errors_array, $tablename . " CREATE ERROR : " . $this->mysqli->error);
             return false;
         }
     }
@@ -146,10 +148,12 @@ class Database {
 
             return  $tablename .  " truncated successfully!";
         } else {
+
+            array_push($this->errors_array, $tablename . " TRUNCATE ERROR: " . $this->mysqli->error);
+
             // ENABLE Foreign key checks when finished
             $this->toggle_foreign_key_checks(TRUE);
 
-            array_push($this->errors_array, $tablename . " TRUNCATE ERROR: " . $this->mysqli->error);
             return false;
         }
     }
@@ -160,15 +164,20 @@ class Database {
         $this->toggle_foreign_key_checks(FALSE);
 
         if ($this->mysqli->query($query) === TRUE) {
+
+            $message = $this->mysqli->affected_rows . " out of " . $numRecords . " rows inserted/updated in " . $tablename .  " successfully!";
+
             // ENABLE Foreign key checks when finished
             $this->toggle_foreign_key_checks(TRUE);
 
-            return $numRecords . " rows inserted into " . $tablename .  " successfully!";
+            return $message;
         } else {
-            // ENABLE Foreign key checks when finished
-            $this->toggle_foreign_key_checks(TRUE);
 
             array_push($this->errors_array, $tablename . " INSERT ERROR: " . $this->mysqli->error);
+
+            // ENABLE Foreign key checks when finished
+            $this->toggle_foreign_key_checks(TRUE);
+
             return false;
         }
     }
@@ -343,7 +352,7 @@ class Database {
         array_push($results, $this->create_permissions_table());
 
         // Lookup Tables
-        array_push($results, $this->create_posts_to_media_content());
+        array_push($results, $this->create_posts_to_media_content_table());
         array_push($results, $this->create_posts_to_tags_table());
         array_push($results, $this->create_posts_to_labels_table());
         array_push($results, $this->create_posts_to_categories_table());
@@ -353,7 +362,7 @@ class Database {
         array_push($results, $this->create_content_to_tags_table());
         array_push($results, $this->create_content_to_labels_table());
         array_push($results, $this->create_content_to_categories_table());
-        array_push($results, $this->create_user_to_permissions_table());
+        array_push($results, $this->create_users_to_permsissions_table());
 
         foreach ($results as $result) {
             if ($result === false) {
@@ -539,7 +548,7 @@ class Database {
         $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
         $sql .= "createdBy INT(10) UNSIGNED NOT NULL, ";
         $sql .= "changedDate DATE, ";
-        $sql .= "content JSON NOT NULL, ";
+        $sql .= "content JSON, ";
         $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
 
         // Execute the query then return the result
@@ -573,10 +582,11 @@ class Database {
     // ------ Lookup Table Creation ----------
 
     // POSTS TO MEDIA CONTENT
-    public function create_posts_to_media_content() {
+    public function create_posts_to_media_content_table() {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_media_content ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (postId, mediaContentId), ";
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id) )";
 
@@ -589,6 +599,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_tags ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (postId, tagId), ";
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
@@ -601,6 +612,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_labels ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (postId, labelId), ";
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
@@ -613,6 +625,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS posts_to_categories ( ";
         $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (postId, categoryId), ";
         $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
@@ -625,6 +638,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_tags ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (mediaContentId, tagId), ";
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
@@ -637,6 +651,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_labels ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (mediaContentId, labelId), ";
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
@@ -649,6 +664,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS media_content_to_categories ( ";
         $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (mediaContentId, categoryId), ";
         $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
@@ -661,6 +677,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_tags ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (contentId, tagId), ";
         $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
         $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
 
@@ -673,6 +690,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_labels ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (contentId, labelId), ";
         $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
         $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
 
@@ -685,6 +703,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS content_to_categories ( ";
         $sql .= "contentId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (contentId, categoryId), ";
         $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
         $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
 
@@ -693,10 +712,11 @@ class Database {
     }
 
     // USER TO PERMISSIONS
-    public function create_user_to_permissions_table() {
+    public function create_users_to_permsissions_table() {
         $sql = "CREATE TABLE IF NOT EXISTS users_to_permissions ( ";
         $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
         $sql .= "permissionId INT(10) UNSIGNED NOT NULL, ";
+        $sql .= "PRIMARY KEY (userId, permissionId), ";
         $sql .= "FOREIGN KEY (userId) REFERENCES users(id), ";
         $sql .= "FOREIGN KEY (permissionId) REFERENCES permissions(id) )";
 
@@ -836,7 +856,7 @@ class Database {
             $createdDate = $this->Faker->dateTimeThisYear($max = 'now')->format('Y-m-d');
             $postDate = $this->Faker->dateTimeThisYear($max = 'now')->format('Y-m-d');
             $status = $this->Faker->numberBetween(0, 1);
-            $title = $this->escape($this->Faker->sentence(rand(1, 5)));
+            $title = $this->escape($this->Faker->word());
 
 
             $sql .= "( " . $author . ", ";
@@ -954,19 +974,17 @@ class Database {
     public function insert_into_content($numRecords = 10, $maxId = 3) {
 
         $sql = "INSERT INTO content ( ";
-        $sql .= " createdBy, changedDate, content ) ";
+        $sql .= " createdBy, changedDate ) ";
         $sql .= "VALUES ";
 
         // Populate the dynamic data into the query
         for ($i = 0; $i < $numRecords; $i++) {
 
             $changedDate = $this->Faker->dateTime($max = 'now')->format('Y-m-d');
-            $content = "{}";
             $createdBy = $this->Faker->numberBetween(1, $maxId);
 
             $sql .= "( " . $createdBy . ", ";
-            $sql .= "'" . $changedDate . "', ";
-            $sql .= $content . " )";
+            $sql .= "'" . $changedDate . "' )";
 
             // If we are not on the last iteration then add a comma for the next statement to be inserted
             if ($i != $numRecords - 1) {
@@ -1122,6 +1140,23 @@ class Database {
     public function insert_into_lookup_table($args = []) {
         $connections = NULL;
         $relationships = NULL;
+        $errorMessage = FALSE;
+
+        // Check if our table ids are defined and contain data
+        if (empty($args['table1_ids'])) {
+            array_push($this->errors_array, "No IDs in Table 1!");
+            $errorMessage = TRUE;
+        } 
+        
+        if (empty($args['table2_ids'])) {
+            array_push($this->errors_array, "No IDs in Table 2!");
+            $errorMessage = TRUE;
+        }
+
+        // Return the error message if we have one and do not continue the function
+        if ($errorMessage) {
+            return FALSE;
+        }
 
         // Sort the IDs initially in ascending order
         sort($args['table1_ids']);
@@ -1141,7 +1176,7 @@ class Database {
             $relationships = $args['relationships'];
         }
 
-
+        // Using the ignore statment ot ignore inserting
         $sql = "INSERT INTO " . $args['tablename'] . " ( ";
         $sql .= $args['field1'] . ", " . $args['field2'] . ") ";
         $sql .= "VALUES ";
@@ -1164,8 +1199,11 @@ class Database {
             }
         }
 
+        // Tag on the ON DUPLICATE KEY to the end of our query
+        $sql .= " ON DUPLICATE KEY UPDATE " .  $args['field1'] . " = " . $args['field1'];
+
         // Execute the query
-        return  $this->execute_insert_query($sql, $args['tablename']);
+        return  $this->execute_insert_query($sql, $args['tablename'], ($connections * $relationships));
     }
 }
     
