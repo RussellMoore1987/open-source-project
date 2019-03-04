@@ -2,9 +2,15 @@
     class Post extends DatabaseObject {
         
         // @ class database information start
+            // table name
             static protected $tableName = "posts";
-            static protected $columns = ['id', 'author', 'authorName', 'catIds', 'comments', 'content', 'createdBy', 'createdDate', 'labelIds', 'postDate', 'status', 'tagIds', 'title'];
-            // db validation, validation_options located at: root/private/reference_information.php
+            // db columns, if need to exclude particular column excluded in the database object attributes()
+            static protected $columns = ['id', 'author', 'authorName', 'catIds', 'comments', 'content', 'createdBy', 'createdDate', 'imageName', 'labelIds', 'postDate', 'status', 'tagIds', 'title'];
+            // name specific properties you wish to included in the API
+            static protected $apiProperties = ['fullDate', 'shortDate', 'imagePath'];
+            // * collection_type_reference, located at: root/private/reference_information.php
+            static protected $collectionTypeReference = 1;
+            // db validation, // * validation_options located at: root/private/reference_information.php
             static protected $validation_columns = [
                 'id'=>[
                     'name'=>'Post id',
@@ -60,6 +66,11 @@
                     'type' => 'str', // type of string
                     'exact' => 10, // string length
                     'date' => 'yes',
+                ],
+                'imageName' => [
+                    'name'=>'imageName',
+                    'type' => 'str', // type of string
+                    'max' => 50 // string length
                 ], 
                 'labelIds' => [
                     'name'=>'LabelIds',
@@ -98,94 +109,106 @@
                 $sql = "SELECT id, title, postDate, comments, authorName FROM posts WHERE status = 1 ORDER BY postDate DESC LIMIT 4";
                 return self::find_by_sql($sql);    
             }
+
+            // # for *multiple posts*, if you need there tags, categories, labels and featured image in a fast manner use the post references info as your go to methods
+                // methods
+                    // get_obj_categories_tags_labels('categories') in DatabaseObject class for categories, tags, labels
+                    // get_image_path('small') in Post class for getting path to referenced post image name (imageName)
+                        // if you want all images for a post use get_post_images() in Post class
+
             
-            // get extended info
-            public function get_extended_info() {
-                // empty array to hold potential extended information
-                $extendedInfo_array = [];
-                // get all images
-                $extendedInfo_array['images'] = $this->get_post_images();
-                // get tags
-                $extendedInfo_array['tags'] = $this->get_post_tags();
-                // get labels
-                $extendedInfo_array['labels'] = $this->get_post_labels();
-                // get categories
-                $extendedInfo_array['categories'] = $this->get_post_categories();
-                return $extendedInfo_array;    
-            }
-            
-            // get image
-            public function get_post_image() {
-                $sql = "SELECT mc.alt, mc.name ";
-                $sql .= "FROM media_content AS mc ";
-                $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
-                $sql .= "ON ptmc.mediaContentId = mc.id";
-                $sql .= "WHERE ptmc.postId = '" . self::db_escape($this->id) . "' ";
-                $sql .= "AND mc.sort = 1 ";
-                $sql .= "LIMIT 1 ";
-                return MediaContent::find_by_sql($sql);    
-            }
+            // # for a *single post* query's start
+                // get all extended info
+                public function get_extended_info() {
+                    // empty array to hold potential extended information
+                    $extendedInfo_array = [];
+                    // get all images
+                    $extendedInfo_array['images'] = $this->get_post_images();
+                    // get tags
+                    $extendedInfo_array['tags'] = $this->get_post_tags();
+                    // get labels
+                    $extendedInfo_array['labels'] = $this->get_post_labels();
+                    // get categories
+                    $extendedInfo_array['categories'] = $this->get_post_categories();
+                    return $extendedInfo_array;    
+                }
+                
+                // get image, main queries for editing
+                public function get_post_image() {
+                    $sql = "SELECT mc.alt, mc.name ";
+                    $sql .= "FROM media_content AS mc ";
+                    $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
+                    $sql .= "ON ptmc.mediaContentId = mc.id";
+                    $sql .= "WHERE ptmc.postId = '" . self::db_escape($this->id) . "' ";
+                    $sql .= "AND mc.sort = 1 ";
+                    $sql .= "LIMIT 1 ";
+                    return MediaContent::find_by_sql($sql);    
+                }
 
-            // get images
-            public function get_post_images() {
-                $sql = "SELECT mc.alt, mc.name ";
-                $sql .= "FROM media_content AS mc ";
-                $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
-                $sql .= "ON ptmc.mediaContentId = mc.id";
-                $sql .= "WHERE ptmc.postId = '" . self::db_escape($this->id) . "' ";
-                return MediaContent::find_by_sql($sql);    
-            }
+                // get images, main queries for editing
+                public function get_post_images() {
+                    $sql = "SELECT mc.alt, mc.name ";
+                    $sql .= "FROM media_content AS mc ";
+                    $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
+                    $sql .= "ON ptmc.mediaContentId = mc.id";
+                    $sql .= "WHERE ptmc.postId = '" . self::db_escape($this->id) . "' ";
+                    return MediaContent::find_by_sql($sql);    
+                }
 
-            // get tags
-            public function get_post_tags() {
-                $sql = "SELECT t.id, t.title";
-                $sql .= "FROM tags AS t ";
-                $sql .= "INNER JOIN posts_to_tags AS ptt ";
-                $sql .= "ON ptt.tagId = t.id";
-                $sql .= "WHERE ptt.postId = '" . self::db_escape($this->id) . "' ";
-                return Tag::find_by_sql($sql);     
-            }
+                // get tags, main queries for editing
+                public function get_post_tags() {
+                    $sql = "SELECT t.id, t.title";
+                    $sql .= "FROM tags AS t ";
+                    $sql .= "INNER JOIN posts_to_tags AS ptt ";
+                    $sql .= "ON ptt.tagId = t.id";
+                    $sql .= "WHERE ptt.postId = '" . self::db_escape($this->id) . "' ";
+                    return Tag::find_by_sql($sql);     
+                }
 
-            // get labels
-            public function get_post_labels() {
-                $sql = "SELECT l.id, l.title";
-                $sql .= "FROM labels AS l ";
-                $sql .= "INNER JOIN posts_to_labels AS ptl ";
-                $sql .= "ON ptl.labelId = l.id";
-                $sql .= "WHERE ptl.postId = '" . self::db_escape($this->id) . "' ";
-                return Label::find_by_sql($sql);    
-            }
+                // get labels, main queries for editing
+                public function get_post_labels() {
+                    $sql = "SELECT l.id, l.title";
+                    $sql .= "FROM labels AS l ";
+                    $sql .= "INNER JOIN posts_to_labels AS ptl ";
+                    $sql .= "ON ptl.labelId = l.id";
+                    $sql .= "WHERE ptl.postId = '" . self::db_escape($this->id) . "' ";
+                    return Label::find_by_sql($sql);    
+                }
 
-            // get categories
-            public function get_post_categories() {
-                $sql = "SELECT c.id, c.title";
-                $sql .= "FROM categories AS c ";
-                $sql .= "INNER JOIN posts_to_categories AS ptc ";
-                $sql .= "ON ptc.categoryId = c.id";
-                $sql .= "WHERE ptc.postId = '" . self::db_escape($this->id) . "' ";
-                return Category::find_by_sql($sql);    
-            }
+                // get categories, main queries for editing
+                public function get_post_categories() {
+                    $sql = "SELECT c.id, c.title";
+                    $sql .= "FROM categories AS c ";
+                    $sql .= "INNER JOIN posts_to_categories AS ptc ";
+                    $sql .= "ON ptc.categoryId = c.id";
+                    $sql .= "WHERE ptc.postId = '" . self::db_escape($this->id) . "' ";
+                    return Category::find_by_sql($sql);    
+                }
+            // # single post query's end
         // @ class specific queries end
 
         // @ properties start
             // main properties
-            public $id;
-            public $author;
-            public $authorName;
-            public $comments;
-            public $content;
-            public $postDate;
-            public $status;
-            public $title;
+                public $author;
+                public $content;
+                public $postDate;
+                public $status;
+                public $title;
             // secondary properties
-            public $fullDate;
-            public $shortDate;
-            // protected properties, read only, use getters  
-            protected $catIds; // get_catIds()
-            protected $createdBy; // get_createdBy()
-            protected $createdDate; // get_createdDate()
-            protected $labelIds; // get_labelIds()
-            protected $tagIds; // get_tagIds()
+                public $fullDate;
+                public $shortDate;
+                // used primarily for the API, if you just need a image path you can just call get_image_path('small') found bellow
+                public $imagePath_array;
+            // protected properties, read only, use getters, they are sent by functions/methods when needed 
+                protected $authorName; // get_authorName()
+                protected $catIds; // get_catIds()
+                protected $comments; // get_comments()
+                protected $createdBy; // get_createdBy()
+                protected $createdDate; // get_createdDate()
+                protected $id; // get_id()
+                protected $imageName; // get_imageName()
+                protected $labelIds; // get_labelIds()
+                protected $tagIds; // get_tagIds()
         // @ properties end
         
         // @ methods start
@@ -199,10 +222,16 @@
                 $this->comments = $args['comments'] ?? NULL;    
                 $this->content = $args['content'] ?? NULL;     
                 $this->createdBy = $args['createdBy'] ?? NULL;     
-                $this->createdDate = $args['createdDate'] ?? NULL;  
+                $this->createdDate = $args['createdDate'] ?? NULL;
+                $this->imageName = $args['imageName'] ?? NULL;
+                $this->$imagePath_array = [];
+                // check to see if we have an image name
+                if (strlen(Trim($this->imageName)) > 0) {
+                    $this->$imagePath_array = [get_image_path('thumbnail'), get_image_path('small'), get_image_path('medium'), get_image_path('large'), get_image_path('original')];  
+                }
                 $this->labelIds = $args['labelIds'] ?? NULL;
                 // Format dates 
-                if (strlen(trim($args['postDate'])) > 0) {
+                if (isset($args['postDate']) && strlen(trim($args['postDate'])) > 0) {
                     // Turn date to time string
                     $postDateStr = strtotime($args['postDate']);
                     // set date types
@@ -212,7 +241,7 @@
                     // database date
                     $this->postDate = $args['postDate'];
                     // abbreviated date
-                    $this->date = $shortDate;
+                    $this->shortDate = $shortDate;
                     // nicely formatted date
                     $this->fullDate = $postFullDate;
                 } else {
@@ -227,6 +256,16 @@
             }
 
             // methods
+            // get authorName property
+            public function get_authorName() {
+                return $this->authorName;
+            }
+
+            // get comments property
+            public function get_comments() {
+                return $this->comments;
+            }
+
             // get createdDate property
             public function get_createdDate() {
                 return $this->createdDate;
@@ -242,6 +281,16 @@
                 return $this->catIds;
             }
 
+            // get id property
+            public function get_id() {
+                return $this->id;
+            }
+
+            // get imageName property
+            public function get_imageName() {
+                return $this->imageName;
+            }
+
             // get tagIds property
             public function get_tagIds() {
                 return $this->tagIds;
@@ -251,8 +300,17 @@
             public function get_labelIds() {
                 return $this->labelIds;
             }
+
+            // get image path with recorded reference image name
+            public function get_image_path($type = 'small') {
+                // get path // * image_paths located at: root/private/reference_information.php
+                $path = get_image_path($type);
+                // return image path with name
+                return "{$path}/{$this->imageName}";
+            }
         // @ methods end
 
+        // ! not using at the moment
         // @ layouts start
             // latest post layout
             public function layout_latestPosts() {

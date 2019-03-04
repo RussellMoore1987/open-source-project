@@ -65,4 +65,30 @@ function get_key_value_array($obj_array) {
   return $array;
 }
 
+// get image path // * image_paths located at: root/private/reference_information.php
+function get_image_path($type = 'small') {
+  // just in case somebody spelled something wrong coming in make them go through the switch statement
+  switch ($type) {
+      case 'thumbnail': $type = 'thumbnail'; break;
+      case 'medium': $type = 'medium'; break;
+      case 'large': $type = 'large'; break;
+      case 'original': $type = 'original'; break;
+      default: $type = 'small'; break;
+  }
+  return IMAGE_PATH . "/{$type}" ;
+}
+
+// give it an array of objects and it will give you back an array of Json on objects ready for the API
+function obj_array_api_prep(array $obj_array, $type = 'basic') {
+    // set blank array, set below
+    $apiObj_array = [];
+    // loop over array to make new array of api ready info
+    foreach ($obj_array as $odj) {
+       $apiObj_array[] = $odj->get_api_data($type);
+    }   
+    // return data
+    return $apiObj_array;
+}
+
+
 ?>

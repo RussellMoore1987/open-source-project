@@ -1,19 +1,49 @@
 <?php
-    class DatabaseObject {
+
+    // todo:
+        // possibly store images after query
+        // possibly function for extended data
+            // main data
+            // media content
+            // class spesific
+            // update checks to make sure were not overwriting things
+            // push notifications, or check if post is being edited by somebody else ***
+                // what if they leave the page or or close down the browser
+            
+            // possible persistent session data to be stored in MySQL what users are logged in so on and so forth, what is being edited
+                // json object, use reference date to see it needs to be updated
+                // users actively using the system
+                // user profile being edited
+                // posted being edited
+                // content being edited
+                // media content being edited??? 
+
+            // something should always be excluded from the normal update process ex post comments
+
+
+
+
+    abstract class DatabaseObject {
         // database connection
         static protected $database;
+        // database information
         static protected $tableName;
         static protected $columns = [];
+        static protected $apiProperties = [];
+        // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/reference_information.php
+        static protected $collectionTypeReference = 0;
+        // db validation, // * validation_options located at: root/private/reference_information.php
+        static protected $validation_columns = [];
         public $errors = [];
 
-        // @ ----- START OF ACTIVE RECORD CODE -----
-            // possible extended info, list loop method
-            // get all possible tags, $type = collection_type_reference, located at: root/private/reference_information.php
-                static public function get_possible_tags(int $type = 0) {
+        // @ active record code start
+            // possible extended info
+            // get all possible tags, // * collection_type_reference, located at: root/private/reference_information.php
+                static public function get_possible_tags() {
                     // if not set get info
                     if (!isset(static::$possibleTags)) {
                         // get all possible tags 
-                        $result = Tag::$find_all_tags($type);
+                        $result = Tag::$find_all_tags(static::$collectionTypeReference);
                         // create an id indexed array, this is a global function, store array in static property
                         static::$possibleTags = get_key_value_array($result);
                     }
@@ -22,12 +52,12 @@
                 }
                 // possible tags
                 static protected $possibleTags;
-            // get all possible labels, $type = collection_type_reference, located at: root/private/reference_information.php 
-                static public function get_possible_labels(int $type = 0) {
+            // get all possible labels, // * collection_type_reference, located at: root/private/reference_information.php 
+                static public function get_possible_labels() {
                     // if not set get info
                     if (!isset(static::$possibleLabels)) {
                         // get all possible Labels 
-                        $result = Label::$find_all_labels($type);
+                        $result = Label::$find_all_labels(static::$collectionTypeReference);
                         // create an id indexed array, this is a global function, store array in static property
                         static::$possibleLabels = get_key_value_array($result);
                     }
@@ -36,26 +66,56 @@
                 }
                 // possible labels
                 static protected $possibleLabels;
-            // get all possible categories, $type = collection_type_reference, located at: root/private/reference_information.php
-                static public function get_possible_categories(int $type = 0) {
+            // get all possible categories, // * collection_type_reference, located at: root/private/reference_information.php
+                static public function get_possible_categories() {
                     // if not set get info
                     if (!isset(static::$possibleCategories)) {
                         // get all possible categories
-                        $result = Category::$find_all_categories($type);
+                        $result = Category::$find_all_categories(static::$collectionTypeReference);
                         // create an id indexed array, this is a global function, store array in static property
                         static::$possibleCategories = get_key_value_array($result);
                     }
                     // return possibilities
                     return static::$possibleCategories;
                 }
-            // possible categories
-            static protected $possibleCategories;
+                // possible categories
+                static protected $possibleCategories;
 
             // set up local reference for the database
             static public function set_database(object $database) {
                 self::$database = $database;
             }
 
+            // get object categories, tags, or labels
+            public function get_obj_categories_tags_labels($type = NULL) {
+                // blank array, set below
+                $data_array = [];
+                // find if there are any ids attached to the object
+                if (($type == 'categories' && !is_blank($this->catIds)) || ($type == 'tags' && !is_blank($this->tagIds)) || ($type == 'labels' && !is_blank($this->labelIds))) {
+                    // take object list of ids and create an array
+                    switch ($type) {
+                        case 'categories': $id_array = explode(',',$this->catIds); break;
+                        case 'tags': $id_array = explode(',',$this->tagIds); break;
+                        case 'labels': $id_array = explode(',',$this->labelIds); break;
+                    }
+                    // get possibilities for the object
+                    switch ($type) {
+                        case 'categories': $possibilities_array = $this->get_possible_categories(); break;
+                        case 'tags': $possibilities_array = $this->get_possible_tags(); break;
+                        case 'labels': $possibilities_array = $this->get_possible_labels(); break;
+                    }
+                    // loop over $id_array
+                    foreach ($id_array as $id) {
+                        // see if the category exists
+                        if (isset($possibilities_array[$id])) {
+                            $data_array[$id] = $possibilities_array[$id];
+                        }
+                    }
+                }
+                // return all tags connected to the object in a key value array
+                return $data_array;
+            }
+            
             // Helper function, object creator
             static protected function instantiate(array $record) {
                 // load the object
@@ -68,7 +128,7 @@
             static public function find_by_sql($sql) {
                 $result = self::$database->query($sql);
                 // error handling
-                $result = db_error_check_and_free_result($result);
+                $result = self::db_error_check_and_free_result($result);
                 // turn results into an array of objects
                 $object_array = [];
                 // loop through query
@@ -92,7 +152,7 @@
                 // get row, only one there
                 $row = $result->fetch_array();
                 // error handling
-                db_error_check_and_free_result($result);
+                self::db_error_check_and_free_result($result);
                 // return count 
                 return array_shift($row);
             }
@@ -169,11 +229,11 @@
                     $this->id = self::$database->insert_id;
                 }
                 // saving result so we can free up connection
-                $temp_result = $result;
+                $tempResult = $result;
                 //free up query result
                 $result->free();
                 // return true
-                return $temp_result;
+                return $tempResult;
             }
 
             // update existing record
@@ -199,7 +259,7 @@
                 $sql .= " LIMIT 1";
                 $result = self::$database->query($sql);
                 // error handling
-                $result = db_error_check_and_free_result($result);
+                $result = self::db_error_check_and_free_result($result);
                 // return result
                 return $result;
             }
@@ -220,7 +280,7 @@
                 $sql .= " LIMIT 1";
                 $result = self::$database->query($sql);
                 // error handling
-                $result = db_error_check_and_free_result($result);
+                $result = self::db_error_check_and_free_result($result);
                 // return result
                 return $result;
             }
@@ -240,6 +300,8 @@
                 foreach (static::$columns as $column) {
                     // skip id
                     if ($column == 'id') { continue; }
+                    // skip post comments
+                    if ($column == 'comments' && $this->ctr() == 1) { continue; }
                     // construct attribute list with object values
                     $attributes[$column] = $this->$column;
                 }
@@ -256,12 +318,85 @@
                 return $sanitized_array;
             }
 
-        // @ ----- END OF ACTIVE RECORD CODE -----
+        // @ active record code end
+
+        // @ API specific queries start
+            // create an associative array, key value pair from the static::$columns excluding id
+            public function api_attributes() {
+                // empty array to be filled below
+                $attributes = [];
+                // column and API attributes merge arrays
+                $apiAttributes_array = array_merge(static::$columns, static::$apiProperties);
+                // loop over and make a key value pair array of api attributes
+                foreach ($apiAttributes_array as $attribute) {
+                    // construct attribute list with object values
+                    $attributes[$attribute] = $this->$attribute;
+                }
+                // return array of attributes
+                return $attributes;
+            }
+
+            // get api data plus extended data
+            public function get_full_api_data() {
+                // get api data
+                $data_array['properties'] = $this->api_attributes();
+                // if of the correct type get categories, tags, or labels
+                if ($this->ctr() == 1 || $this->ctr() == 2 || $this->ctr() == 3 || $this->ctr() == 4) {
+                    $data_array['categories'] = $this->get_obj_categories_tags_labels('categories');
+                    $data_array['tags'] = $this->get_obj_categories_tags_labels('tags');
+                    $data_array['labels'] = $this->get_obj_categories_tags_labels('labels');
+                }
+                // if of the correct type get all images
+                if ($this->ctr() == 1 || $this->ctr() == 3) {
+                    // set blank array, set below
+                    $image_array = [];
+                    // get image(s)
+                    if ($this->ctr() == 1) {
+                        $temp_array = $this->get_post_images();
+                    } else {                                               
+                        $temp_array = $this->get_user_image();
+                    }
+                    // loop over info to make new array
+                    $image_array = obj_array_api_prep($temp_array);
+                    // put images into the correct spot
+                    $data_array['images'] = $image_array;
+                }
+                // return data
+                return $data_array;
+            }
+        
+            // get api data
+            public function get_basic_api_data() {
+                // get api data
+                $data_array['properties'] = $this->api_attributes();
+                // return data
+                return $data_array;
+            }
+
+            // get data and turn it into json
+            public function get_api_data($type = 'basic') {
+                // check to see which api data to use
+                if ($type == 'basic') {
+                    $data_array = $this->get_basic_api_data();
+                } else {
+                    $data_array = $this->get_full_api_data();
+                }
+                // turn array into Jason
+                $jsonData_array = json_encode($data_array);
+                // return data
+                return $jsonData_array;
+            }
+        // @ API specific queries end
 
         // @ class functionality methods start
             // stands for database escape, you sanitized data, and to protect against my SQL injection
             static protected function db_escape($db_field){
                 return self::$database->escape_string($db_field);
+            }
+
+            // * collection_type_reference, located at: root/private/reference_information.php
+            public function ctr() {
+                return static::$collectionTypeReference;
             }
 
             // checks for database errors and frees up result, can return true
@@ -271,11 +406,11 @@
                     exit("Query Failed!!!: " . self::$database->error);
                 } 
                 // saving result so we can free up connection
-                $temp_result = $result;
+                $tempResult = $result;
                 //free up query result
                 $result->free();
                 // return result
-                return $temp_result;
+                return $tempResult;
             }
         // @ class functionality methods end
     }
