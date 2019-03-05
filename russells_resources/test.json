@@ -1,0 +1,42 @@
+{
+    "author": "22",
+    "authorName": null,
+    "catIds": "12",
+    "comments": null,
+    "content": " kdgfjhkj gdfkhg kdshgjkd kghdkjfhgk dfhkhg df gkjfdhkjs ghsdfkjghkjfd hgkdfkjhgkjh fkdhjghfkd hgd fkhgkjhkjdfhk hg",
+    "createdBy": null,
+    "createdDate": null,
+    "imageName": null,
+    "labelIds": "2",
+    "postDate": "2019-05-29",
+    "status": "0",
+    "tagIds": "23",
+    "title": "fghd gdfhsg kljkldf",
+    "fullDate": "May 29, 2019",
+    "shortDate": "05\/29\/2019",
+    "categories": {
+        "22": "car",
+        "34": "other",
+        "2": "handyman",
+        "1": "Technology"
+    },
+    "labels": {
+        "3": "big",
+        "4": "small",
+        "5": "soso",
+        "89": "gogo"
+    },
+    "tags": {
+        "9": "sam",
+        "8": "bob",
+        "5": "joe",
+        "56": "jill"
+    },
+    "featuredImagePaths": {
+        "thumbnail": "https:\/\/i0.wp.com\/mooredigitalsolutions.com\/wp-content\/uploads\/2018\/03\/php_cms_featured_image.jpg?fit=1024%2C852&ssl=1",
+        "small": "https:\/\/i0.wp.com\/mooredigitalsolutions.com\/wp-content\/uploads\/2018\/03\/php_cms_featured_image.jpg?fit=1024%2C852&ssl=1",
+        "medium": "https:\/\/i0.wp.com\/mooredigitalsolutions.com\/wp-content\/uploads\/2018\/03\/php_cms_featured_image.jpg?fit=1024%2C852&ssl=1",
+        "large": "",
+        "original": "https:\/\/i0.wp.com\/mooredigitalsolutions.com\/wp-content\/uploads\/2018\/03\/php_cms_featured_image.jpg?fit=1024%2C852&ssl=1"
+    }
+}

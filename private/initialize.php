@@ -6,7 +6,7 @@
   define("PRIVATE_PATH", dirname(__FILE__)); // C:\wamp64\www\open_source_project\private
   define("PROJECT_PATH", dirname(PRIVATE_PATH)); // C:\wamp64\www\open_source_project
   define("PUBLIC_PATH", PROJECT_PATH . '/public'); // C:\wamp64\www\open_source_project/public
-
+  define("IMAGE_PATH", PUBLIC_PATH . '/images'); // C:\wamp64\www\open_source_project\public/images
   
   // setting up variables to check whether or not were local or live
   $localTest = [
@@ -36,12 +36,12 @@
 
   // get default functions
   require_once('functions/functions.php');
+  require_once('security/validation_functions.php');
   require_once('db/db_functions.php');
-
+  
   // db connection
   require_once('db/db_credentials.php');
   $db = db_connect();
-
-  // ? need to move, only use when needed
-  // Post::set_database($db);
+  // set db connection
+  DatabaseObject::set_database($db);
 ?>
