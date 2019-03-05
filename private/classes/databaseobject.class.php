@@ -18,8 +18,6 @@
                 // content being edited
                 // media content being edited??? 
 
-            // something should always be excluded from the normal update process ex post comments
-
 
 
 
@@ -29,6 +27,7 @@
         // database information
         static protected $tableName;
         static protected $columns = [];
+        static protected $columnExclusions = [];
         static protected $apiProperties = [];
         // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/reference_information.php
         static protected $collectionTypeReference = 0;
@@ -298,10 +297,8 @@
             public function attributes() {
                 $attributes = [];
                 foreach (static::$columns as $column) {
-                    // skip id
-                    if ($column == 'id') { continue; }
-                    // skip post comments
-                    if ($column == 'comments' && $this->ctr() == 1) { continue; }
+                    // skip class column exclusions
+                    if (in_array($column, static::$columnExclusions)) { continue; }
                     // construct attribute list with object values
                     $attributes[$column] = $this->$column;
                 }

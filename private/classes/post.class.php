@@ -1,13 +1,14 @@
 <?php
     class Post extends DatabaseObject {
-        
         // @ class database information start
             // table name
             static protected $tableName = "posts";
             // db columns, if need to exclude particular column excluded in the database object attributes()
             static protected $columns = ['id', 'author', 'authorName', 'catIds', 'comments', 'content', 'createdBy', 'createdDate', 'imageName', 'labelIds', 'postDate', 'status', 'tagIds', 'title'];
+            // values to exclude on normal updates, should always include id
+            static protected $columnExclusions = ['id', 'comments'];
             // name specific properties you wish to included in the API
-            static protected $apiProperties = ['fullDate', 'shortDate', 'imagePath'];
+            static protected $apiProperties = ['fullDate', 'shortDate', 'imagePath_array'];
             // * collection_type_reference, located at: root/private/reference_information.php
             static protected $collectionTypeReference = 1;
             // db validation, // * validation_options located at: root/private/reference_information.php
