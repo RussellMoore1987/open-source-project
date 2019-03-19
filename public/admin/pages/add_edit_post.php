@@ -1,66 +1,102 @@
-
-
-
-
-
-
-
-
 <?php
     // @ logic for add_edit_post.php start
         // get post id or set default
         $postId = $_GET["postId"] ?? "add";
 
         // check to see if we have a real ID
-        if (!($postId == "add") && is_int($postId)) {
+        if (!($postId == "add")) {
+            $postId = (int) $postId;
             // get post for editing
-            $post_obj = Post::find_by_id($postId);
+            $Post_obj = Post::find_by_id($postId);
+            // error handling
+            if (!$Post_obj) {
+                $Post_obj = new Post();
+                $Post_obj->errors[] = "No post with the ID of {$postId} exists";
+                $postId = "add";
+
+            }
         } else {
             // create empty objects so page dose not brake
-            $post_obj = new Post();
+            $Post_obj = new Post();
         }
 
         // if post request
         if (is_post_request() && isset($_POST["post"])) {
             // populate new object
-            $post_obj = new Post($_POST["post"]);
-            // $post_obj->save();
-            echo $post_obj->title;
+            $Post_obj = new Post($_POST["post"]);
+            // $Post_obj->save();
+            echo $Post_obj->title;
             echo "<br>";
-            echo $post_obj->postDate;
+            echo $Post_obj->postDate;
             echo "<br>";
-            echo $post_obj->fullDate;
+            echo $Post_obj->fullDate;
             echo "<br>";
-            echo $post_obj->shortDate;
+            echo $Post_obj->shortDate;
             echo "<br>";
-            echo $post_obj->status;
+            echo $Post_obj->status;
             echo "<br>";
-            echo $post_obj->get_api_data();
+            echo $Post_obj->get_api_data();
         }
+
+        // get post categories
+            $postCategories_array = $Post_obj->get_post_categories();
+            // var_dump($postCategories_array);
+        // get post tags
+            // $postTags_array = $Post_obj->get_post_tags();
+            // var_dump($postTags_array);
+        // get post labels
+            // $postLabels_array = $Post_obj->get_post_labels();
+
+        // get all categories
+            $possibleCategories_array = Post::get_possible_categories();
+        // get all tags
+        // $possibleTags_array = Post::get_possible_tags();
+        // get all labels
+        // $possibleLabels_array = Post::get_possible_labels();
     // @ logic for add_edit_post.php END
 ?>
 
 
 
 <div>
-    <p>comment count <?php echo $post_obj->comments ?></p>
+    <?php
+        // check for errors
+        if ($Post_obj->errors) {
+            foreach ($Post_obj->errors as $error) {
+                echo $error;
+            }
+        }   
+    ?>
+    <p>Comment Count: <?php echo $Post_obj->get_comments() ?? "none"; ?></p>
     <form method="post" action="add_edit_post.php?postId=<?php echo $postId ?>">
         <!-- main form -->
         <div>
             <label for="post[title]">Post Title</label>
-            <input type="text" name="post[title]" value="<?php echo $post_obj->title ?>" maxlength="50" minlength="2" required>
+            <input type="text" name="post[title]" value="<?php echo $Post_obj->title ?>" maxlength="50" minlength="2" required>
         </div>
         <br>
 
        <div>
             <label for="post[postDate]">Post Date</label>
-            <input type="text" name="post[postDate]" value="<?php echo $post_obj->postDate ?>" required>
+            <input type="text" name="post[postDate]" value="<?php echo $Post_obj->postDate ?>" required>
        </div>
        <br>
 
         <div>
             <label for="post[catIds]">Post Categories</label>
             <select name="post[catIds]">
+                <?php
+                    // showing possible categories as well as selected categories
+                    foreach ($possibleCategories_array as $key => $value) {
+                        // set default selected value
+                        $selected = "";
+                        // check to see if the post has any categories attached to it
+                        if (isset($postCategories_array[$key])) {
+                            $selected = "selected";
+                        }
+                        echo "<option value='{$key}' {$selected}>{$value}</option>";
+                    }
+                ?>
                 <option value="12">Volvo</option>
                 <option value="2">Saab</option>
                 <option value="3">Opel</option>
@@ -83,8 +119,8 @@
         <div>
             <label for="post[status]">Post Status</label>
             <select name="post[status]">
-                <option <?php if ($post_obj->status == 0) { echo "selected";} ?> value="0">Draft</option>
-                <option <?php if ($post_obj->status == 1) { echo "selected";} ?> value="1">Published</option>
+                <option <?php if ($Post_obj->status == 0) { echo "selected";} ?> value="0">Draft</option>
+                <option <?php if ($Post_obj->status == 1) { echo "selected";} ?> value="1">Published</option>
             </select>
         </div>
         <br>
@@ -114,13 +150,13 @@
 
         <div>
             <label for="post[content]">Post Content</label>
-            <textarea name="post[content]" cols="30" rows="10"><?php echo $post_obj->content ?></textarea>
+            <textarea name="post[content]" cols="30" rows="10"><?php echo $Post_obj->content ?></textarea>
         </div>
         <br>
 
         <!-- submit button -->
         <div>
-            <button type="submit">ADD POST</button>
+            <button type="submit"><?php echo $postId == "add" ? "ADD" : "EDIT" ?> POST</button>
         </div>
     </form>
 </div>

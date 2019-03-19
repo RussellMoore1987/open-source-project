@@ -1,6 +1,7 @@
 <?php
     // @ collection_type_reference
         // # reference number
+        // 0 = none 
         // 1 = posts 
         // 2 = media content
         // 3 = users

@@ -36,49 +36,50 @@
         public $errors = [];
 
         // @ active record code start
-            // possible extended info
-            // get all possible tags, // * collection_type_reference, located at: root/private/reference_information.php
-                static public function get_possible_tags() {
-                    // if not set get info
-                    if (!isset(static::$possibleTags)) {
-                        // get all possible tags 
-                        $result = Tag::$find_all_tags(static::$collectionTypeReference);
-                        // create an id indexed array, this is a global function, store array in static property
-                        static::$possibleTags = get_key_value_array($result);
+            // # possible extended info start
+                // get all possible tags, // * collection_type_reference, located at: root/private/reference_information.php
+                    static public function get_possible_tags() {
+                        // if not set get info
+                        if (!isset(static::$possibleTags)) {
+                            // get all possible tags 
+                            $result = Tag::find_all_tags(static::$collectionTypeReference);
+                            // create an id indexed array, this is a global function, store array in static property
+                            static::$possibleTags = get_key_value_array($result);
+                        }
+                        // return possibilities
+                        return static::$possibleTags;
                     }
-                    // return possibilities
-                    return static::$possibleTags;
-                }
-                // possible tags
-                static protected $possibleTags;
-            // get all possible labels, // * collection_type_reference, located at: root/private/reference_information.php 
-                static public function get_possible_labels() {
-                    // if not set get info
-                    if (!isset(static::$possibleLabels)) {
-                        // get all possible Labels 
-                        $result = Label::$find_all_labels(static::$collectionTypeReference);
-                        // create an id indexed array, this is a global function, store array in static property
-                        static::$possibleLabels = get_key_value_array($result);
+                    // possible tags
+                    static protected $possibleTags;
+                // get all possible labels, // * collection_type_reference, located at: root/private/reference_information.php 
+                    static public function get_possible_labels() {
+                        // if not set get info
+                        if (!isset(static::$possibleLabels)) {
+                            // get all possible Labels 
+                            $result = Label::find_all_labels(static::$collectionTypeReference);
+                            // create an id indexed array, this is a global function, store array in static property
+                            static::$possibleLabels = get_key_value_array($result);
+                        }
+                        // return possibilities
+                        return static::$possibleLabels;
                     }
-                    // return possibilities
-                    return static::$possibleLabels;
-                }
-                // possible labels
-                static protected $possibleLabels;
-            // get all possible categories, // * collection_type_reference, located at: root/private/reference_information.php
-                static public function get_possible_categories() {
-                    // if not set get info
-                    if (!isset(static::$possibleCategories)) {
-                        // get all possible categories
-                        $result = Category::$find_all_categories(static::$collectionTypeReference);
-                        // create an id indexed array, this is a global function, store array in static property
-                        static::$possibleCategories = get_key_value_array($result);
+                    // possible labels
+                    static protected $possibleLabels;
+                // get all possible categories, // * collection_type_reference, located at: root/private/reference_information.php
+                    static public function get_possible_categories() {
+                        // if not set get info
+                        if (!isset(static::$possibleCategories)) {
+                            // get all possible categories
+                            $result = Category::find_all_categories(static::$collectionTypeReference);
+                            // create an id indexed array, this is a global function, store array in static property
+                            static::$possibleCategories = get_key_value_array($result);
+                        }
+                        // return possibilities
+                        return static::$possibleCategories;
                     }
-                    // return possibilities
-                    return static::$possibleCategories;
-                }
-                // possible categories
-                static protected $possibleCategories;
+                    // possible categories
+                    static protected $possibleCategories;
+            // # possible extended info end
 
             // set up local reference for the database
             static public function set_database(object $database) {
@@ -122,9 +123,11 @@
                 // return the object
                 return $object;
             }
+            
 
             // find by sql
             static public function find_by_sql($sql) {
+
                 $result = self::$database->query($sql);
                 // error handling
                 $result = self::db_error_check_and_free_result($result);
@@ -397,17 +400,13 @@
             }
 
             // checks for database errors and frees up result, can return true
-            static protected function db_error_check_and_free_result(object $result){
+            static protected function db_error_check_and_free_result($result){
                 // error handling
                 if (!$result) {
                     exit("Query Failed!!!: " . self::$database->error);
                 } 
-                // saving result so we can free up connection
-                $tempResult = $result;
-                //free up query result
-                $result->free();
                 // return result
-                return $tempResult;
+                return $result;
             }
         // @ class functionality methods end
     }

@@ -54,9 +54,9 @@ function get_key_value_array($obj_array) {
   // empty array
   $array = [];
   // loop through result to create a key value pair array
-  while ($record = $obj_array) {
-      $id = $obj_array->id; 
-      $title = $obj_array->title; 
+  foreach ($obj_array as $record) {
+      $id = $record->get_id(); 
+      $title = $record->title; 
       $array[$id] = $title; 
   }
   // sort array alphabetically by title
@@ -86,6 +86,8 @@ function obj_array_api_prep(array $obj_array, $type = 'basic') {
     foreach ($obj_array as $odj) {
        $apiObj_array[] = $odj->get_api_data($type);
     }   
+    // turn array into Jason
+    $apiObj_array = json_encode($apiObj_array);
     // return data
     return $apiObj_array;
 }
