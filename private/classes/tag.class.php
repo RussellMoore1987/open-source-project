@@ -18,21 +18,23 @@
                 'id' => [
                     'name' => 'Tag id',
                     'required' => 'yes',
-                    'type' => 'int',
-                    'num_min' => 0,
-                    'max' => 10
+                    'type' => 'int', // type of int
+                    'num_min' => 0, // number min value
+                    'max' => 10 // string length
                 ],
                 'note' => [
                     'name' => 'Tag Note',
-                    'required' => 'no',
-                    'type' => 'str',
-                    'max' => 10
+                    'type' => 'str', // type of string
+                    'max' => 255, // string length
+                    'html' => 'no'
                 ],
                 'title' => [
                     'name' => 'Tag Title',
                     'required' => 'yes',
-                    'type' => 'str',
-                    'max' => 50
+                    'type' => 'str', // type of string
+                    'min' => 2, // string length
+                    'max' => 50, // string length
+                    'html' => 'yes'
                 ]
             ];
 
