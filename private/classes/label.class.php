@@ -1,11 +1,11 @@
 <?php
-    class Tag extends DatabaseObject {
+    class Label extends DatabaseObject {
         // @ class database information start
             // Class specific properties. Overwritten from DabaseObject Class
             // Name of the table
-            static protected $tablename = 'tags';
+            static protected $tablename = 'labels';
             // db columns, if need to exclude particular column excluded in the database object attributes()
-            static protected $columns = ['id', 'note', 'title', 'useTag'];
+            static protected $columns = ['id', 'note', 'title', 'useLabel'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
@@ -36,8 +36,8 @@
                     'max' => 50, // string length
                     'html' => 'yes'
                 ],
-                'useTag' => [
-                    'name'=>'Tag useTag',
+                'useLabel' => [
+                    'name'=>'Label useLabel',
                     'required' => 'yes',
                     'type' => 'int', // type of int
                     'num_min'=> 0, // number min value
@@ -49,11 +49,11 @@
         // @ class database information end
 
         // @ class specific queries start
-            // Find all the tags associated with the collection type parameter
-            static public function find_all_tags(int $type = 0) {
-                $sql = "SELECT id, note, title, useTag FROM tags ";
+            // Find all the labels associated with the collection type parameter
+            static public function find_all_labels(int $type = 0) {
+                $sql = "SELECT id, note, title, useLabel FROM labels ";
                 if (!($type > 4 && $type < 0)) {
-                    $sql .= "WHERE useTag = {$type}";
+                    $sql .= "WHERE useLabel = {$type}";
                 }  
                 return self::find_by_sql($sql);
             }
@@ -63,7 +63,7 @@
             // main properties
             public $title;
             public $note;
-            public $useTag;
+            public $useLabel;
 
             //protected properties
             protected $id;
@@ -76,7 +76,7 @@
                 $this->id = $args['id'] ?? NULL;
                 $this->note = $args['note'] ?? NULL;
                 $this->title = $args['title'] ?? NULL;
-                $this->useTag = $args['useTag'] ?? NULL;
+                $this->useLabel = $args['useLabel'] ?? NULL;
             }
 
             // methods
