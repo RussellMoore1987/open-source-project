@@ -719,12 +719,12 @@ class Database {
                 // add comments correctly
                     $subSql = "SELECT COUNT(*) FROM comments WHERE postId = " . ($i + 1);
                     $result = $this->mysqli->query($subSql);
-                    // get row, only one there
-                    $row = $result->fetch_array();
                     // error handling
                     if (!$result) {
                         exit("Query Failed!!!: " . $this->mysqli->error);
                     } 
+                    // get row, only one there
+                    $row = $result->fetch_array();
                     // return count 
                     $commentCount = array_shift($row);
                 // add author
