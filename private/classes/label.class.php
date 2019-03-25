@@ -1,7 +1,7 @@
 <?php
     class Label extends DatabaseObject {
         // @ class database information start
-            // Class specific properties. Overwritten from DabaseObject Class
+            // Class specific properties. Overwritten from DatabaseObject Class
             // Name of the table
             static protected $tablename = 'labels';
             // db columns, if need to exclude particular column excluded in the database object attributes()
@@ -13,23 +13,22 @@
             // * collection_type_reference, located at: root/private/reference_information.php
             static protected $collectionTypeReference = 0;
             // db validation, // * validation_options located at: root/private/reference_information.php
-            // get all post tags
             static protected $validation_columns = [
                 'id' => [
-                    'name' => 'Tag id',
+                    'name' => 'Label id',
                     'required' => 'yes',
                     'type' => 'int', // type of int
-                    'num_min' => 0, // number min value
+                    'num_min' => 1, // number min value
                     'max' => 10 // string length
                 ],
                 'note' => [
-                    'name' => 'Tag Note',
+                    'name' => 'Label Note',
                     'type' => 'str', // type of string
                     'max' => 255, // string length
                     'html' => 'no'
                 ],
                 'title' => [
-                    'name' => 'Tag Title',
+                    'name' => 'Label Title',
                     'required' => 'yes',
                     'type' => 'str', // type of string
                     'min' => 2, // string length
@@ -40,9 +39,8 @@
                     'name'=>'Label useLabel',
                     'required' => 'yes',
                     'type' => 'int', // type of int
-                    'num_min'=> 0, // number min value
+                    'num_min'=> 1, // number min value
                     'num_max'=> 4, // number max value
-                    'max' => 1 // string length
                 ]
             ];
 
@@ -52,8 +50,9 @@
             // Find all the labels associated with the collection type parameter
             static public function find_all_labels(int $type = 0) {
                 $sql = "SELECT id, note, title, useLabel FROM labels ";
-                if (!($type > 4 && $type < 0)) {
-                    $sql .= "WHERE useLabel = {$type}";
+                // we expect a number between one and four // * collection_type_reference, located at: root/private/reference_information.php
+                if ($type <= 4 && $type <= 1) {
+                    $sql .= "WHERE useLabel = '{$type}'";
                 }  
                 return self::find_by_sql($sql);
             }
@@ -61,8 +60,8 @@
 
         // @ properties start
             // main properties
-            public $title;
             public $note;
+            public $title;
             public $useLabel;
 
             //protected properties

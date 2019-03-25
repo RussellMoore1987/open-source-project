@@ -86,35 +86,68 @@
                 self::$database = $database;
             }
 
-            // get object categories, tags, or labels
-            public function get_obj_categories_tags_labels($type = NULL) {
-                // blank array, set below
-                $data_array = [];
-                // find if there are any ids attached to the object
-                if (($type == 'categories' && !is_blank($this->catIds)) || ($type == 'tags' && !is_blank($this->tagIds)) || ($type == 'labels' && !is_blank($this->labelIds))) {
-                    // take object list of ids and create an array
-                    switch ($type) {
-                        case 'categories': $id_array = explode(',',$this->catIds); break;
-                        case 'tags': $id_array = explode(',',$this->tagIds); break;
-                        case 'labels': $id_array = explode(',',$this->labelIds); break;
-                    }
-                    // get possibilities for the object
-                    switch ($type) {
-                        case 'categories': $possibilities_array = $this->get_possible_categories(); break;
-                        case 'tags': $possibilities_array = $this->get_possible_tags(); break;
-                        case 'labels': $possibilities_array = $this->get_possible_labels(); break;
-                    }
-                    // loop over $id_array
-                    foreach ($id_array as $id) {
-                        // see if the category exists
-                        if (isset($possibilities_array[$id])) {
-                            $data_array[$id] = $possibilities_array[$id];
+            // #things only in reference to collection_type_reference start
+                // get object categories, tags, or labels
+                public function get_obj_categories_tags_labels($type = NULL) {
+                    // blank array, set below
+                    $data_array = [];
+                    // find if there are any ids attached to the object
+                    if (($type == 'categories' && !is_blank($this->catIds)) || ($type == 'tags' && !is_blank($this->tagIds)) || ($type == 'labels' && !is_blank($this->labelIds))) {
+                        // take object list of ids and create an array
+                        switch ($type) {
+                            case 'categories': $id_array = explode(',',$this->catIds); break;
+                            case 'tags': $id_array = explode(',',$this->tagIds); break;
+                            case 'labels': $id_array = explode(',',$this->labelIds); break;
+                        }
+                        // get possibilities for the object
+                        switch ($type) {
+                            case 'categories': $possibilities_array = $this->get_possible_categories(); break;
+                            case 'tags': $possibilities_array = $this->get_possible_tags(); break;
+                            case 'labels': $possibilities_array = $this->get_possible_labels(); break;
+                        }
+                        // loop over $id_array
+                        foreach ($id_array as $id) {
+                            // see if the category exists
+                            if (isset($possibilities_array[$id])) {
+                                $data_array[$id] = $possibilities_array[$id];
+                            }
                         }
                     }
+                    // return all tags connected to the object in a key value array
+                    return $data_array;
                 }
-                // return all tags connected to the object in a key value array
-                return $data_array;
-            }
+
+                // delete connecting record
+                public function delete_connection_records($tableName, $NameOfId, $id) {
+                    $sql = "DELETE FROM {$tableName} ";
+                    $sql .= "WHERE {$NameOfId}='{$id}' ";
+                    // perform query
+                    $result = self::$database->query($sql);
+                    // error handling
+                    $result = self::db_error_check($result);
+                    // return result
+                    return $result;
+                }
+
+                // make connecting record
+                public function insert_connection_record($tableName, array $NameOfColumns_array, array $values_array) {
+                    // set variables
+                    $column1 = $NameOfColumns_array[0];
+                    $column2 = $NameOfColumns_array[1];
+                    $columnValue1 = $values_array[0];
+                    $columnValue2 = $values_array[1];
+
+                    // make sql
+                    $sql = "INSERT INTO {$tableName} ({$column1}, {$column2}) ";
+                    $sql .= "VALUES ({$columnValue1}, {$columnValue2}) ";
+                    // perform query
+                    $result = self::$database->query($sql);
+                    // error handling
+                    $result = self::db_error_check($result);
+                    // return result
+                    return $result;
+                }
+            // #things only in reference to collection_type_reference start
             
             // Helper function, object creator
             static protected function instantiate(array $record) {
@@ -130,7 +163,7 @@
 
                 $result = self::$database->query($sql);
                 // error handling
-                $result = self::db_error_check_and_free_result($result);
+                $result = self::db_error_check($result);
                 // turn results into an array of objects
                 $object_array = [];
                 // loop through query
@@ -154,7 +187,7 @@
                 // get row, only one there
                 $row = $result->fetch_array();
                 // error handling
-                self::db_error_check_and_free_result($result);
+                self::db_error_check($result);
                 // return count 
                 return array_shift($row);
             }
@@ -183,6 +216,7 @@
                 $attributes = $this->attributes();
                 // loop over and validate
                 foreach ($attributes as $key => $value) {
+                    // if in create mode expect all values to be there
                     if ($type == "create" && property_exists($this, $key)) {
                         // run validation on property value
                         $errors_array = val_validation($value, static::$validation_columns[$key]);
@@ -191,6 +225,7 @@
                             // merge arrays
                             $this->errors = array_merge($this->errors, $errors_array);
                         }
+                    // this assumes that were running an update
                     } elseif (property_exists($this, $key) && !is_null($value)) {
                         // run validation on property value
                         $errors_array = val_validation($value, static::$validation_columns[$key]);
@@ -245,25 +280,40 @@
                 // if errors return false, don't continue
                 if (!empty($this->errors)) { return false; }
 
-                // get attributes
-                $attributes = $this->sanitized_attributes();
+                // get attributes, we should only be given at this point what needs to be updated
+                $attributes = $this->sanitized_attributes("yes");
+                echo "just before up date ***********";
+                var_dump($attributes);   
                 $attribute_pairs = [];
+                $attributePairsToUpDate_array = [];
                 foreach ($attributes as $key => $value) {
                     if (property_exists($this, $key) && !is_null($value)) {
-                        $attribute_pairs = "{$key}='{$value}'";
+                        $value = trim($value);
+                        $attribute_pairs[] = "{$key}='{$value}'";
+                        $attributePairsToUpDate_array[$key] = $value;
                     }
                 }
+
                 // sql
                 $sql = "";
                 $sql .= "UPDATE " . static::$tableName . " SET ";
                 $sql .= join(', ', $attribute_pairs);
                 $sql .= " WHERE id='" . self::db_escape($this->id) . "'";
                 $sql .= " LIMIT 1";
+
+                // make a query
                 $result = self::$database->query($sql);
                 // error handling
-                $result = self::db_error_check_and_free_result($result);
+                $result = self::db_error_check($result);
+                // perform class specific cleanup, post, user, tag, ect.
+                $this->class_clean_up_update($attributePairsToUpDate_array);
                 // return result
                 return $result;
+            }
+
+            // class clean up update
+            protected function class_clean_up_update(array $array = []){
+                // write code in specific class if needed. Enables you to run up cleanup information/queries based off of what was updated
             }
 
             // this allows you to add or update a record
@@ -282,7 +332,7 @@
                 $sql .= " LIMIT 1";
                 $result = self::$database->query($sql);
                 // error handling
-                $result = self::db_error_check_and_free_result($result);
+                $result = self::db_error_check($result);
                 // return result
                 return $result;
             }
@@ -297,11 +347,15 @@
             }
 
             // create an associative array, key value pair from the static::$columns excluding id
-            public function attributes() {
+            public function attributes($update = "no") {
                 $attributes = [];
                 foreach (static::$columns as $column) {
                     // skip class column exclusions
                     if (in_array($column, static::$columnExclusions)) { continue; }
+                    // if in update mode do not add values with NULL
+                    if ($update === "yes") {
+                        if ($this->$column === NULL) { continue; }
+                    }
                     // construct attribute list with object values
                     $attributes[$column] = $this->$column;
                 }
@@ -310,11 +364,13 @@
             }
 
             // sanitizes attributes, for MySQL queries, and to protect against my SQL injection
-            protected function sanitized_attributes() {
+            protected function sanitized_attributes($update = "no") {
                 $sanitized_array = [];
-                foreach ($this->attributes() as $key => $value) {
+                foreach ($this->attributes($update) as $key => $value) {
                     $sanitized_array[$key] = self::db_escape($value);
                 }
+                echo "sanitized_attributes ***********";
+                var_dump($sanitized_array); 
                 return $sanitized_array;
             }
 
@@ -400,13 +456,35 @@
             }
 
             // checks for database errors and frees up result, can return true
-            static protected function db_error_check_and_free_result($result){
+            static protected function db_error_check($result){
                 // error handling
                 if (!$result) {
                     exit("Query Failed!!!: " . self::$database->error);
                 } 
                 // return result
                 return $result;
+            }
+
+            static public function cleanFormArray(array $array){
+                echo "just got info to clean up ***********";
+                var_dump($array);
+                // get and store validation columns to check if we need to clean up
+                $cleanUpInfo_array = static::$validation_columns;
+                // default array
+                $post_array = [];
+                // loop through array and filter accordingly
+                foreach ($array as $key => $value) {
+                    if (isset($cleanUpInfo_array[$key]) && isset($cleanUpInfo_array[$key]['required'])) {
+                        // check to see if the information is blank or null, if it is do nothing, if it is not put in the array
+                        if (!is_blank($value)) {
+                            $post_array[$key] = trim($value);
+                        }
+                    } else {
+                        // let it pass through
+                        $post_array[$key] = $value;
+                    }
+                }
+                return $post_array;
             }
         // @ class functionality methods end
     }

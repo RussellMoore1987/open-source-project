@@ -14,6 +14,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- set page title -->
     <title><?php echo $pageTitle; ?></title>
+    <link rel="stylesheet" href="<?php echo PUBLIC_LINK_PATH . "/admin/css/style.css"; ?>">
+    <!-- jQuery CDN -->
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <?php
         // todo list
             // set favicon

@@ -1,6 +1,7 @@
 <?php
     class Category extends DatabaseObject {
         // @ class database information start
+            // Class specific properties. Overwritten from DatabaseObject Class
             // table name
             static protected $tableName = "categories";
             // db columns, if need to exclude particular column excluded in the database object attributes()
@@ -47,17 +48,17 @@
                     'type' => 'int', // type of int
                     'num_min'=> 0, // number min value
                     'num_max'=> 4, // number max value
-                    'max' => 1 // string length
                 ]
             ];
         // @ class database information end
         
         // @ class specific queries start
-            // latest posts feed
+            // Find all the categories associated with the collection type parameter
             static public function find_all_categories(int $type = 0) {
                 $sql = "SELECT id, note, subCatId, title, useCat FROM categories ";
-                if (!($type > 4 && $type < 0)) {
-                    $sql .= "WHERE useCat = {$type}";
+                // we expect a number between one and four // * collection_type_reference, located at: root/private/reference_information.php
+                if ($type <= 4 && $type <= 1) {
+                    $sql .= "WHERE useCat = '{$type}'";
                 }
                 return self::find_by_sql($sql);    
             }

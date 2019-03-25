@@ -127,10 +127,12 @@
         } 
 
         // Validate length exact
-        if(isset($options['exact']) && $val_length !== Trim($options['exact'])) { 
+        if(isset($options['exact']) && !($val_length == Trim($options['exact']))) { 
             $option_exact = Trim($options['exact']);
+            echo $val_length;
+            echo $option_exact;
             // main error message
-            $errors[] = "The value \"{$name}\" requires an exact length of {$option_exact} characters. You have {$val_length} of characters.";
+            $errors[] = "The value \"{$name}\" requires an exact length of {$option_exact} characters. You have only {$val_length} of the characters.";
         }
 
         // Validating required
@@ -198,23 +200,47 @@
             if (isset($options['html']) && $options['html'] == "yes" ) {
                 // Checking for restricted characters
                 // uses !== to prevent position 0 from being considered false
-                switch ($value) {
-                    case strpos($value, '<script') !== false : $errors[] = no_html_message($name, "<script> tag"); return $validate;
-                    case strpos($value, ';') !== false : $errors[] = no_html_message($name, ";"); return $validate;
-                    case strpos($value, '\\') !== false : $errors[] = no_html_message($name, "\\"); return $validate;
-                }
+                if (strpos($value, '<script') !== false) { $errors[] = no_html_message($name, "<script> tag");}
+                if (strpos($value, ';') !== false) { $errors[] = no_html_message($name, ";");}
+                if (strpos($value, '\\') !== false) { $errors[] = no_html_message($name, "\\");}
+                // switch ($value) {
+                //     case strpos($value, '<script') !== false : $errors[] = no_html_message($name, "<script> tag");
+                //     case strpos($value, ';') !== false : $errors[] = no_html_message($name, ";");
+                //     case strpos($value, '\\') !== false : $errors[] = no_html_message($name, "\\");
+                // }
             } elseif (isset($options['html']) && $options['html'] == "no") {
                 // Checking for HTML characters
                 // uses !== to prevent position 0 from being considered false
-                switch ($value) {
-                    case strpos($value, '>') !== false || strpos($value, '<') !== false : $errors[] = no_html_message($name, "<"); return $validate;
-                    case strpos($value, ')') !== false || strpos($value, '(') !== false : $errors[] = no_html_message($name, "("); return $validate;
-                    case strpos($value, '[') !== false || strpos($value, ']') !== false : $errors[] = no_html_message($name, "["); return $validate;
-                    case strpos($value, '{') !== false || strpos($value, '}') !== false : $errors[] = no_html_message($name, "{"); return $validate;
-                    case strpos($value, '/') !== false : $errors[] = no_html_message($name, "/"); return $validate;
-                    case strpos($value, '\\') !== false : $errors[] = no_html_message($name, "\\"); return $validate;
-                    case strpos($value, ';') !== false : $errors[] = no_html_message($name, ";"); return $validate;
+                if (strpos($value, '>') !== false || strpos($value, '<') !== false) { 
+                    $errors[] = no_html_message($name, "<");
                 }
+                if (strpos($value, ')') !== false || strpos($value, '(') !== false) { 
+                    $errors[] = no_html_message($name, "(");
+                }
+                if (strpos($value, '[') !== false || strpos($value, ']') !== false) { 
+                    $errors[] = no_html_message($name, "[");
+                }
+                if (strpos($value, '{') !== false || strpos($value, '}') !== false) { 
+                    $errors[] = no_html_message($name, "{");
+                }
+                if (strpos($value, '/') !== false) { 
+                    $errors[] = no_html_message($name, "/");
+                }
+                if (strpos($value, '\\') !== false) { 
+                    $errors[] = no_html_message($name, "\\");
+                }
+                if (strpos($value, ';') !== false) { 
+                    $errors[] = no_html_message($name, ";");
+                }
+                // switch ($value) {
+                    // case strpos($value, '>') !== false || strpos($value, '<') !== false : $errors[] = no_html_message($name, "<");
+                    // case strpos($value, ')') !== false || strpos($value, '(') !== false : $errors[] = no_html_message($name, "(");
+                    // case strpos($value, '[') !== false || strpos($value, ']') !== false : $errors[] = no_html_message($name, "[");
+                    // case strpos($value, '{') !== false || strpos($value, '}') !== false : $errors[] = no_html_message($name, "{");
+                    // case strpos($value, '/') !== false : $errors[] = no_html_message($name, "/");
+                    // case strpos($value, '\\') !== false : $errors[] = no_html_message($name, "\\");
+                    // case strpos($value, ';') !== false : $errors[] = no_html_message($name, ";");
+                // }
             }
         }
       

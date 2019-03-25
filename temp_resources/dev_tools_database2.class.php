@@ -126,7 +126,7 @@ class Database {
             $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "url VARCHAR(255), ";
             $sql .= "name VARCHAR(50), ";
-            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
+            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'bookmarks');
@@ -171,7 +171,7 @@ class Database {
             $sql .= "note VARCHAR(255) DEFAULT NULL, ";
             // * collection_type_reference, located at: root/private/reference_information.php
             $sql .= "useCat TINYINT(1) UNSIGNED NOT NULL, ";
-            $sql .= "KEY subCatId (subCatId) )";
+            $sql .= "KEY subCatId (subCatId) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'categories');
@@ -243,7 +243,7 @@ class Database {
             $sql .= "actionBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "postId INT(10) UNSIGNED NOT NULL, ";
             // on delete cascade, this is meant for post comments
-            $sql .= "FOREIGN KEY (postId) REFERENCES posts(id) ON DELETE CASCADE )";
+            $sql .= "FOREIGN KEY (postId) REFERENCES posts(id) ON DELETE CASCADE ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'comments');
@@ -311,7 +311,7 @@ class Database {
             $sql .= "tagIds VARCHAR(255) DEFAULT NULL, ";
             $sql .= "labelIds VARCHAR(255) DEFAULT NULL, ";
             $sql .= "content JSON, ";
-            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
+            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'content');
@@ -421,7 +421,7 @@ class Database {
             $sql .= "apiKey VARCHAR(255), ";
             $sql .= "commentKey VARCHAR(255), ";
             $sql .= "contentKey VARCHAR(255), ";
-            $sql .= "mainSettings JSON NOT NULL )";
+            $sql .= "mainSettings JSON NOT NULL ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'main_settings');
@@ -481,7 +481,7 @@ class Database {
             $sql .= "alt VARCHAR(75) DEFAULT NULL, ";
             $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "createdDate DATE NOT NULL DEFAULT '0001-01-01 00:00:00', ";
-            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
+            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'media_content');
@@ -532,7 +532,7 @@ class Database {
             $sql .= "title VARCHAR(50) NOT NULL, ";
             $sql .= "note VARCHAR(255) DEFAULT NULL, ";
             // * collection_type_reference, located at: root/private/reference_information.php
-            $sql .= "useLabel TINYINT(1) UNSIGNED DEFAULT 1)";
+            $sql .= "useLabel TINYINT(1) UNSIGNED DEFAULT 1) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'labels');
@@ -574,7 +574,7 @@ class Database {
             $sql = "CREATE TABLE IF NOT EXISTS permissions ( ";
             $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
             $sql .= "name VARCHAR(50) NOT NULL, ";
-            $sql .= "description VARCHAR(255) NOT NULL )";
+            $sql .= "description VARCHAR(255) NOT NULL ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'permissions');
@@ -627,7 +627,7 @@ class Database {
             $sql .= "changedDate DATE NOT NULL DEFAULT '0001-01-01 00:00:00', ";
             $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "personalSettings JSON NOT NULL, ";
-            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
+            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'personal_settings');
@@ -697,7 +697,7 @@ class Database {
             $sql .= "imageName VARCHAR(150) DEFAULT NULL, ";
             $sql .= "mediaContentIds VARCHAR(255) DEFAULT NULL, ";
             $sql .= "FOREIGN KEY (author) REFERENCES users(id), ";
-            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
+            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'posts');
@@ -787,7 +787,7 @@ class Database {
             $sql .= "title VARCHAR(50) NOT NULL, ";
             $sql .= "note VARCHAR(255) DEFAULT NULL, ";
             // * collection_type_reference, located at: root/private/reference_information.php
-            $sql .= "useTag TINYINT(1) UNSIGNED NOT NULL DEFAULT 1 )";
+            $sql .= "useTag TINYINT(1) UNSIGNED NOT NULL DEFAULT 1 ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'tags');
@@ -831,7 +831,7 @@ class Database {
             $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
             $sql .= "userId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "todo VARCHAR(255) DEFAULT NULL, ";
-            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
+            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'todo');
@@ -877,14 +877,17 @@ class Database {
             $sql .= "phoneNumber VARCHAR(25) DEFAULT NULL, ";
             $sql .= "emailAddress VARCHAR(150) NOT NULL, ";
             $sql .= "title VARCHAR(45) DEFAULT NULL, ";
-            $sql .= "mediaContent INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
+            $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "adminNote VARCHAR(255) DEFAULT NULL, ";
             $sql .= "note VARCHAR(255) DEFAULT NULL, ";
             $sql .= "showOnWeb TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "createdBy INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "createdDate DATE NOT NULL DEFAULT '0001-01-01 00:00:00', ";
             $sql .= "imageName VARCHAR(150) DEFAULT NULL, ";
-            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) )";
+            $sql .= "catIds VARCHAR(255) DEFAULT NULL, ";
+            $sql .= "tagIds VARCHAR(255) DEFAULT NULL, ";
+            $sql .= "labelIds VARCHAR(255) DEFAULT NULL, ";
+            $sql .= "FOREIGN KEY (createdBy) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'users');
@@ -894,7 +897,7 @@ class Database {
         public function insert_into_users() {
             // start sql
             $sql = "INSERT INTO users ( ";
-            $sql .= " username, password, firstName, lastName, address, phoneNumber, emailAddress, title, mediaContent, adminNote, note, showOnWeb, createdBy, createdDate, imageName ) ";
+            $sql .= " username, password, firstName, lastName, address, phoneNumber, emailAddress, title, mediaContentId, adminNote, note, showOnWeb, createdBy, createdDate, imageName, catIds, tagIds, labelIds ) ";
             $sql .= "VALUES ";
 
             // helper counter
@@ -915,13 +918,16 @@ class Database {
                 if ($counter > $this->userPicCount) {
                     $counter = 1;
                 }
-                $mediaContent = $counter;
+                $mediaContentId = $counter;
                 $adminNote = $this->escape($this->Faker->sentence());
                 $note = $this->escape($this->Faker->sentence());
                 $showOnWeb = $this->Faker->numberBetween(0, 1);
                 $createdBy = $this->Faker->numberBetween(1, $this->numRecords_users);
                 $createdDate = $this->Faker->dateTimeThisYear($max = 'now')->format('Y-m-d');
                 $imageName = $this->imageData[($counter - 1)]["imageName"];
+                $catIds = "";
+                $tagIds = "";
+                $labelIds = "";
 
                 // end sql
                 $sql .= "( '" . $username . "', ";
@@ -932,13 +938,17 @@ class Database {
                 $sql .= "'" . $phoneNumber . "', ";
                 $sql .= "'" . $emailAddress . "', ";
                 $sql .= "'" . $title . "', ";
-                $sql .= $mediaContent . ", ";
+                $sql .= $mediaContentId . ", ";
                 $sql .= "'" . $adminNote . "', ";
                 $sql .= "'" . $note . "', ";
                 $sql .= $showOnWeb . ", ";
                 $sql .= $createdBy . ", ";
                 $sql .= "'" . $createdDate . "', ";
-                $sql .= "'" . $imageName . "' )";
+                $sql .= "'" . $imageName . "', ";
+                $sql .= "'" . $catIds . "', ";
+                $sql .= "'" . $tagIds . "', ";
+                $sql .= "'" . $labelIds . "' )";
+                
 
                 // increment counter
                 $counter++;
@@ -957,7 +967,7 @@ class Database {
         public function add_main_test_user() {
             // start sql
             $sql = "INSERT INTO users ( ";
-            $sql .= " username, password, firstName, lastName, address, phoneNumber, emailAddress, title, mediaContent, adminNote, note, showOnWeb, createdBy, createdDate, imageName ) ";
+            $sql .= " username, password, firstName, lastName, address, phoneNumber, emailAddress, title, mediaContentId, adminNote, note, showOnWeb, createdBy, createdDate, imageName ) ";
             $sql .= "VALUES ";
 
             // making fake data
@@ -969,7 +979,7 @@ class Database {
             $phoneNumber = $this->escape($this->Faker->tollFreePhoneNumber());
             $emailAddress = "developer@developer.io";
             $title = "developer/tester";
-            $mediaContent = 8;
+            $mediaContentId = 8;
             $adminNote = $this->escape($this->Faker->sentence());
             $note = $this->escape($this->Faker->sentence());
             $showOnWeb = 1;
@@ -986,7 +996,7 @@ class Database {
             $sql .= "'" . $phoneNumber . "', ";
             $sql .= "'" . $emailAddress . "', ";
             $sql .= "'" . $title . "', ";
-            $sql .= $mediaContent . ", ";
+            $sql .= $mediaContentId . ", ";
             $sql .= "'" . $adminNote . "', ";
             $sql .= "'" . $note . "', ";
             $sql .= $showOnWeb . ", ";
@@ -1027,7 +1037,7 @@ class Database {
             $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "changedDate DATE NOT NULL DEFAULT '0001-01-01 00:00:00', ";
             $sql .= "styleSettings JSON NOT NULL, ";
-            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) )";
+            $sql .= "FOREIGN KEY (userId) REFERENCES users(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'style_settings');
@@ -1115,7 +1125,7 @@ class Database {
             $sql .= "mediaContentId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (postId, mediaContentId), ";
             $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
-            $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id) )";
+            $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'posts_to_media_content');
@@ -1128,7 +1138,7 @@ class Database {
             $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (postId, tagId), ";
             $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
-            $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
+            $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'posts_to_tags');
@@ -1141,7 +1151,7 @@ class Database {
             $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (postId, labelId), ";
             $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
-            $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
+            $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'posts_to_labels');
@@ -1154,7 +1164,7 @@ class Database {
             $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (postId, categoryId), ";
             $sql .= "FOREIGN KEY (postId) REFERENCES posts(id), ";
-            $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
+            $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'posts_to_categories');
@@ -1167,7 +1177,7 @@ class Database {
             $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (mediaContentId, tagId), ";
             $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
-            $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
+            $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'media_content_to_tags');
@@ -1180,7 +1190,7 @@ class Database {
             $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (mediaContentId, labelId), ";
             $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
-            $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
+            $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'media_content_to_labels');
@@ -1193,7 +1203,7 @@ class Database {
             $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (mediaContentId, categoryId), ";
             $sql .= "FOREIGN KEY (mediaContentId) REFERENCES media_content(id), ";
-            $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
+            $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'media_content_to_categories');
@@ -1206,7 +1216,7 @@ class Database {
             $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (contentId, tagId), ";
             $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
-            $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) )";
+            $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'content_to_tags');
@@ -1219,7 +1229,7 @@ class Database {
             $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (contentId, labelId), ";
             $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
-            $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) )";
+            $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'content_to_labels');
@@ -1232,7 +1242,7 @@ class Database {
             $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (contentId, categoryId), ";
             $sql .= "FOREIGN KEY (contentId) REFERENCES content(id), ";
-            $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) )";
+            $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'content_to_categories');
@@ -1245,10 +1255,49 @@ class Database {
             $sql .= "permissionId INT(10) UNSIGNED NOT NULL, ";
             $sql .= "PRIMARY KEY (userId, permissionId), ";
             $sql .= "FOREIGN KEY (userId) REFERENCES users(id), ";
-            $sql .= "FOREIGN KEY (permissionId) REFERENCES permissions(id) )";
+            $sql .= "FOREIGN KEY (permissionId) REFERENCES permissions(id) ) ENGINE=InnoDB";
 
             // Execute the query then return the result
             return $this->execute_create_query($sql, 'users_to_permissions');
+        }
+
+        // # USERS TO TAGS
+        public function create_users_to_tags_table() {
+            $sql = "CREATE TABLE IF NOT EXISTS users_to_tags ( ";
+            $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
+            $sql .= "tagId INT(10) UNSIGNED NOT NULL, ";
+            $sql .= "PRIMARY KEY (userId, tagId), ";
+            $sql .= "FOREIGN KEY (userId) REFERENCES users(id), ";
+            $sql .= "FOREIGN KEY (tagId) REFERENCES tags(id) ) ENGINE=InnoDB";
+
+            // Execute the query then return the result
+            return $this->execute_create_query($sql, 'users_to_tags');
+        }
+
+        // # USERS TO LABELS
+        public function create_users_to_labels_table() {
+            $sql = "CREATE TABLE IF NOT EXISTS users_to_labels ( ";
+            $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
+            $sql .= "labelId INT(10) UNSIGNED NOT NULL, ";
+            $sql .= "PRIMARY KEY (userId, labelId), ";
+            $sql .= "FOREIGN KEY (userId) REFERENCES users(id), ";
+            $sql .= "FOREIGN KEY (labelId) REFERENCES labels(id) ) ENGINE=InnoDB";
+
+            // Execute the query then return the result
+            return $this->execute_create_query($sql, 'users_to_labels');
+        }
+
+        // # USERS TO CATEGORIES
+        public function create_users_to_categories_table() {
+            $sql = "CREATE TABLE IF NOT EXISTS users_to_categories ( ";
+            $sql .= "userId INT(10) UNSIGNED NOT NULL, ";
+            $sql .= "categoryId INT(10) UNSIGNED NOT NULL, ";
+            $sql .= "PRIMARY KEY (userId, categoryId), ";
+            $sql .= "FOREIGN KEY (userId) REFERENCES users(id), ";
+            $sql .= "FOREIGN KEY (categoryId) REFERENCES categories(id) ) ENGINE=InnoDB";
+
+            // Execute the query then return the result
+            return $this->execute_create_query($sql, 'users_to_categories');
         }
 
         // # insert into connecting tables/lookup tables
@@ -1541,6 +1590,9 @@ class Database {
             $results[] = $this->create_content_to_labels_table();
             $results[] = $this->create_content_to_categories_table();
             $results[] = $this->create_users_to_permissions_table();
+            $results[] = $this->create_users_to_tags_table();
+            $results[] = $this->create_users_to_labels_table();
+            $results[] = $this->create_users_to_categories_table();
 
             foreach ($results as $result) {
                 if ($result === false) {

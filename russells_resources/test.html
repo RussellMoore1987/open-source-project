@@ -5,9 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        span {
+            display: inline-block;
+            padding: 10px 15px;
+            color: #ffffff;
+            margin: 10px 15px;
+            background-color: rgb(167, 167, 167);
+            cursor: pointer;
+        }
+
+        span.active {
+            background-color: rgb(0, 216, 231);
+        }
+    </style>
     
 </head>
 <body>  
-    
+    <div class="multiSelect">
+        <span id="1">Lorem</span>   
+        <span id="2">ipsum</span>
+        <span id="3">dolor</span>
+        <span id="4">sit</span>
+        <span id="5">amet</span>
+        <span id="6">consectetur</span>
+        <span id="7">adipisicing</span>
+        <span id="8">elit</span>
+        <span id="9">Quasi</span>
+        <span id="10">beatae</span>
+        <span id="11">quam</span>
+        <span id="12">numquam</span>
+        <span id="13">inventore</span>
+        <span id="14">hic</span>
+        <span id="15">natus</span>
+        <span id="16">molestias</span>
+        <span id="17">consectetur</span>
+        <span id="18">nulla</span>
+        <span id="19">obcaecati</span>
+        <span id="20">eos</span>
+        <span id="21">nemo</span>
+        <span id="22">in</span>
+        <input type="hidden" name="" value="">
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="multiSelect">
+        <span id="1">Lorem</span>   
+        <span id="2">ipsum</span>
+        <span id="3">dolor</span>
+        <span id="4">sit</span>
+        <span id="5">amet</span>
+        <span id="6">consectetur</span>
+        <span id="7">adipisicing</span>
+        <span id="8">elit</span>
+        <span id="9">Quasi</span>
+        <span id="10">beatae</span>
+        <span id="11">quam</span>
+        <span id="12">numquam</span>
+        <span id="13">inventore</span>
+        <span id="14">hic</span>
+        <span id="15">natus</span>
+        <span id="16">molestias</span>
+        <span id="17">consectetur</span>
+        <span id="18">nulla</span>
+        <span id="19">obcaecati</span>
+        <span id="20">eos</span>
+        <span id="21">nemo</span>
+        <span id="22">in</span>
+        <input type="hidden" name="" value="">
+    </div>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            // $(".multiSelect span").on( "click", function() {
+            //     $(this).toggleClass("active");
+                
+            //     // console.log( $(this).attr("id"));
+            // });
+
+            // toggle done and not done, add listener to the parent so that new children will have desired functionality
+            $(".multiSelect").on("click", "span", function () {
+
+                $(this).toggleClass("active");
+                // console.log($(this).parent());
+                // var IDs = $(this).parent().find("span.active",).map(function() { return this.id; })
+                var IDs = [];
+                $(this).parent().find("span.active").map(function() {IDs.push(this.id)})
+                console.log(IDs);
+                $(this).parent().find("input[type='hidden']").attr("value", IDs.join());
+                console.log($(this).parent().find("input[type='hidden']").val());
+
+            });
+        });
+    </script>
 </body>
 </html>

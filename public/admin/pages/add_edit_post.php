@@ -1,10 +1,11 @@
 <?php
     // @ logic for add_edit_post.php start
-        // get post id or set default
+        // set defaults
         $postId = $_GET["postId"] ?? "add";
 
         // check to see if we have a real ID
         if (!($postId == "add")) {
+            // this forces the $postId to be an integer
             $postId = (int) $postId;
             // get post for editing
             $Post_obj = Post::find_by_id($postId);
@@ -21,49 +22,41 @@
         }
 
         // if post request
-        if (is_post_request() && isset($_POST["post"])) {
+        if (is_post_request() && isset($_POST["post"])) {         
             // populate new object
             $Post_obj = new Post($_POST["post"]);
-            // $Post_obj->save();
-            echo $Post_obj->title;
-            echo "<br>";
-            echo $Post_obj->postDate;
-            echo "<br>";
-            echo $Post_obj->fullDate;
-            echo "<br>";
-            echo $Post_obj->shortDate;
-            echo "<br>";
-            echo $Post_obj->status;
-            echo "<br>";
-            echo $Post_obj->get_api_data();
+            echo "Post_obj info ***********";
+            var_dump($Post_obj);
+            // validate and save
+            $Post_obj->save();
         }
 
+        // get all extended info
+            $postExtendedInfo_array = $Post_obj->get_extended_info();
         // get post categories
-            $postCategories_array = $Post_obj->get_post_categories();
-            // var_dump($postCategories_array);
-        // get post tags
-            // $postTags_array = $Post_obj->get_post_tags();
-            // var_dump($postTags_array);
+            $postCategories_array = get_key_value_array($postExtendedInfo_array['categories']);
         // get post labels
-            // $postLabels_array = $Post_obj->get_post_labels();
+            $postLabels_array = get_key_value_array($postExtendedInfo_array['labels']);
+        // get post tags
+            $postTags_array = get_key_value_array($postExtendedInfo_array['tags']);
 
         // get all categories
             $possibleCategories_array = Post::get_possible_categories();
-        // get all tags
-        // $possibleTags_array = Post::get_possible_tags();
         // get all labels
-        // $possibleLabels_array = Post::get_possible_labels();
+            $possibleLabels_array = Post::get_possible_labels();
+        // get all tags
+            $possibleTags_array = Post::get_possible_tags();
+        // get all users
+            $possibleUsers_array = User::get_users_for_select();
     // @ logic for add_edit_post.php END
 ?>
-
-
 
 <div>
     <?php
         // check for errors
         if ($Post_obj->errors) {
             foreach ($Post_obj->errors as $error) {
-                echo $error;
+                echo h($error) . "<br>";
             }
         }   
     ?>
@@ -72,52 +65,62 @@
         <!-- main form -->
         <div>
             <label for="post[title]">Post Title</label>
-            <input type="text" name="post[title]" value="<?php echo $Post_obj->title ?>" maxlength="50" minlength="2" required>
+            <!-- maxlength="50" minlength="2" required -->
+            <input type="text" name="post[title]" value="<?php echo $Post_obj->title ?>" >
         </div>
         <br>
 
        <div>
             <label for="post[postDate]">Post Date</label>
-            <input type="text" name="post[postDate]" value="<?php echo $Post_obj->postDate ?>" required>
+            <!-- required -->
+            <input type="text" name="post[postDate]" value="<?php echo $Post_obj->postDate; ?>" >
        </div>
        <br>
 
         <div>
             <label for="post[catIds]">Post Categories</label>
-            <select name="post[catIds]">
+            <div class="multiSelect">        
                 <?php
                     // showing possible categories as well as selected categories
                     foreach ($possibleCategories_array as $key => $value) {
                         // set default selected value
-                        $selected = "";
+                        $active = "";
                         // check to see if the post has any categories attached to it
                         if (isset($postCategories_array[$key])) {
-                            $selected = "selected";
+                            $active = "active";
                         }
-                        echo "<option value='{$key}' {$selected}>{$value}</option>";
+                        echo "<span id='{$key}' class='{$active}'>{$value}</span>";
                     }
                 ?>
-                <option value="12">Volvo</option>
-                <option value="2">Saab</option>
-                <option value="3">Opel</option>
-                <option value="4">Audi</option>
-            </select>
+                <input type="hidden" name="post[catIds]" value="<?php echo $Post_obj->get_catIds(); ?>">
+            </div>
+            <!-- old list to compare -->
+            <input type="hidden" name="post[catIdsOld]" value="<?php echo $Post_obj->get_catIds(); ?>">
         </div>
         <br>
 
         <div>
             <label for="post[author]">Post Author</label>
             <select name="post[author]">
-                <option value="22">Russell Moore</option>
-                <option value="15">Sabrina Smith</option>
-                <option value="26">Alexander Hamilton</option>
-                <option value="35">Stephanie Wardlaw</option>
+                <?php
+                    // showing possible users as well as selected tags
+                    foreach ($possibleUsers_array as $User) {
+                        // set default selected value
+                        $selected = "";
+                        // check to see if the post has any categories attached to it
+                        if ($User->get_id() === $Post_obj->author) {
+                            $selected = "selected";
+                        }
+                        echo "<option value='{$User->get_id()}' {$selected}>{$User->fullName}</option>";
+                    }
+                ?>
             </select>
         </div>
         <br>
 
         <div>
             <label for="post[status]">Post Status</label>
+            <!-- required -->
             <select name="post[status]">
                 <option <?php if ($Post_obj->status == 0) { echo "selected";} ?> value="0">Draft</option>
                 <option <?php if ($Post_obj->status == 1) { echo "selected";} ?> value="1">Published</option>
@@ -127,36 +130,75 @@
 
         <div>
             <label for="post[tagIds]">Post Tags</label>
-            <select name="post[tagIds]">
-                <option value="23">Four-door</option>
-                <option value="3">Two doors</option>
-                <option value="2">Pink</option>
-                <option value="4">Purple</option>
-                <option value="5">Brown</option>
-            </select>
+            <div class="multiSelect">        
+                <?php
+                    // showing possible tags as well as selected tags
+                    foreach ($possibleTags_array as $key => $value) {
+                        // set default selected value
+                        $active = "";
+                        // check to see if the post has any tags attached to it
+                        if (isset($postTags_array[$key])) {
+                            $active = "active";
+                        }
+                        echo "<span id='{$key}' class='{$active}'>{$value}</span>";
+                    }
+                ?>
+                <input type="hidden" name="post[tagIds]" value="<?php echo $Post_obj->get_tagIds(); ?>">
+            </div>
+            <!-- old list to compare -->
+            <input type="hidden" name="post[tagIdsOld]" value="<?php echo $Post_obj->get_tagIds(); ?>">
         </div>
         <br>
 
         <div>
             <label for="post[labelIds]">Post Labels</label>
-            <select name="post[labelIds]">
-                <option value="2">Good condition</option>
-                <option value="33">Poor condition</option>
-                <option value="45">Lopsided</option>
-                <option value="1">No ceiling</option>
-            </select>
+            <div class="multiSelect">        
+                <?php
+                    // showing possible labels as well as selected labels
+                    foreach ($possibleLabels_array as $key => $value) {
+                        // set default selected value
+                        $active = "";
+                        // check to see if the post has any labels attached to it
+                        if (isset($postLabels_array[$key])) {
+                            $active = "active";
+                        }
+                        echo "<span id='{$key}' class='{$active}'>{$value}</span>";
+                    }
+                ?>
+                <input type="hidden" name="post[labelIds]" value="<?php echo $Post_obj->get_labelIds(); ?>">
+            </div>
+            <!-- old list to compare -->
+            <input type="hidden" name="post[labelIdsOld]" value="<?php echo $Post_obj->get_labelIds(); ?>">
         </div>
         <br>
 
         <div>
             <label for="post[content]">Post Content</label>
+            <br>
             <textarea name="post[content]" cols="30" rows="10"><?php echo $Post_obj->content ?></textarea>
         </div>
         <br>
 
+        <!-- hidden form fields -->
+        <input type="hidden" name="post[id]" value="<?php echo $postId == "add" ? NULL : $postId; ?>">
+        <input type="hidden" name="post[authorName]" value="<?php echo $Post_obj->get_authorName();?>">
+
         <!-- submit button -->
         <div>
-            <button type="submit"><?php echo $postId == "add" ? "ADD" : "EDIT" ?> POST</button>
+            <button type="submit"><?php echo $postId == "add" ? "ADD" : "EDIT"; ?> POST</button>
         </div>
     </form>
 </div>
+
+<!-- page level JavaScript/jQuery -->
+<script>
+    $(document).ready(function() {
+        // on change reset author's name in hidden input field
+        $('select[name="post[author]"]').on('change', function() {
+            var name = $(this).find('option:selected').text();
+            var input = $('input[name="post[authorName]"]');
+            input.val(name);
+        });
+        
+    });
+</script>

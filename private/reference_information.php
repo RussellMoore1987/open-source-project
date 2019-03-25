@@ -69,8 +69,11 @@
                         // it makes sure that the string length is not more than the set value
                     // * 'exact' => 5 
                         // it makes sure that the string length is the same as the set value
-                    // * 'required' => 'yes'/'no' 
-                        // it makes sure a value is sent through
+                    // * 'required' => 'yes' 
+                        // it makes sure a value is sent through, not necessarily that it's always required. basically if it's not NULL it needs to be checked and cannot be an empty string
+                        // we also use the required for the cleanFormArray() function in the databaseobject class.
+                            // if it is required and it goes to the cleanFormArray() function, if it is NULL or an empty string it will be kicked off the returned $post_array.
+
                     // * 'html' => 'yes'/'no'/'full'
                         // yes = allows for HTML special characters but does not allow JavaScript characters. Excluded values: <script, ;, \
                         // no = dose not allow for HTML special characters and does not allow JavaScript characters. Excluded values: <>, (), [], {}, ;, \, /
