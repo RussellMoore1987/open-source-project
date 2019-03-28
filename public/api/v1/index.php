@@ -1,7 +1,7 @@
 <?php
 
 // This is the endpoint that will display general information and navigation for the API
-// the information is displayed in JSON format upon a request to this endpoint
+// the information is displayed in JSON format upon a request to this endpoint: root/public/api/v1/
 
 // Begin structuring our response and packaging it to send back to the user
 
@@ -23,6 +23,7 @@ $generalInfo = array(
     "root" => "https://www.placeholdersite.com",
     "mainPath" => "/public/api/v1/",
     "routes" => NULL
+    // TODO: Should information about success and errors be displayed here?
 );
 
 // ----------- 2nd Level - mainAuthentication and route endpoints ------------------------
