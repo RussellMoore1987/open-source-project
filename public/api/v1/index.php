@@ -29,7 +29,9 @@ $generalInfo = array(
 $routes = array(
     "mainAuthentication" => NULL,
     "/categories" => NULL,
-    "/posts" => NULL
+    "/posts" => NULL,
+    "/tags" => NULL,
+    "/labels" => NULL
 );
 
 // ---------- 3rd Level - category, posts, and mainAuthentication data -----------------
@@ -49,6 +51,16 @@ $posts = array(
     "methods" => NULL
 );
 
+// Tags
+$tags = array(
+    "methods" => NULL
+);
+
+// Labels
+$labels = array(
+    "methods" => NULL
+);
+
 // --------- 4th Level - available methods, GET -----------------------------------------
 // Categories
 $categoryMethods = array(
@@ -58,6 +70,18 @@ $categoryMethods = array(
 
 // Posts
 $postMethods =array(
+    "availableMethods" => NULL,
+    "GET" => NULL
+);
+
+// Tags
+$tagMethods = array(
+    "availableMethods" => NULL,
+    "GET" => NULL
+);
+
+// Labels
+$labelMethods = array(
     "availableMethods" => NULL,
     "GET" => NULL
 );
@@ -81,15 +105,30 @@ $postGet = array(
     "parameters" => NULL
 );
 
+// Tags
+$tagAvailableMethods = array(
+    "GET" => "To get tags information"
+);
+
+$tagGet = array(
+    "parameters" => NULL
+);
+
+// Labels
+$labelAvailableMethods = array(
+    "GET" => "To get labels information"
+);
+
+$labelGet = array(
+    "parameters" => NULL
+);
+
 // ---------- 6th level - no params, id, createdDate, greaterThan, lessThan, ctr -------------
 // Categories
 $categoryGetParameters = array(
     "noParamsSent" => NULL,
     "id" => NULL,
-    "ctr" => NULL,
-    "createdDate" => NULL,
-    "greaterThan" => NULL,
-    "lessThan" => NULL
+    "ctr" => NULL
 );
 
 // Posts
@@ -103,6 +142,21 @@ $postGetParameters = array(
     // TODO: Any additonal parameters? By the id of the user that created the post?
 );
 
+// Tags
+$tagGetParameters = array(
+    "noParamsSent" => NULL,
+    "id" => NULL,
+    "ctr" => NULL
+);
+
+// Labels
+$labelGetParameters = array(
+    "noParamsSent" => NULL,
+    "id" => NULL,
+    "ctr" => NULL
+);
+
+
 // ------------ 7th level - info and examples for each parameter -----------------------------
 // Categories
 $categoryGetNoParamsSent = array(
@@ -113,36 +167,15 @@ $categoryGetNoParamsSent = array(
 $categoryGetId = array(
     "required" => false,
     "type" => "int / list",
-    "description" => "Gets categoires by the category id or list of cateogry ids",
+    "description" => "Gets categoires by the category id or list of category ids",
     "example" => NULL
 );
 
-$CategoryGetCtr = array(
+$categoryGetCtr = array(
     "required" => false,
     "type" => "int",
     "description" => "Gets categories by the Collection Type Reference. 0 = none, 1 = posts, 2 = media content, 3 = users, 4 = content",
     "example" => "root/public/api/v1/categories/?ctr=3"
-);
-
-$categoryGetCreatedDate = array(
-    "required" => false,
-    "type" => "date",
-    "description" => "Gets categories by the date they were created",
-    "example" => "root/public/api/v1/categories/?createdDate='2019-02-01'"
-);
-
-$categoryGetGreaterThan = array(
-    "required" => false,
-    "type" => "date",
-    "description" => "Gets categories that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan paramter to get dates in categories with createdDates between the two values",
-    "example" => NULL
-);
-
-$categoryGetLessThan = array(
-    "required" => false,
-    "type" => "date",
-    "description" => "Gets categories that have a createdDate <= the date given with the lessThan parameter. May be used with the greaterThan paramter to get dates in categories with createdDates between the two values",
-    "example" => NULL
 );
 
 // Posts
@@ -186,22 +219,52 @@ $postGetStatus = array(
     "example" => "root/public/api/v1/posts/?status=1"
 );
 
+// Tags
+$tagGetNoParamsSent = array(
+    "description" => "When no parameters are passed then all tags are returned",
+    "example" => "root/public/api/v1/tags/"
+);
+
+$tagGetId = array(
+    "required" => false,
+    "type" => "int / list",
+    "description" => "Gets tags by the tag id or list of tag ids",
+    "example" => NULL
+);
+
+$tagGetCtr = array(
+    "required" => false,
+    "type" => "int",
+    "description" => "Gets tags by the Collection Type Reference. 0 = none, 1 = posts, 2 = media content, 3 = users, 4 = content",
+    "example" => "root/public/api/v1/tags/?ctr=3"
+);
+
+// Labels
+$labelGetNoParamsSent = array(
+    "description" => "When no parameters are passed then all labels are returned",
+    "example" => "root/public/api/v1/labels/"
+);
+
+$labelGetId = array(
+    "required" => false,
+    "type" => "int / list",
+    "description" => "Gets labels by the label id or list of label ids",
+    "example" => NULL
+);
+
+$labelGetCtr = array(
+    "required" => false,
+    "type" => "int",
+    "description" => "Gets labels by the Collection Type Reference. 0 = none, 1 = posts, 2 = media content, 3 = users, 4 = content",
+    "example" => "root/public/api/v1/labels/?ctr=3"
+);
+
 
 // ---------------------- 8th Level - examples ---------------------------------------
 // Categories
 $categoryGetIdExamples = array(
     "intExample" => "root/public/api/v1/categories/?id=5",
     "listExample" => "root/public/api/v1/categories/?id=5,6,7,8,9"
-);
-
-$categoryGetGreaterThanExamples = array(
-    "greaterThan" => "root/public/api/v1/categories/?greaterThan='2018-02-01'",
-    "between" => "root/public/api/v1/categories/?greaterThan='2018-02-01'&lessThan='2019-03-01'"
-);
-
-$categoryGetLessThanExamples = array(
-    "lessThan" => "root/public/api/v1/categories/?lessThan='2019-03-01'",
-    "between" => "root/public/api/v1/categories/?greaterThan='2018-02-01'&lessThan='2019-03-01'"
 );
 
 // Posts
@@ -220,28 +283,41 @@ $postGetLessThanExamples = array(
     "between" => "root/public/api/v1/posts/?greaterThan='2018-02-01'&lessThan='2019-03-01'"
 );
 
+// Tags
+$tagGetIdExamples = array(
+    "intExample" => "root/public/api/v1/tags/?id=5",
+    "listExample" => "root/public/api/v1/tags/?id=5,6,7,8,9"
+);
+
+// Labels
+$labelGetIdExamples = array(
+    "intExample" => "root/public/api/v1/labels/?id=5",
+    "listExample" => "root/public/api/v1/labels/?id=5,6,7,8,9"
+);
+
 // Package the data structure to prepare for json encoding
 // NOTE: You must link your data in reverse from the bottom of the data structure to the top for it to package correctly
 
 // ========= Link the 7th and 8th levels =============
 // Categories
 $categoryGetId['example'] = $categoryGetIdExamples;
-$categoryGetGreaterThan['example'] = $categoryGetGreaterThanExamples;
-$categoryGetLessThan['example'] = $categoryGetLessThanExamples;
 
 // Posts
 $postGetId['example'] = $postGetIdExamples;
 $postGetGreaterThan['example'] = $postGetGreaterThanExamples;
 $postGetLessThan['example'] = $postGetLessThanExamples;
 
+// Tags
+$tagGetId['example'] = $tagGetIdExamples;
+
+// Labels
+$labelGetId['example'] = $labelGetIdExamples;
+
 // ======== Link the 6th and 7th levels ===============
 // Categories
 $categoryGetParameters['noParamsSent'] = $categoryGetNoParamsSent;
 $categoryGetParameters['id'] = $categoryGetId;
-$categoryGetParameters['ctr'] = $CategoryGetCtr;
-$categoryGetParameters['createdDate'] = $categoryGetCreatedDate;
-$categoryGetParameters['greaterThan'] = $categoryGetGreaterThan;
-$categoryGetParameters['lessThan'] = $categoryGetLessThan;
+$categoryGetParameters['ctr'] = $categoryGetCtr;
 
 // Posts
 $postGetParameters['noParamsSent'] = $postGetNoParamsSent;
@@ -251,24 +327,65 @@ $postGetParameters['greaterThan'] = $postGetGreaterThan;
 $postGetParameters['lessThan'] = $postGetLessThan;
 $postGetParameters['status'] = $postGetStatus;
 
+// Tags
+$tagGetParameters['noParamsSent'] = $tagGetNoParamsSent;
+$tagGetParameters['id'] = $tagGetId;
+$tagGetParameters['ctr'] = $tagGetCtr;
+
+// Labels
+$labelGetParameters['noParamsSent'] = $labelGetNoParamsSent;
+$labelGetParameters['id'] = $labelGetId;
+$labelGetParameters['ctr'] = $labelGetCtr;
+
 // ======== Link the 5th and 6th levels ===============
+// Categories
 $categoryGet['parameters'] = $categoryGetParameters;
+
+// Posts
 $postGet['parameters'] = $postGetParameters;
 
+// Tags
+$tagGet['parameters'] = $tagGetParameters;
+
+// Labels
+$labelGet['parameters'] = $labelGetParameters;
+
 // ========= Link the 4th and 5th levels ==============
+// Categories
 $categoryMethods['availableMethods'] = $categoryAvailableMethods;
 $categoryMethods['GET'] = $categoryGet;
+
+// Posts
 $postMethods['availableMethods'] = $postAvailableMethods;
 $postMethods['GET'] = $postGet;
 
+// Tags
+$tagMethods['availableMethods'] = $tagAvailableMethods;
+$tagMethods['GET'] = $tagGet;
+
+// Labels
+$labelMethods['availableMethods'] = $labelAvailableMethods;
+$labelMethods['GET'] = $labelGet;
+
 // ========= Link the 3rd and 4th levels ================
+// Categories
 $categories['methods'] = $categoryMethods;
+
+// Posts
 $posts['methods'] = $postMethods;
+
+// Tags
+$tags['methods'] = $tagMethods;
+
+// Labels
+$labels['methods'] = $labelMethods;
 
 // ========= Link the 2nd and 3rd levels ================
 $routes['mainAuthentication'] = $mainAuthentication;
 $routes['/categories'] = $categories;
 $routes['/posts'] = $posts;
+$routes['/tags'] = $tags;
+$routes['/labels'] = $labels;
 
 // ========= Link the 1st and 2nd levels ================
 $generalInfo['routes'] = $routes;
