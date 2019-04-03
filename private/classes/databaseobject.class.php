@@ -213,13 +213,16 @@
                 // reset error array for a clean slate
                 $this->errors = [];
                 // get class attributes, brings back an associative array
-                $attributes = $this->attributes();
+                $attributes = $this->attributes($type);
+                // get validation column info
+                $validation_columns = static::$validation_columns;
                 // loop over and validate
                 foreach ($attributes as $key => $value) {
                     // if in create mode expect all values to be there
-                    if ($type == "create" && property_exists($this, $key)) {
+                    if ($type === "create" && property_exists($this, $key)) {
                         // run validation on property value
-                        $errors_array = val_validation($value, static::$validation_columns[$key]);
+                        // echo $key . "%%%%%%%%%<br>";
+                        $errors_array = val_validation($value, $validation_columns[$key]);
                         // check to see if there are any errors in the array, if yes merge it with the errors array
                         if (count($errors_array) > 0) {
                             // merge arrays
@@ -228,7 +231,7 @@
                     // this assumes that were running an update
                     } elseif (property_exists($this, $key) && !is_null($value)) {
                         // run validation on property value
-                        $errors_array = val_validation($value, static::$validation_columns[$key]);
+                        $errors_array = val_validation($value, $validation_columns[$key]);
                         // check to see if there are any errors in the array, if yes merge it with the errors array
                         if (count($errors_array) > 0) {
                             // merge arrays
@@ -243,13 +246,14 @@
                
             // Create a new instance/record
             protected function create() {
-                // validate
+                // validate all attributes
                 $this->validate("create");
-                // if errors return false, don't continue
+                // if errors return false, dont continue/add record
                 if (!empty($this->errors)) { return false; }
-
-                // get attributes
-                $attributes = $this->sanitized_attributes();
+                // get all attributes sanitized
+                $attributes = $this->sanitized_attributes("create");
+                // echo "just before up date create() ***********";
+                // var_dump($attributes);  
                 // sql
                 $sql = "INSERT INTO " . static::$tableName . " (";
                 $sql .= join(", ", array_keys($attributes));
@@ -265,33 +269,32 @@
                     // add the new id to the obj
                     $this->id = self::$database->insert_id;
                 }
-                // saving result so we can free up connection
-                $tempResult = $result;
-                //free up query result
-                $result->free();
+                // perform class specific cleanup, post, user, tag, ect.
+                $this->class_clean_up_update($this->attributes('create'));
                 // return true
-                return $tempResult;
+                return $result;
             }
 
             // update existing record
             protected function update() {
-                // validate
+                // validate, all attributes that we were given
                 $this->validate();
                 // if errors return false, don't continue
                 if (!empty($this->errors)) { return false; }
 
-                // get attributes, we should only be given at this point what needs to be updated
-                $attributes = $this->sanitized_attributes("yes");
-                echo "just before up date ***********";
-                var_dump($attributes);   
+                // get attributes sanitized, we should only be given at this point what needs to be updated, all NULLs
+                $attributes = $this->sanitized_attributes();
+                // echo "just before up date ***********";
+                // var_dump($attributes);   
                 $attribute_pairs = [];
                 $attributePairsToUpDate_array = [];
+                // all validation was done previously
                 foreach ($attributes as $key => $value) {
-                    if (property_exists($this, $key) && !is_null($value)) {
-                        $value = trim($value);
-                        $attribute_pairs[] = "{$key}='{$value}'";
-                        $attributePairsToUpDate_array[$key] = $value;
-                    }
+                    // double checking the trim, just in case
+                    $value = trim($value);
+                    $attribute_pairs[] = "{$key}='{$value}'";
+                    // add to this array so we know exactly what was updated in a key value array
+                    $attributePairsToUpDate_array[$key] = $value;
                 }
 
                 // sql
@@ -347,30 +350,32 @@
             }
 
             // create an associative array, key value pair from the static::$columns excluding id
-            public function attributes($update = "no") {
+            public function attributes($type = "update") {
                 $attributes = [];
                 foreach (static::$columns as $column) {
                     // skip class column exclusions
                     if (in_array($column, static::$columnExclusions)) { continue; }
-                    // if in update mode do not add values with NULL
-                    if ($update === "yes") {
+                    // if in type = update mode do not add values with NULL
+                    if ($type === "update") {
                         if ($this->$column === NULL) { continue; }
                     }
                     // construct attribute list with object values
                     $attributes[$column] = $this->$column;
                 }
+                // echo "attributes ***********";
+                // var_dump($attributes); 
                 // return array of attributes
                 return $attributes;
             }
 
             // sanitizes attributes, for MySQL queries, and to protect against my SQL injection
-            protected function sanitized_attributes($update = "no") {
+            protected function sanitized_attributes($type = "update") {
                 $sanitized_array = [];
-                foreach ($this->attributes($update) as $key => $value) {
+                foreach ($this->attributes($type) as $key => $value) {
                     $sanitized_array[$key] = self::db_escape($value);
                 }
-                echo "sanitized_attributes ***********";
-                var_dump($sanitized_array); 
+                // echo "sanitized_attributes ***********";
+                // var_dump($sanitized_array); 
                 return $sanitized_array;
             }
 
@@ -466,22 +471,24 @@
             }
 
             static public function cleanFormArray(array $array){
-                echo "just got info to clean up ***********";
-                var_dump($array);
-                // get and store validation columns to check if we need to clean up
+                // echo "just got info to clean up ***********";
+                // var_dump($array);
+                // get and store class specific validation columns to check if we need to clean up
                 $cleanUpInfo_array = static::$validation_columns;
-                // default array
+                // default array, fill with appropriate applicable form data
                 $post_array = [];
                 // loop through array and filter accordingly
                 foreach ($array as $key => $value) {
+                    // If I want to change it, I needed it, get a value or no go
                     if (isset($cleanUpInfo_array[$key]) && isset($cleanUpInfo_array[$key]['required'])) {
                         // check to see if the information is blank or null, if it is do nothing, if it is not put in the array
                         if (!is_blank($value)) {
                             $post_array[$key] = trim($value);
                         }
+                    // pass through everything else do validation later on
                     } else {
                         // let it pass through
-                        $post_array[$key] = $value;
+                        $post_array[$key] = trim($value);
                     }
                 }
                 return $post_array;

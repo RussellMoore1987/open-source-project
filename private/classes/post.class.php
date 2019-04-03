@@ -31,7 +31,7 @@
                     'name'=>'Post AuthorName Stamp',
                     'required' => 'yes',
                     'type' => 'str', // type of string
-                    'min'=> 4, // string length
+                    'min'=> 4, // string length, 2 first name, 2 last name
                     'max' => 50, // string length
                     'html' => 'no'
                 ], 
@@ -69,10 +69,10 @@
                     'date' => 'yes'
                 ],
                 'imageName' => [
-                    'required' => 'yes',
                     'name'=>'Post imageName',
                     'type' => 'str', // type of string
-                    'max' => 50 // string length
+                    'max' => 150, // string length
+                    'min' => 5 // string length
                 ], 
                 'labelIds' => [
                     'name'=>'Post labelIds',
@@ -123,7 +123,9 @@
 
             // class clean up update
             protected function class_clean_up_update(array $array = []){
-                // check properties, only update necessary ones  
+                // check properties, only update necessary ones 
+                // echo "class_clean_up_update info ***********";
+                // var_dump($array); 
                 // check to see if catIds were passed in
                 if (isset($array['catIds'])) {
                     // check to see if the new list and the old list are the same
@@ -138,7 +140,7 @@
                             foreach ($id_array as $value) {
                                 $this->insert_connection_record("posts_to_categories", ["postId", "categoryId"], [$this->id, $value]);
                             }
-                            echo "updated!!!***********";
+                            // echo "updated!!! posts_to_categories *********** <br>";
                         }
                     } 
                 }
@@ -156,7 +158,25 @@
                             foreach ($id_array as $value) {
                                 $this->insert_connection_record("posts_to_labels", ["postId", "labelId"], [$this->id, $value]);
                             }
-                            echo "updated!!!***********";
+                            // echo "updated!!! posts_to_labels *********** <br>";
+                        }
+                    } 
+                }
+                // check to see if mediaContentIds were passed in
+                if (isset($array['mediaContentIds'])) {
+                    // check to see if the new list and the old list are the same
+                    if (!($this->mediaContentIds == $this->mediaContentIdsOld)) {
+                        // delete all old connections 
+                        $this->delete_connection_records("posts_to_media_content", "postId", $this->id);
+                        // if string is blank don't update, no need to data is accurate
+                        if (!(is_blank($this->mediaContentIds))) {
+                            // make the id list into an array
+                            $id_array = explode(",", $this->mediaContentIds);
+                            // loop through and make a record for each id
+                            foreach ($id_array as $value) {
+                                $this->insert_connection_record("posts_to_media_content", ["postId", "mediaContentId"], [$this->id, $value]);
+                            }
+                            // echo "updated!!! posts_to_media_content *********** <br>";
                         }
                     } 
                 }
@@ -174,7 +194,7 @@
                             foreach ($id_array as $value) {
                                 $this->insert_connection_record("posts_to_tags", ["postId", "tagId"], [$this->id, $value]);
                             }
-                            echo "updated!!!***********";
+                            // echo "updated!!! posts_to_tags *********** <br>";
                         }
                     } 
                 }
@@ -193,7 +213,7 @@
                     // empty array to hold potential extended information
                     $extendedInfo_array = [];
                     // get all images
-                    // $extendedInfo_array['images'] = $this->get_post_images();
+                    $extendedInfo_array['images'] = $this->get_post_images();
                     // get tags
                     $extendedInfo_array['tags'] = $this->get_post_tags();
                     // get labels
@@ -206,7 +226,7 @@
                 
                 // get image, main queries for editing
                 public function get_post_image() {
-                    $sql = "SELECT mc.alt, mc.name ";
+                    $sql = "SELECT mc.id, mc.alt, mc.name ";
                     $sql .= "FROM media_content AS mc ";
                     $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
                     $sql .= "ON ptmc.mediaContentId = mc.id ";
@@ -219,11 +239,12 @@
 
                 // get images, main queries for editing
                 public function get_post_images() {
-                    $sql = "SELECT mc.alt, mc.name ";
+                    $sql = "SELECT mc.id, mc.alt, mc.name ";
                     $sql .= "FROM media_content AS mc ";
                     $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
                     $sql .= "ON ptmc.mediaContentId = mc.id ";
                     $sql .= "WHERE ptmc.postId = '" . self::db_escape($this->id) . "' ";
+                    $sql .= "AND mc.type IN ('PNG', 'JPEG', 'JPG', 'GIF') ";
                     // return data
                     return MediaContent::find_by_sql($sql);    
                 }
@@ -260,7 +281,7 @@
                     // return data
                     return Category::find_by_sql($sql);    
                 }
-            // # single post query's end
+            // # single post querys end
         // @ class specific queries end
 
         // @ properties start
@@ -278,6 +299,7 @@
             // form helpers/update helper
                 protected $catIdsOld;
                 protected $labelIdsOld;
+                protected $mediaContentIdsOld;
                 protected $tagIdsOld;
             // protected properties, read only, use getters, they are sent by functions/methods when needed 
                 protected $authorName; // get_authorName()
@@ -297,6 +319,8 @@
             public function __construct(array $args=[]) {
                 // clean up form information coming in
                 $args = self::cleanFormArray($args);
+                // echo "just got new post info ***********";
+                // var_dump($args);
                 // Set up properties
                 $this->id = $args['id'] ?? NULL;    
                 $this->author = $args['author'] ?? NULL;   
@@ -311,11 +335,12 @@
                 $this->imagePath_array = [];
                 // check to see if we have an image name
                 if (strlen(Trim($this->imageName)) > 0) {
-                    $this->$imagePath_array = [get_image_path('thumbnail'), get_image_path('small'), get_image_path('medium'), get_image_path('large'), get_image_path('original')];  
+                    $this->imagePath_array = [$this->get_image_path('thumbnail'), $this->get_image_path('small'), $this->get_image_path('medium'), $this->get_image_path('large'), $this->get_image_path('original')];  
                 }
                 $this->labelIds = $args['labelIds'] ?? NULL;
                 $this->labelIdsOld = $args['labelIdsOld'] ?? NULL;
                 $this->mediaContentIds = $args['mediaContentIds'] ?? NULL;
+                $this->mediaContentIdsOld = $args['mediaContentIdsOld'] ?? NULL;
                 // Format dates 
                 if (isset($args['postDate']) && strlen(trim($args['postDate'])) > 0) {
                     // Turn date to time string
@@ -325,7 +350,7 @@
                     $postFullDate = date("F d, Y", $postDateStr);
                     // set dates
                     // database date
-                    $this->postDate = $args['postDate'];
+                    $this->postDate = date("Y-m-d", $postDateStr);
                     // abbreviated date
                     $this->shortDate = $shortDate;
                     // nicely formatted date

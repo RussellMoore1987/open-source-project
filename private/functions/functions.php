@@ -75,7 +75,7 @@ function get_image_path($type = 'small') {
       case 'original': $type = 'original'; break;
       default: $type = 'small'; break;
   }
-  return IMAGE_PATH . "/{$type}" ;
+  return IMAGE_LINK_PATH . "/{$type}" ;
 }
 
 // give it an array of objects and it will give you back an array of Json on objects ready for the API
@@ -92,5 +92,18 @@ function obj_array_api_prep(array $obj_array, $type = 'basic') {
     return $apiObj_array;
 }
 
+// make a list into an array where key and value are the same
+function list_to_array($list) {
+  // make array from ids
+  $list_array = explode(",", $list);
+  // set array
+  $associativeList_array = [];
+  // fill array with form data
+  foreach ($list_array as $value) {
+      $associativeList_array[$value] = $value;
+  }
+  // return array
+  return $associativeList_array;
+}
 
 ?>
