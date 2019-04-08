@@ -1,5 +1,5 @@
 <?php
-    // todo: clean up echos and var_dump, to remove it from the function/validation function page
+    // todo: clean up echos, var_dumps, and var_dump, to remove it from the function/validation function page
     // @ logic for add_edit_post.php start
         // set page title
         $pageTitle = "Add/Edit Posts";
@@ -13,7 +13,7 @@
                 $postId = (int) $postId;
                 // get post for editing
                 $Post_obj = Post::find_by_id($postId);
-                // error handling
+                // error handling, if not there, throw an error
                 if (!$Post_obj) {
                     $Post_obj = new Post();
                     $Post_obj->errors[] = "No post with the ID of {$postId} exists";

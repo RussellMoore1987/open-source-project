@@ -3,7 +3,7 @@
         // @ class database information start
             // Class specific properties. Overwritten from DatabaseObject Class
             // Name of the table
-            static protected $tablename = 'tags';
+            static protected $tableName = "tags";
             // db columns, if need to exclude particular column excluded in the database object attributes()
             static protected $columns = ['id', 'note', 'title', 'useTag'];
             // values to exclude on normal updates, should always include id
@@ -13,7 +13,6 @@
             // * collection_type_reference, located at: root/private/reference_information.php
             static protected $collectionTypeReference = 0;
             // db validation, // * validation_options located at: root/private/reference_information.php
-            // get all post tags
             static protected $validation_columns = [
                 'id' => [
                     'name' => 'Tag id',
@@ -34,7 +33,7 @@
                     'type' => 'str', // type of string
                     'min' => 2, // string length
                     'max' => 50, // string length
-                    'html' => 'yes'
+                    'html' => 'yes' // mostly just to allow special characters like () []
                 ],
                 'useTag' => [
                     'name'=>'Tag useTag',
@@ -73,6 +72,8 @@
         // @ methods start
             // constructor method, type declaration of array
             public function __construct(array $args=[]) {
+                // clean up form information coming in
+                $args = self::cleanFormArray($args);
                 $this->id = $args['id'] ?? NULL;
                 $this->note = $args['note'] ?? NULL;
                 $this->title = $args['title'] ?? NULL;

@@ -20,4 +20,9 @@ span.active {
 .multiSelect span img {
     width: 80px;
 }
+
+.temp_flex_sb{
+    display: flex;
+    justify-content: space-between;
+}
 /*! temp styles */

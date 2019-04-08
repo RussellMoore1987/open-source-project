@@ -10,7 +10,7 @@
         ?>
     </div>
     <p>Comment Count: <?php echo $Post_obj->get_comments() ?? "none"; ?></p>
-    <form method="post" action="add_edit_post?postId=<?php echo $postId ?>">
+    <form method="post" action='add_edit_post<?php if($postId != 'add' && is_int($postId)) { echo "?postId={$postId}";} ?>'>
         <!-- main form -->
         <div>
             <label for="post[title]">Post Title</label>
