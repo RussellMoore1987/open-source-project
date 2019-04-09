@@ -144,12 +144,61 @@ $apiRoot = array(
                             "type" => "int",
                             "description" => "Returns all images associated with the posts. 0 = Return no images, 1 = Return all images. Default is 0.  ",
                             "example" => "root/public/api/v1/posts/?allImages=1"
+                        ],
+                        "page" => [
+                            "required" => false,
+                            "type" => int,
+                            "description" => "Returns the specified set of posts for the page of results requested",
+                            "example" => "root/public/api/v1/posts?page=1"
+                        ],
+                        "perPage" => [
+                            "required" => false,
+                            "type" => int,
+                            "description" => "Specifies the number of results to return with each page of information.",
+                            "example" => "root/public/api/v1/posts?perPage=50"
                         ]
                     ]
                 ],
                 "exampleResponse" => [
-                    "response" => [
-                        
+                    // TODO: Make this example response dynamic based on the current CMS system
+                    "successResponse" => [
+                        "success" => true,
+                        "errors" => [],
+                        "requestType" => "GET",
+                        "totalPages" => 4,
+                        "currentPage" => 1,
+                        "posts" => [
+                            [
+                                "id" => 1,
+                                "createdBy" => 69,
+                                "catIds" => [
+                                    3, 4, 5, 6
+                                ],
+                                "tagIds" => [
+                                    2, 3
+                                ],
+                                "labelIds" => [
+                                    9, 6, 5
+                                ],
+                                "content" => [
+                                    "url" => "www.something.com/somethingelse/thisthing",
+                                    "status" => 1,
+                                    "title" => "This Title",
+                                    "description" => "A description",
+                                    "contentUrl" => "www.anotherurl.com/thisone"
+                                ]
+                            ]
+                        ]
+                    ],
+                    "errorResponse" => [
+                        "success" => false,
+                        "errors" => [
+                            "code" => 500,
+                            "message" => "500 Internal Server Error"
+                        ],
+                        "requestType" => "GET",
+                        "totalPages" => 1,
+                        "currentPage" => 1
                     ]
                 ]
             ]
