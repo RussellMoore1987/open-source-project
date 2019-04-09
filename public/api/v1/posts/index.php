@@ -3,11 +3,11 @@ require_once('../../../../private/functions/functions.php');
 // The endpoint for Posts
 
 // Check to be sure we are using https communication, if not then force it.
-if ($_SERVER['HTTPS'] != "on") {
-    $redirectUrl = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    redirect_to($redirectUrl);
-    exit();
-}
+// if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
+//     $redirectUrl = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+//     redirect_to($redirectUrl);
+//     exit();
+// }
 
 // Check to see if it was a GET request
 if (is_get_request()) {
@@ -19,7 +19,7 @@ if (is_get_request()) {
     if (isset($_GET['id'])) {
         
         // Check to see if we got a list of ids, then add the id or ids to the parameters array
-        
+
         $ids_array = split_string_by_comma($_GET['id']);
 
         if ($ids_array != false) {
@@ -101,6 +101,7 @@ if (is_get_request()) {
 } else {
     $data = [
         "success" => false,
+        "statusCode" => 405,
         "errors" => [
             "code" => 405,
             "message" => "Method Not Allowed"

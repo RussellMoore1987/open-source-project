@@ -1,9 +1,15 @@
 <?php
+require_once('../../../private/functions/functions.php');
 
 // This is the endpoint that will display general information and navigation for the API
 // the information is displayed in JSON format upon a request to this endpoint: root/public/api/v1/
 
-// Begin structuring our response
+// Check to be sure we are using https communication, if not then force it.
+// if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
+//     $redirectUrl = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+//     redirect_to($redirectUrl);
+//     exit();
+// }
 
 // TODO: 
 // 1- Dynamic companyName
@@ -163,6 +169,7 @@ $apiRoot = array(
                     // TODO: Make this example response dynamic based on the current CMS system
                     "successResponse" => [
                         "success" => true,
+                        "statusCode" => 200,
                         "errors" => [],
                         "requestType" => "GET",
                         "totalPages" => 4,
@@ -192,6 +199,7 @@ $apiRoot = array(
                     ],
                     "errorResponse" => [
                         "success" => false,
+                        "statusCode" => 500,
                         "errors" => [
                             "code" => 500,
                             "message" => "500 Internal Server Error"
