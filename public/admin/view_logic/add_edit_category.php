@@ -50,11 +50,8 @@
             }
         
         // # page info
-            // get all categories, then sort them
-            $allCategories_array = Category::find_all();
-
-            // filter array, get back array of arrays 
-            $Categories_array = Category::filter_all_categories($allCategories_array);
+            // get and filter array, get back array of object arrays 
+            $Categories_array = Category::get_all_categories_sorted();
             
             // get correct info for possible "subs of" info, the correct selection of categories
             if (is_blank($Category_obj->useCat)) {
