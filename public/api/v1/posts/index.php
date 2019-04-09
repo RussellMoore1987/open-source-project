@@ -17,11 +17,20 @@ if (is_get_request()) {
     
     // Check what parameters have been passed in the request
     if (isset($_GET['id'])) {
-    
-        // TODO: Check to see if we got a list of ids
-        $parameters_array[] = [
-            "id" => $_GET['id']
-        ];
+        
+        // Check to see if we got a list of ids, then add the id or ids to the parameters array
+        
+        $ids_array = split_string_by_comma($_GET['id']);
+
+        if ($ids_array != false) {
+            $parameters_array[] = [
+                "id" => $_GET['id']
+            ];
+        } else {
+            $parameters_array[] = [
+                "id" => $ids_array
+            ];
+        }
     }
     
     if (isset($_GET['createdDate'])) {

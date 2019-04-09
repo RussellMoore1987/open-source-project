@@ -92,5 +92,27 @@ function obj_array_api_prep(array $obj_array, $type = 'basic') {
     return $apiObj_array;
 }
 
+// Checks if a string is a comma separated list of values then turns it into an array and returns it
+function split_string_by_comma($string) {
+
+  // Return false if there are no commas in the string
+  if (strpos(",", $string) == false) {
+    return false;
+    
+  } else {
+
+    // Get the array of values from the comma separated string
+    $new_array = explode(',', $string);
+
+    // Clean the whitespace from each value, put into new array and return it
+    $clean_array = [];
+    foreach($new_array as $item) {
+      $clean_array[] = trim($item);
+    }
+
+    return $clean_array;
+  }
+}
+
 
 ?>
