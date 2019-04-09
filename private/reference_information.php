@@ -94,4 +94,6 @@
             // ...\public/images/original/fake_image.jpg
             // or 
             // IMAGE_PATH . /thumbnail/fake_image.jpg
+
+        // HTTP Status codes for the API can be found here: https://www.restapitutorial.com/httpstatuscodes.html
 ?> 

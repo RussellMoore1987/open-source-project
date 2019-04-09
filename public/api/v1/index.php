@@ -147,13 +147,13 @@ $apiRoot = array(
                         ],
                         "page" => [
                             "required" => false,
-                            "type" => int,
-                            "description" => "Returns the specified set of posts for the page of results requested",
+                            "type" => "int",
+                            "description" => "Returns the specified set of posts for the page of results requested. Default = 1",
                             "example" => "root/public/api/v1/posts?page=1"
                         ],
                         "perPage" => [
                             "required" => false,
-                            "type" => int,
+                            "type" => "int",
                             "description" => "Specifies the number of results to return with each page of information.",
                             "example" => "root/public/api/v1/posts?perPage=50"
                         ]
@@ -268,7 +268,6 @@ $apiRoot = array(
             ]
         ]
     ]
-    // TODO: Should information about success and errors be displayed here?
 );
 
 // Dynamic content
