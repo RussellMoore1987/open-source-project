@@ -444,6 +444,49 @@
             }
         // @ API specific queries end
 
+        // @ API Dynamic Query Method Start
+            // This method is inherited by the child classes and will be called by the api endpoint pages
+            static protected function api_query_database($parameters_array) {
+                // Specific parameters:
+                    // extendedData
+                    // allImages
+                    // page
+                    // perPage
+
+                // Begin building the sql query
+                // TODO: What columns to return specifically?
+                $sql = "SELECT * FROM {static::$tablename} ";
+
+                // Check if there are parameters for our query, if so then add them to the sql
+                if ($parameters_arry != NULL) {
+
+                    // Get each parameter and build our dynamic sql query
+                    for ($i = 0; $i < sizeof($parameters_array); $i++) {
+                        foreach($parameters_array[$i] as $key => $value) {
+                            // Check if the key is the operator then add it in
+                            if ($key == 'operator') {
+                                $sql .= "{$value} ";
+
+                            // If the key is something else
+                            } elseif ($key == "page") {
+                                $sql .= "OFFSET {$value * } ";
+
+                            } elseif ($key == "perPage") {
+                                $sql .= "LIMIT {$value} ";
+                            } 
+                            
+                            else {
+                                $sql .= "WHERE {$key} ";
+                            }
+        
+                            $sql .= " ";
+                        }
+                    }
+                } 
+            }
+
+        // @ API Dynamic Query Method End
+
         // @ class functionality methods start
             // stands for database escape, you sanitized data, and to protect against my SQL injection
             static protected function db_escape($db_field){

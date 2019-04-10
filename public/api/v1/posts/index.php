@@ -2,6 +2,8 @@
 require_once('../../../../private/functions/functions.php');
 // The endpoint for Posts
 
+// TODO: Add function call to validate api key if it exists and is needed
+
 // Check to be sure we are using https communication, if not then force it.
 // if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
 //     $redirectUrl = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -23,43 +25,50 @@ if (is_get_request()) {
         $ids_array = split_string_by_comma($_GET['id']);
 
         if ($ids_array != false) {
-            $parameters_array[] = [
-                "id" => $_GET['id']
+            $parameters_array['id'] = [
+                $_GET['id'],
+                "="
             ];
         } else {
-            $parameters_array[] = [
-                "id" => $ids_array
+            $parameters_array['id'] = [
+                $ids_array,
+                "="
             ];
         }
     }
     
     if (isset($_GET['createdDate'])) {
-        $parameters_array[] = [
-            "createdDate" => $_GET['createdDate']
+        $parameters_array['createdDate'] = [
+            $_GET['createdDate'],
+            "="
         ];
     }
     
     if (isset($_GET['postDate'])) {
         $parameters_array[] = [
-            "postDate" => $_GET['postDate']
+            "postDate" => $_GET['postDate'],
+            "operator" => "="
         ];
     }
     
     if (isset($_GET['greaterThan'])) {
         $parameters_array[] = [
-            "greaterThan" => $_GET['greaterThan']
+            "greaterThan" => $_GET['greaterThan'],
+            "operator" => ">="
         ];
     }
     
     if (isset($_GET['lessThan'])) {
         $parameters_array[] = [
-            "lessThan" => $_GET['lessThan']
+            "lessThan" => $_GET['lessThan'],
+            "operator" => "<="
         ];
     }
     
     if (isset($_GET['status'])) {
         $parameters_array[] = [
-            "status" => $_GET['status']
+            "status" => $_GET['status'],
+            "operator" => "="
         ];
     }
     
@@ -86,6 +95,8 @@ if (is_get_request()) {
             "perPage" => $_GET['perPage']
         ];
     }
+
+    if (isset($_GET['perPage'] && ))
     
     // Get the data using the parameters given, else get all the data if no parameters given
     

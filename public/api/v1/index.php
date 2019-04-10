@@ -27,7 +27,7 @@ $apiRoot = array(
     "termsOfUse" => "Placeholder Terms URL",
     "version" => "1.0.0",
     "contact" => "someone@someone.com",
-    "description" => "V1.0 of the api. This API may be used to retrieve data fromt the CMS system and in some cases create data. If the system has an API key it is required on all requests.",
+    "description" => "V1.0.0 of the api. This API may be used to retrieve data fromt the CMS system and in some cases create data. If the system has an API key it is required on all requests.",
     "root" => "https://www.placeholdersite.com",
     "mainPath" => "/public/api/v1/",
 
