@@ -62,6 +62,142 @@
                 }
                 return self::find_by_sql($sql);    
             }
+
+            static public function get_all_categories_sorted() {
+                // check to see if we are to have the array set
+                if (count(self::$allCategoriesSorted) <= 0) {
+                    // get all categories, then sort them
+                    $allCategories_array = Category::find_all();
+
+                    // filter array, get back array of arrays 
+                    $Categories_array = Category::filter_all_categories($allCategories_array);
+
+                    self::$allCategoriesSorted = $Categories_array;
+                }
+
+                // return the data
+                return self::$allCategoriesSorted;
+            }
+
+            // this function is overwritten from the databaseObject class, do category checks and then this allows you to add or update a record
+            public function save(){
+                // check and see if we need to do any extra work, validation checks on category layers and transferring children to the correct categories
+                if (($this->subCatIdOld != $this->subCatId) || ($this->useCatOld != $this->useCat)) {
+                    // set localized reference
+                    $Categories_array = Category::find_all();
+                    // change the active record in the object arrays, so the information is accurate to validate all of
+                    foreach ($Categories_array as $Category) {
+                        // find it and change it
+                        if ($Category->get_id() == $this->get_id()) {
+                            // change that record
+                            $Category->subCatId = $this->subCatId;
+                            $Category->useCat = $this->useCat;
+                        }
+                        // put everything into a new array
+                        $CategoriesNew_array[] = $Category;
+                    }
+                    // make sure that the category is not deeper than five layers
+                        // get parents
+                            // set parent counter
+                            $parents = 0;
+                            // see if we are the parent
+                            if (!($this->subCatId == 0)) {
+                                // set up an initial sub ID
+                                $subCatId = $this->subCatId;
+                                // whether or not there are more parents, default true
+                                $moreParents = true;
+                                // loop over the array until all parents are found
+                                while ($moreParents == true) {
+                                    // if we get a zero we are at the top
+                                    if ($subCatId == 0) {
+                                        $moreParents = false;
+                                    } else {
+                                        // loop over array find parent
+                                        foreach ($CategoriesNew_array as $Parent) {
+                                            if ($Parent->get_id() == $subCatId) {
+                                                $subCatId = $Parent->subCatId;
+                                                $parents++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        // get subs
+                            // todo: working here ****************************** finding a way to count subcategory tree length while collecting subcategory lists of ids
+                            // set sub counter
+                            $sudLayers = 0;
+                            // list of child IDs
+                            $subIdList = [];
+                            $tempSubIdList = [];
+                            // whether or not there are more subs, default true
+                            $moreSubs = true;
+                            // set initial parent ID
+                            $parentCatId = $this->get_id();
+                            // looped over category array record the layer, and the IDs of all children and merge them with existing list
+                            // loop over the array until all parents are found
+                            while ($moreSubs == true) {
+                                // set default
+                                $addLayer = false;
+                                // loop over array find subs
+                                foreach ($CategoriesNew_array as $Sub) {
+                                    // if matches set as child
+                                    if ($Sub->subCatId = $parentCatId) {
+                                        // add them to array
+                                        $tempSubIdList[] = $Sub->get_id();
+                                        // add a layer
+                                        $addLayer = true;
+                                    }
+                                }
+                                // check to see if we are adding another layer
+                                if ($addLayer) {
+                                    // at account to the sub layers and keep moving through the array
+                                    $sudLayers++;
+                                } else {
+                                    // no more layers to go through and the loop
+                                    $moreSubs = false;
+                                }
+                                // merge arrays
+                                $subIdList = array_merge($subIdList, $tempSubIdList);
+
+                                // todo: possibly do this for all and start off the sub ID list with the original parent ID
+                                // loop over all subs
+                                for ($i=0; $i < count($subIdList) ; $i++) { 
+                                    // set parent id
+                                    $parentCatId = $subIdList[$i];
+                                    // reset array, we don't know if it has any children
+                                    $tempSubIdList = [];
+                                    // set default
+                                    $addLayer = false;
+                                    // loop over array find subs
+                                    foreach ($CategoriesNew_array as $Sub) {
+                                        // if matches set as child
+                                        if ($Sub->subCatId = $parentCatId) {
+                                            // add them to array
+                                            $tempSubIdList[] = $Sub->get_id();
+                                            // add a layer
+                                            $addLayer = true;
+                                        }
+                                    }
+                                    // check to see if we are adding another layer
+                                    if ($addLayer) {
+                                        // at account to the sub layers and keep moving through the array
+                                        $sudLayers++;
+                                    }
+                                }
+                            }
+
+    
+                    // if the category is a parent make sure to change the children as well
+                    // with children, is the category structure deeper than five
+                    // check to see if we need to update children, new useCat
+                }
+                    
+                echo $parents ." parents count <br>";
+                echo $sudLayers ." suds count <br>";
+                echo $sudLayers + $parents ." total category tree length count <br>";
+                // save 
+                Parent::save();
+            }
         // @ class specific queries end
 
         // @ properties start
@@ -70,6 +206,12 @@
                 public $subCatId;
                 public $title;
                 public $useCat;
+            // secondary properties
+                // this stores the sorted category information
+                static public $allCategoriesSorted = [];
+            // form helpers/update helper
+                protected $subCatIdOld;
+                protected $useCatOld;
             // protected properties, read only, use getters, they are sent by functions/methods when needed 
                 protected $id; // get_id()
         // @ properties end
@@ -90,6 +232,108 @@
             public function get_id() {
                 return $this->id;
             }
+
+            // filter all categories, expects an array of objects
+            static public function filter_all_categories(array $categories_array) {
+                // make arrays of them below
+                $postCategories_array = [];
+                $mediaContentCategories_array = [];
+                $usersCategories_array = [];
+                $contentCategories_array = [];
+
+                // all parents
+                $postParentCategories_array = [];
+                $mediaContentParentCategories_array = [];
+                $usersParentCategories_array = [];
+                $contentParentCategories_array = [];
+
+                // all subs
+                $postSubCategories_array = [];
+                $mediaContentSubCategories_array = [];
+                $usersSubCategories_array = [];
+                $contentSubCategories_array = [];
+
+                // sort them, they should fit into one of these arrays
+                foreach ($categories_array as $Category) {
+                    // get all category of a ctr type parents and subs
+                    switch ($Category->useCat) {
+                        // putting the title in first to use for sorting
+                        case 1: $postCategories_array[$Category->title] = $Category; break;
+                        case 2: $mediaContentCategories_array[$Category->title] = $Category; break;
+                        case 3: $usersCategories_array[$Category->title] = $Category; break;
+                        case 4: $contentCategories_array[$Category->title] = $Category; break;
+                    }
+                    
+                    // get parent category
+                    if ($Category->subCatId == 0) {
+                        switch ($Category->useCat) {
+                            // putting the title in first to use for sorting
+                            case 1: $postParentCategories_array[$Category->title] = $Category; break;
+                            case 2: $mediaContentParentCategories_array[$Category->title] = $Category; break;
+                            case 3: $usersParentCategories_array[$Category->title] = $Category; break;
+                            case 4: $contentParentCategories_array[$Category->title] = $Category; break;
+                        }
+                    // get subs
+                    } else {
+                        switch ($Category->useCat) {
+                            // putting the title in first to use for sorting
+                            case 1: $postSubCategories_array[$Category->title] = $Category; break;
+                            case 2: $mediaContentSubCategories_array[$Category->title] = $Category; break;
+                            case 3: $usersSubCategories_array[$Category->title] = $Category; break;
+                            case 4: $contentSubCategories_array[$Category->title] = $Category; break;
+                        }
+                    }
+                }
+                // sort alphabetically all arrays
+                ksort($postCategories_array);
+                ksort($mediaContentCategories_array);
+                ksort($usersCategories_array);
+                ksort($contentCategories_array);
+
+                // all parents
+                ksort($postParentCategories_array);
+                ksort($mediaContentParentCategories_array);
+                ksort($usersParentCategories_array);
+                ksort($contentParentCategories_array);
+
+                // all subs
+                ksort($postSubCategories_array);
+                ksort($mediaContentSubCategories_array);
+                ksort($usersSubCategories_array);
+                ksort($contentSubCategories_array);
+
+                // put it all into one array
+                
+                $sorted_array['postCategories_array'] = $postCategories_array;
+                $sorted_array['mediaContentCategories_array'] = $mediaContentCategories_array;
+                $sorted_array['usersCategories_array'] = $usersCategories_array;
+                $sorted_array['contentCategories_array'] = $contentCategories_array;
+
+                // all parents
+                $sorted_array['postParentCategories_array'] = $postParentCategories_array;
+                $sorted_array['mediaContentParentCategories_array'] = $mediaContentParentCategories_array;
+                $sorted_array['usersParentCategories_array'] = $usersParentCategories_array;
+                $sorted_array['contentParentCategories_array'] = $contentParentCategories_array;
+
+                // all subs
+                $sorted_array['postSubCategories_array'] = $postSubCategories_array;
+                $sorted_array['mediaContentSubCategories_array'] = $mediaContentSubCategories_array;
+                $sorted_array['usersSubCategories_array'] = $usersSubCategories_array;
+                $sorted_array['contentSubCategories_array'] = $contentSubCategories_array;
+
+                // return data
+                return $sorted_array;
+            }
         // @ methods end
+
+        // @ layouts start
+            // add/edit structure for categories layout
+                // ? it expects $array, retrieved from get_all_categories_sorted() or Category::filter_all_categories(); and a ctr, ctr = collection_type_reference
+                // * collection_type_reference, located at: root/private/reference_information.php
+            static public function layout_categoryStructure($Categories_array = [], $ctr = 1) {
+                // global path to layouts
+                include PRIVATE_PATH . "/layouts/categoryStructure.php";
+            }
+        // @ layouts end
     }
 ?>

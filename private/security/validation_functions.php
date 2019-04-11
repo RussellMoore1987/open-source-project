@@ -111,6 +111,14 @@
         $name = Trim($options['name']) ?? "Unknown Name";
         $errors = [];
 
+        // check to see if we can allow a blank string to pass through, no need to continue doing validation
+        if ($val_length === 0 && !isset($options['required'])) {
+            // return error array, no errors, let the blank string pass through
+            // echo $name . " got here@@@@@@@@<br>";
+            return $errors;
+        }
+        // echo $name . " got here#############<br>";
+
         // Validate length min
         if(isset($options['min']) && $val_length < Trim($options['min'])) {
             $option_min = Trim($options['min']);
@@ -123,14 +131,14 @@
             $option_max = Trim($options['max']);
             $length_over = $val_length - $option_max;
             // error message 
-            $errors[] = "The value \"{$name}\" has a max length of {$option_max} characters. You are {$length_over} characters too long.";
+            $errors[] = "The value \"{$name}\" has a max length of {$option_max} characters. You are {$length_over} character(s) too long.";
         } 
 
         // Validate length exact
         if(isset($options['exact']) && !($val_length == Trim($options['exact']))) { 
             $option_exact = Trim($options['exact']);
-            echo $val_length;
-            echo $option_exact;
+            // echo $val_length;
+            // echo $option_exact;
             // main error message
             $errors[] = "The value \"{$name}\" requires an exact length of {$option_exact} characters. You have only {$val_length} of the characters.";
         }

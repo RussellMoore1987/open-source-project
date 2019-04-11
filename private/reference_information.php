@@ -1,7 +1,7 @@
 <?php
     // @ collection_type_reference
         // # reference number
-        // 0 = none 
+        // 0 = none/get all 
         // 1 = posts 
         // 2 = media content
         // 3 = users
@@ -70,9 +70,16 @@
                     // * 'exact' => 5 
                         // it makes sure that the string length is the same as the set value
                     // * 'required' => 'yes' 
-                        // it makes sure a value is sent through, not necessarily that it's always required. basically if it's not NULL it needs to be checked and cannot be an empty string
+                        // it makes sure a value is sent through: it is needed, can not be blank, can not be NULL
                         // we also use the required for the cleanFormArray() function in the databaseobject class.
                             // if it is required and it goes to the cleanFormArray() function, if it is NULL or an empty string it will be kicked off the returned $post_array.
+                    // ? there are two different ways to work with form data, 
+                        // get it or reject it
+                            // to activate, you must have the validation parameter "required" set
+                        // if I get it then validate it, if not past the blank through
+                            // get it then validate it or let the blank pass through
+                                // this is done by default, but you can set in a "min" parameter which allows you to give minimum length value if it is passed through, all other validations should work as well.
+                            // let the blank pass through, done by default
 
                     // * 'html' => 'yes'/'no'/'full'
                         // yes = allows for HTML special characters but does not allow JavaScript characters. Excluded values: <script, ;, \

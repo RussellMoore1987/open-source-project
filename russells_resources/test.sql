@@ -1,3 +1,12 @@
+
+
+-- conect
+-- devPass1!
+-- devteam
+
+
+
+
 SELECT mc.alt, mc.name
 FROM media_content AS mc
 INNER JOIN posts_to_media_content AS ptmc
@@ -28,4 +37,15 @@ SHOW CREATE TABLE `posts`;
 INSERT INTO `posts_to_categories` (postId, categoryId)
 VALUES (782, 10);
 
-SELECT * FROM posts_to_categories;
+SELECT * FROM posts_to_media_content;
+
+DESC posts_to_media_content;
+SHOW CREATE TABLE posts_to_media_content;
+
+
+
+INSERT INTO posts_to_media_content (postId, mediaContentId) VALUES (307, 3)
+mediaContentId
+mediaContentId
+
+`postId` int(10) unsigned NOT NULL, `mediaContentId` int(10) unsigned NOT NULL, PRIMARY KEY (`postId`,`mediaContentId`), KEY `mediaContentId` (`mediaContentId`), CONSTRAINT `posts_to_media_content_ibfk_1` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`), CONSTRAINT `posts_to_media_content_ibfk_2` FOREIGN KEY (`mediaContentId`) REFERENCES `media_content` (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1

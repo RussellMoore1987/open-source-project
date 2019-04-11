@@ -3,7 +3,7 @@
         // @ class database information start
             // Class specific properties. Overwritten from DatabaseObject Class
             // Name of the table
-            static protected $tablename = 'labels';
+            static protected $tableName = 'labels';
             // db columns, if need to exclude particular column excluded in the database object attributes()
             static protected $columns = ['id', 'note', 'title', 'useLabel'];
             // values to exclude on normal updates, should always include id
@@ -72,6 +72,8 @@
         // @ methods start
             // constructor method, type declaration of array
             public function __construct(array $args=[]) {
+                // clean up form information coming in
+                $args = self::cleanFormArray($args);
                 $this->id = $args['id'] ?? NULL;
                 $this->note = $args['note'] ?? NULL;
                 $this->title = $args['title'] ?? NULL;
