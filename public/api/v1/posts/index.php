@@ -1,5 +1,7 @@
 <?php
 require_once('../../../../private/functions/functions.php');
+require_once('../../../../private/classes/post.class.php');
+
 // The endpoint for Posts
 
 // TODO: Add function call to validate api key if it exists and is needed
@@ -15,7 +17,7 @@ require_once('../../../../private/functions/functions.php');
 if (is_get_request()) {
 
     // Declare an array to hold all the parameters to use for the query;
-    $parameters_array = [];
+    $parameters_array = NULL;
     
     // Check what parameters have been passed in the request
     if (isset($_GET['id'])) {
@@ -25,79 +27,52 @@ if (is_get_request()) {
         $ids_array = split_string_by_comma($_GET['id']);
 
         if ($ids_array != false) {
-            $parameters_array[] = [
-                'id' => $_GET['id']
-            ];
+            $parameters_array['id'] = $_GET['id'];
         } else {
-            $parameters_array[] = [
-                'id' => $ids_array
-            ];
+            $parameters_array['id'] = $ids_array;
         }
     }
     
     if (isset($_GET['createdDate'])) {
-        $parameters_array[] = [
-            'createdDate' => $_GET['createdDate']
-        ];
+        $parameters_array['createdDate'] = $_GET['createdDate'];
     }
     
     if (isset($_GET['postDate'])) {
-        $parameters_array[] = [
-            "postDate" => $_GET['postDate']
-        ];
+        $parameters_array['postDate'] = $_GET['postDate'];
     }
     
     if (isset($_GET['greaterThan'])) {
-        $parameters_array[] = [
-            "greaterThan" => $_GET['greaterThan']
-        ];
+        $parameters_array['greaterThan'] = $_GET['greaterThan'];
     }
     
     if (isset($_GET['lessThan'])) {
-        $parameters_array[] = [
-            "lessThan" => $_GET['lessThan']
-        ];
+        $parameters_array['lessThan'] = $_GET['lessThan'];
     }
     
     if (isset($_GET['status'])) {
-        $parameters_array[] = [
-            "status" => $_GET['status']
-        ];
+        $parameters_array['status'] = $_GET['status'];
     }
     
     if (isset($_GET['extendedData'])) {
-        $parameters_array[] = [
-            "extendedData" => $_GET['extendedData']
-        ];
+        $parameters_array['extendedData'] = $_GET['extendedData'];
     }
     
     if (isset($_GET['allImages'])) {
-        $parameters_array[] = [
-            "allImages" => $_GET['allImages']
-        ];
+        $parameters_array['allImages'] = $_GET['allImages'];
     }
     
     if (isset($_GET['page'])) {
-        $parameters_array[] = [
-            "page" => $_GET['page']
-        ];
+        $parameters_array['page'] = $_GET['page'];
     }
     
     if (isset($_GET['perPage'])) {
-        $parameters_array[] = [
-            "perPage" => $_GET['perPage']
-        ];
+        $parameters_array['perPage'] = $_GET['perPage'];
     }
     
-    // Get the data using the parameters given, else get all the data if no parameters given
-    
-    if (empty($parameters_array)) {
-        // TODO: Call the code to execute the a query to get all the posts
-    
-    } else {
-        // TODO: Call the code to execute the query to get the posts using the specified parameters
-    
-    }
+    // Call the code to trigger the SQL query.
+    // Submit parameters_array = NULL if no params
+    // TODO: Save the output and convert to json
+    Post::api_query_database($parameters_array);
 
 // If it was a POST request
 } else {

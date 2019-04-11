@@ -32,10 +32,16 @@
                 'extendedData',
                 'allImages', 
                 'page' => [
-                    'sqlKeyWord' => 'OFFSET'
+                    'sqlKeyWord' => 'OFFSET',
+                    'default' => 1
                 ],
                 'perPage' => [
-                    'sqlKeyWord' => 'LIMIT'
+                    'sqlKeyWord' => 'LIMIT',
+                    'default' => 500
+                ],
+                'defaultOrderBy' => [
+                    'column' => 'createdDate',
+                    'direction' => 'ASC'
                 ]
             ];
             // * collection_type_reference, located at: root/private/reference_information.php

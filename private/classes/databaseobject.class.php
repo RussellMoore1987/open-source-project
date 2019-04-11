@@ -448,36 +448,110 @@
         // @ API Dynamic Query Method Start
             // This method is inherited by the child classes and will be called by the api endpoint pages
             static protected function api_query_database($parameters_array) {
+                // Determine the LIMIT and OFFSET values for pagination. These are held in the 'page' and 'perPage' parameters
+                // If both page and perPage are defined
+                if (isset($parameters_array['page']) && isset($parameters_array['perPage'])) {
+                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
+                    
+                // If only page is defined set the define and set the default perPage
+                } elseif (isset($parameters_array['page'])) {
+                    $parameters_array['perPage'] = static::$apiGetParameters['perPage']['default'];
+                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
+
+                // If only the perPage is defined define and set the default page
+                } elseif (isset($parameters_array['perPage'])) {
+                    $parameters_array['page'] = static::$apiGetParameters['page']['default'];
+                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
+
+                // If neither are defined. define and set the default page and perPage
+                } else {
+                    $parameters_array['perPage'] = static::$apiGetParameters['perPage']['default'];
+                    $parameters_array['page'] = static::$apiGetParameters['page']['default'];
+                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
+                }
 
                 // Begin building the sql query
                 // TODO: What columns to return specifically?
-                $sql = "SELECT * FROM {static::$tablename} ";
+                $sql = "SELECT * FROM " . "'" . self::db_escape(static::$tablename) .  "' ";
+
+                // Used for determining if we should add certain sql clauses
+                $numParamsAdded = 0;
+                $paramAdded = false;
 
                 // Check if there are parameters for our query, if so then add them to the sql
                 if ($parameters_array != NULL) {
-                    // Loop over the parameters array to get each parameter
-                    for($i = 0; $i < sizeof($parameters_array); $i++) {
-                        // Get the parameter information nested in the array
-                        foreach($parameters_array[i] as $paramKey => $paramValue) {
-                            // Check to see what SQL operation to perform based on the matching parameter in the class
-                            foreach(static::$apiGetParameters as $paramCheck) {
-                                // Check if the parameterkey matches the parameter check
-                                if ($paramKey == $paramCheck) {
-                                    // If the parameter check has an operator value then add the specific sql
-                                    if (isset($paramCheck['operator'])) {
-                                        
+                    // Loop through the parameters array and compare each parameter to know what sql to insert
+                    foreach($parameters_array as $paramKey => $paramValue) {
+                        // Check to see what SQL operation to perform based on the matching parameter in the class
+                        foreach(static::$apiGetParameters as $paramCheck) {
+                            // Check if the parameterkey matches the parameter check
+                            if ($paramKey == $paramCheck) {
+                                // If the parameter check has an operator value then add the specific sql
+                                if (isset($paramCheck['operator'])) {
 
-                                    // Else if the parameter check has an sqlKeyWord value then add the specific sql
-                                    } elseif (isset($paramCheck['sqlKeyWord'])) {
-
+                                    // Check to see if we should add the WHERE
+                                    if ($numParamsAdded == 0) {
+                                        $sql .= "WHERE ";
+                                        $numParamsAdded++;
                                     }
+
+                                    // Check to see if we should add the AND
+                                    if ($paramAdded) {
+                                        $sql .= "AND ";
+                                    }
+
+                                    // Check to see if the paramValue is an array of values, if so then add each one with an OR statement
+                                    if (is_array($paramValue)) {
+                                        for($i = 0; $i < sizeof($paramValue); $i++) {
+                                            $sql .= "'" . self::db_escape($paramKey) . "' ";
+                                            $sql .= "'" . self::db_escape($paramCheck['operator']) . "' ";
+                                            $sql .= "'" . self::db_escape($paramValue) . "' ";
+
+                                            // If not at the end of the loop then add the OR
+                                            if ($i != sizeof($paramValue) - 1) {
+                                                $sql .= "OR ";
+                                            } 
+                                        }
+
+                                        // After adding the dynamic sql break out of the loop
+                                        break;
+
+                                    // If not an array of values just add the sql for the one value
+                                    } else {
+
+                                        $sql .= "'" . self::db_escape($paramKey) . "' ";
+                                        $sql .= "'" . self::db_escape($paramCheck['operator']) . "' ";
+                                        $sql .= "'" . self::db_escape($paramValue) . "' ";
+
+                                        // After adding the dynamic sql break out of the loop
+                                        break;
+                                    }
+
+                                // Else if the parameter check has an sqlKeyWord then add the specific sqlKeyWord and value
+                                } elseif (isset($paramCheck['sqlKeyWord'])) {
+
+                                    $sql .= "'" . self::db_escape($paramCheck['sqlKeyWord']) . "' ";
+                                    $sql .= "'" . self::db_escape($paramValue) . "' ";
+
                                 }
                             }
                         }
                     }
+
+                    // execute the find_by_sql then return the values
+                    // TODO: Check how we need to adjust the returned values so that we can output the json
+                    return static::find_by_sql($sql);
+
                 // If there are no parameters then add the default sql paging and order by then execute the query and return the results
                 } else {
+                    
+                    // Set the default LIMIT and ORDER BY
+                    $sql .= "LIMIT '" . self::db_escape(static::$apiGetParameters['perPage']['default']) . "' ";
+                    $sql .= "ORDER BY '" . self::db_escape(static::$apiGetParameters['defaultOrderBy']['column']) . "' " . "'" . self::db_escape(static::$apiGetParameters['defaultOrderBy']['direction']) . "'";
 
+                    // execute the find_by_sql then return the values
+                    // TODO: Check how we need to adjust the returned values so that we can output the json
+                    return static::find_by_sql($sql);
                 } 
             }
 
