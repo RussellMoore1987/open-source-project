@@ -29,6 +29,7 @@
         static protected $columns = [];
         static protected $columnExclusions = [];
         static protected $apiProperties = [];
+        static protected $apiGetParameters = [];
         // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/reference_information.php
         static protected $collectionTypeReference = 0;
         // db validation, // * validation_options located at: root/private/reference_information.php
@@ -447,41 +448,36 @@
         // @ API Dynamic Query Method Start
             // This method is inherited by the child classes and will be called by the api endpoint pages
             static protected function api_query_database($parameters_array) {
-                // Specific parameters:
-                    // extendedData
-                    // allImages
-                    // page
-                    // perPage
 
                 // Begin building the sql query
                 // TODO: What columns to return specifically?
                 $sql = "SELECT * FROM {static::$tablename} ";
 
                 // Check if there are parameters for our query, if so then add them to the sql
-                if ($parameters_arry != NULL) {
+                if ($parameters_array != NULL) {
+                    // Loop over the parameters array to get each parameter
+                    for($i = 0; $i < sizeof($parameters_array); $i++) {
+                        // Get the parameter information nested in the array
+                        foreach($parameters_array[i] as $paramKey => $paramValue) {
+                            // Check to see what SQL operation to perform based on the matching parameter in the class
+                            foreach(static::$apiGetParameters as $paramCheck) {
+                                // Check if the parameterkey matches the parameter check
+                                if ($paramKey == $paramCheck) {
+                                    // If the parameter check has an operator value then add the specific sql
+                                    if (isset($paramCheck['operator'])) {
+                                        
 
-                    // Get each parameter and build our dynamic sql query
-                    for ($i = 0; $i < sizeof($parameters_array); $i++) {
-                        foreach($parameters_array[$i] as $key => $value) {
-                            // Check if the key is the operator then add it in
-                            if ($key == 'operator') {
-                                $sql .= "{$value} ";
+                                    // Else if the parameter check has an sqlKeyWord value then add the specific sql
+                                    } elseif (isset($paramCheck['sqlKeyWord'])) {
 
-                            // If the key is something else
-                            } elseif ($key == "page") {
-                                $sql .= "OFFSET {$value * } ";
-
-                            } elseif ($key == "perPage") {
-                                $sql .= "LIMIT {$value} ";
-                            } 
-                            
-                            else {
-                                $sql .= "WHERE {$key} ";
+                                    }
+                                }
                             }
-        
-                            $sql .= " ";
                         }
                     }
+                // If there are no parameters then add the default sql paging and order by then execute the query and return the results
+                } else {
+
                 } 
             }
 

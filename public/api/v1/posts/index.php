@@ -25,50 +25,43 @@ if (is_get_request()) {
         $ids_array = split_string_by_comma($_GET['id']);
 
         if ($ids_array != false) {
-            $parameters_array['id'] = [
-                $_GET['id'],
-                "="
+            $parameters_array[] = [
+                'id' => $_GET['id']
             ];
         } else {
-            $parameters_array['id'] = [
-                $ids_array,
-                "="
+            $parameters_array[] = [
+                'id' => $ids_array
             ];
         }
     }
     
     if (isset($_GET['createdDate'])) {
-        $parameters_array['createdDate'] = [
-            $_GET['createdDate'],
-            "="
+        $parameters_array[] = [
+            'createdDate' => $_GET['createdDate']
         ];
     }
     
     if (isset($_GET['postDate'])) {
         $parameters_array[] = [
-            "postDate" => $_GET['postDate'],
-            "operator" => "="
+            "postDate" => $_GET['postDate']
         ];
     }
     
     if (isset($_GET['greaterThan'])) {
         $parameters_array[] = [
-            "greaterThan" => $_GET['greaterThan'],
-            "operator" => ">="
+            "greaterThan" => $_GET['greaterThan']
         ];
     }
     
     if (isset($_GET['lessThan'])) {
         $parameters_array[] = [
-            "lessThan" => $_GET['lessThan'],
-            "operator" => "<="
+            "lessThan" => $_GET['lessThan']
         ];
     }
     
     if (isset($_GET['status'])) {
         $parameters_array[] = [
-            "status" => $_GET['status'],
-            "operator" => "="
+            "status" => $_GET['status']
         ];
     }
     
@@ -95,8 +88,6 @@ if (is_get_request()) {
             "perPage" => $_GET['perPage']
         ];
     }
-
-    if (isset($_GET['perPage'] && ))
     
     // Get the data using the parameters given, else get all the data if no parameters given
     

@@ -9,6 +9,35 @@
             static protected $columnExclusions = ['id', 'comments'];
             // name specific properties you wish to included in the API
             static protected $apiProperties = ['fullDate', 'shortDate', 'imagePath_array'];
+            // Possible GET Method API parameters for this class
+            static protected $apiGetParameters = [
+                'id' => [
+                    'operator' => '='
+                ],
+                'createdDate' => [
+                    'operator' => '='
+                ], 
+                'postDate' => [
+                    'operator' => '='
+                ],
+                'greaterThan' => [
+                    'operator' => '>='
+                ],
+                'lessThan' => [
+                    'operator' => '<='
+                ],
+                'status' => [
+                    'operator' => '='
+                ],
+                'extendedData',
+                'allImages', 
+                'page' => [
+                    'sqlKeyWord' => 'OFFSET'
+                ],
+                'perPage' => [
+                    'sqlKeyWord' => 'LIMIT'
+                ]
+            ];
             // * collection_type_reference, located at: root/private/reference_information.php
             static protected $collectionTypeReference = 1;
             // db validation, // * validation_options located at: root/private/reference_information.php
