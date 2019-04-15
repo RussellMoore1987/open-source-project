@@ -176,44 +176,36 @@
 
             // find all
             static public function find_all(array $options = NULL, array $columns = NULL) {
-                // Build the SQL for the default query
+                // Begin building the sql
                 $sql = "SELECT ";
-
                 // Add all the columns to select if defined
                 if (isset($columns)) {
                     foreach($columns as $col) {
                         $sql .= self::db_escape($col);
-
                         // Add the comma if not at the end of the array
                         if ($col !== end($columns)) {
                             $sql .= ", ";
+                        } else {
+                            $sql .= " ";
                         }
                     }
-                
                 // If no custom columns given then add the *
                 } else {
                     $sql .= "* ";
                 }
-
                 // Add the rest of our SQL statement
                 $sql .= "FROM " . static::$tablename;
-                
+                // Add the options if defined
+                if (isset($options)) {
+                    foreach($options as $optKey => $optValue) {
+                        $sql .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
+                    }
+                }
                 return static::find_by_sql($sql);
             }
 
-            // count all records
-            static public function count_all() {
-                $sql = "SELECT COUNT(*) FROM " . static::$tableName;
-                $result = self::$database->query($sql);
-                // get row, only one there
-                $row = $result->fetch_array();
-                // error handling
-                self::db_error_check($result);
-                // return count 
-                return array_shift($row);
-            }
-
             // find by id
+            // TODO: Refactor this code to accept an array of ids as well
             static public function find_by_id(int $id) {
                 // sql
                 $sql = "SELECT * FROM " . static::$tableName . " ";
@@ -227,6 +219,64 @@
                 } else {
                     return false;
                 }
+            }
+
+            // find where
+            static public function find_where(array $whereClauses = NULL, array $options = NULL, array $columns = NULL) {
+                // Begin building the SQL
+                $sql = "SELECT ";
+                // Add all the columns to select if defined
+                if (isset($columns)) {
+                    foreach($columns as $col) {
+                        $sql .= self::db_escape($col);
+                        // Add the comma if not at the end of the array
+                        if ($col !== end($columns)) {
+                            $sql .= ", ";
+                        } else {
+                            $sql .= " "; 
+                        }
+                    }
+                // If no custom columns given then add the *
+                } else {
+                    $sql .= "* ";
+                }
+                // Add the rest of our SQL statement
+                $sql .= "FROM " . static::$tablename;
+                // Add the where clauses if defined
+                if (isset($whereClauses)) {
+                    // Begin the WHERE SQL
+                    $sql .= " WHERE ";
+                    // Loop through all of the where clauses given
+                    foreach($whereClauses as $where) {
+                        $sql .= self::db_escape($where['column']) . " ";
+                        $sql .= self::db_escape($where['operator']) . " ";
+                        $sql .= self::db_escape($where['value']) . " ";
+                        // Add the AND if not at the end of the array
+                        if ($where !== end($whereClauses)) {
+                            $sql .= "AND ";
+                        }
+                    }
+                }
+                // Add the options if defined
+                if (isset($options)) {
+                    foreach($options as $optKey => $optValue) {
+                        $sql .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
+                    }
+                }
+                // Submit the SQL query
+                return static::find_by_sql($sql);
+            }
+
+            // count all records
+            static public function count_all() {
+                $sql = "SELECT COUNT(*) FROM " . static::$tableName;
+                $result = self::$database->query($sql);
+                // get row, only one there
+                $row = $result->fetch_array();
+                // error handling
+                self::db_error_check($result);
+                // return count 
+                return array_shift($row);
             }
 
             // runs validation on all possible columns in create, null properties excluded on update
