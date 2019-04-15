@@ -29,7 +29,6 @@
         static protected $columns = [];
         static protected $columnExclusions = [];
         static protected $apiProperties = [];
-        static protected $apiGetParameters = [];
         // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/reference_information.php
         static protected $collectionTypeReference = 0;
         // db validation, // * validation_options located at: root/private/reference_information.php
@@ -176,8 +175,29 @@
             }
 
             // find all
-            static public function find_all() {
-                $sql = "SELECT * FROM " . static::$tableName;
+            static public function find_all(array $options = NULL, array $columns = NULL) {
+                // Build the SQL for the default query
+                $sql = "SELECT ";
+
+                // Add all the columns to select if defined
+                if (isset($columns)) {
+                    foreach($columns as $col) {
+                        $sql .= self::db_escape($col);
+
+                        // Add the comma if not at the end of the array
+                        if ($col !== end($columns)) {
+                            $sql .= ", ";
+                        }
+                    }
+                
+                // If no custom columns given then add the *
+                } else {
+                    $sql .= "* ";
+                }
+
+                // Add the rest of our SQL statement
+                $sql .= "FROM " . static::$tablename;
+                
                 return static::find_by_sql($sql);
             }
 
@@ -449,119 +469,6 @@
                 // return data
                 return $jsonData_array;
             }
-        // @ API specific queries end
-
-        // @ API Dynamic Query Method Start
-            // This method is inherited by the child classes and will be called by the api endpoint pages
-            static protected function api_query_database($parameters_array) {
-                // Determine the LIMIT and OFFSET values for pagination. These are held in the 'page' and 'perPage' parameters
-                // If both page and perPage are defined
-                if (isset($parameters_array['page']) && isset($parameters_array['perPage'])) {
-                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
-                    
-                // If only page is defined set the define and set the default perPage
-                } elseif (isset($parameters_array['page'])) {
-                    $parameters_array['perPage'] = static::$apiGetParameters['perPage']['default'];
-                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
-
-                // If only the perPage is defined define and set the default page
-                } elseif (isset($parameters_array['perPage'])) {
-                    $parameters_array['page'] = static::$apiGetParameters['page']['default'];
-                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
-
-                // If neither are defined. define and set the default page and perPage
-                } else {
-                    $parameters_array['perPage'] = static::$apiGetParameters['perPage']['default'];
-                    $parameters_array['page'] = static::$apiGetParameters['page']['default'];
-                    $parameters_array['page'] = $parameters_array['page'] - 1 * $parameters_array['perPage'];
-                }
-
-                // Begin building the sql query
-                // TODO: What columns to return specifically?
-                $sql = "SELECT * FROM " . "'" . self::db_escape(static::$tablename) .  "' ";
-
-                // Used for determining if we should add certain sql clauses
-                $numParamsAdded = 0;
-                $paramAdded = false;
-
-                // Check if there are parameters for our query, if so then add them to the sql
-                if ($parameters_array != NULL) {
-                    // Loop through the parameters array and compare each parameter to know what sql to insert
-                    foreach($parameters_array as $paramKey => $paramValue) {
-                        // Check to see what SQL operation to perform based on the matching parameter in the class
-                        foreach(static::$apiGetParameters as $paramCheck) {
-                            // Check if the parameterkey matches the parameter check
-                            if ($paramKey == $paramCheck) {
-                                // If the parameter check has an operator value then add the specific sql
-                                if (isset($paramCheck['operator'])) {
-
-                                    // Check to see if we should add the WHERE
-                                    if ($numParamsAdded == 0) {
-                                        $sql .= "WHERE ";
-                                        $numParamsAdded++;
-                                    }
-
-                                    // Check to see if we should add the AND
-                                    if ($paramAdded) {
-                                        $sql .= "AND ";
-                                    }
-
-                                    // Check to see if the paramValue is an array of values, if so then add each one with an OR statement
-                                    if (is_array($paramValue)) {
-                                        for($i = 0; $i < sizeof($paramValue); $i++) {
-                                            $sql .= "'" . self::db_escape($paramKey) . "' ";
-                                            $sql .= "'" . self::db_escape($paramCheck['operator']) . "' ";
-                                            $sql .= "'" . self::db_escape($paramValue) . "' ";
-
-                                            // If not at the end of the loop then add the OR
-                                            if ($i != sizeof($paramValue) - 1) {
-                                                $sql .= "OR ";
-                                            } 
-                                        }
-
-                                        // After adding the dynamic sql break out of the loop
-                                        break;
-
-                                    // If not an array of values just add the sql for the one value
-                                    } else {
-
-                                        $sql .= "'" . self::db_escape($paramKey) . "' ";
-                                        $sql .= "'" . self::db_escape($paramCheck['operator']) . "' ";
-                                        $sql .= "'" . self::db_escape($paramValue) . "' ";
-
-                                        // After adding the dynamic sql break out of the loop
-                                        break;
-                                    }
-
-                                // Else if the parameter check has an sqlKeyWord then add the specific sqlKeyWord and value
-                                } elseif (isset($paramCheck['sqlKeyWord'])) {
-
-                                    $sql .= "'" . self::db_escape($paramCheck['sqlKeyWord']) . "' ";
-                                    $sql .= "'" . self::db_escape($paramValue) . "' ";
-
-                                }
-                            }
-                        }
-                    }
-
-                    // execute the find_by_sql then return the values
-                    // TODO: Check how we need to adjust the returned values so that we can output the json
-                    return static::find_by_sql($sql);
-
-                // If there are no parameters then add the default sql paging and order by then execute the query and return the results
-                } else {
-                    
-                    // Set the default LIMIT and ORDER BY
-                    $sql .= "LIMIT '" . self::db_escape(static::$apiGetParameters['perPage']['default']) . "' ";
-                    $sql .= "ORDER BY '" . self::db_escape(static::$apiGetParameters['defaultOrderBy']['column']) . "' " . "'" . self::db_escape(static::$apiGetParameters['defaultOrderBy']['direction']) . "'";
-
-                    // execute the find_by_sql then return the values
-                    // TODO: Check how we need to adjust the returned values so that we can output the json
-                    return static::find_by_sql($sql);
-                } 
-            }
-
-        // @ API Dynamic Query Method End
 
         // @ class functionality methods start
             // stands for database escape, you sanitized data, and to protect against my SQL injection
