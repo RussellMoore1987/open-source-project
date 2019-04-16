@@ -242,7 +242,7 @@
                 } else {
                     $sql .= "WHERE id='" . self::db_escape($id) . "'";
                 }
-                
+
                 // TODO: Do we need to still return an object array?
                 // get object array
                 $obj_array = static::find_by_sql($sql);
@@ -282,9 +282,24 @@
                     $sql .= " WHERE ";
                     // Loop through all of the where clauses given
                     foreach($whereClauses as $where) {
-                        $sql .= self::db_escape($where['column']) . " ";
-                        $sql .= self::db_escape($where['operator']) . " ";
-                        $sql .= self::db_escape($where['value']) . " ";
+                        // Check if the value in the where clause is an array of values or not
+                        if(is_array($where['value'])) {
+                            $sql .= "WHERE " . self::db_escape($where['column']) . " IN ( ";
+                            foreach($where['value'] as $singleValue) {
+                                $sql .= self::db_escape($singleValue);
+                                // Add the end parentheses if at the end otherwise add a comma separator
+                                if($singleId === end($id)) {
+                                    $sql .= " ) ";
+                                } else {
+                                    $sql .= ", ";
+                                }
+                            }
+                        // If the value in the where clause is not an array
+                        } else {
+                            $sql .= self::db_escape($where['column']) . " ";
+                            $sql .= self::db_escape($where['operator']) . " ";
+                            $sql .= self::db_escape($where['value']) . " ";
+                        }
                         // Add the AND if not at the end of the array
                         if ($where !== end($whereClauses)) {
                             $sql .= "AND ";
