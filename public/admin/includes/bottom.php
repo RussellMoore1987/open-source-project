@@ -1,17 +1,15 @@
+<!-- jQuery CDN -->
+<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
 <?php
-    // todo
-        // do bottom check to see which JavaScript/assets to use
-        // pull in custom js
-    
-    
     // set page specific js if there 
     if (file_exists(PUBLIC_PATH . "/admin/js/{$Router->pathJs}")) {
         // got it, set path
-        echo "<script src='" . PUBLIC_LINK_PATH . "/admin/js/{$Router->pathJs}" . "'></script>";
+        echo "<script src='" . PUBLIC_LINK_PATH . "/admin/js/{$Router->pathJs}?{$assetVersion}'></script>";
     }
     
 ?>
-<script src="<?php echo PUBLIC_LINK_PATH . "/admin/js/forms.js"; ?>"></script>
+<!-- general form JS -->
+<script src="<?php echo PUBLIC_LINK_PATH . "/admin/js/forms.js?{$assetVersion}"; ?>"></script>
 </body>
 </html>

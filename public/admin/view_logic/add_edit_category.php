@@ -5,12 +5,14 @@
 
         // set defaults
         $categoryId = $_GET["categoryId"] ?? "add";
+        // if not add make number
+        if (!($categoryId == "add")) {
+            // this forces the $categoryId to be an integer
+            $categoryId = (int) $categoryId;
+        }
         // ctr, make number
         // * collection_type_reference, located at: root/private/reference_information.php
-        $categoryCtr = $_GET["ctr"] ?? 1;
-        $categoryCtr = (int) $categoryCtr;
-
-        
+        $ctr = get_url_ctr();
 
         // # check to see if we have a real ID
             if (!($categoryId == "add")) {
@@ -30,6 +32,19 @@
                 $Category_obj = new Category();
             }
 
+        // # delete category
+            // check to see if we have a valid number
+            if (isset($_GET["delete"]) && is_int($categoryId) && $categoryId > 0 && !$Category_obj->errors) {
+                // delete record
+                $Category_obj->delete();
+                // set ctr
+                $ctr = (int) $Category_obj->useCat;
+                // create new record
+                $Category_obj = new Category();
+                // switch categoryId to add
+                $categoryId = "add";
+            }
+
         // # if post request
             if (is_post_request() && isset($_POST["category"])) { 
                 // populate new object
@@ -42,10 +57,14 @@
                 // set id
                 $categoryId = (int) $Category_obj->get_id();
                 // echo $categoryId. "**************";
-                // check to see if we have in ID
+                // set ctr
+                $ctr = (int) $Category_obj->useCat;
+                // check to see if we have in ID, set to add mode
                 if (!($categoryId === 0 || is_blank($categoryId)) && !$Category_obj->errors) {
-                    // get full category object
-                    $Category_obj = Category::find_by_id($categoryId);
+                    // create new record
+                    $Category_obj = new Category();
+                    // switch categoryId to add
+                    $categoryId = "add";
                 }
             }
         
@@ -55,7 +74,7 @@
             
             // get correct info for possible "subs of" info, the correct selection of categories
             if (is_blank($Category_obj->useCat)) {
-                $Category_obj->useCat = $categoryCtr;
+                $Category_obj->useCat = $ctr;
             }
 
             // get info for JavaScript

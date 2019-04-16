@@ -9,13 +9,16 @@
             }   
         ?>
     </div>
+    <div>
+        <a href='add_edit_post'>Add New Post</a>
+    </div>
     <p>Comment Count: <?php echo $Post_obj->get_comments() ?? "none"; ?></p>
-    <form method="post" action='add_edit_post<?php if($postId != 'add' && is_int($postId)) { echo "?postId={$postId}";} ?>'>
+    <form method="post" action='add_edit_post<?php if($postId != 'add') { echo "?postId={$postId}";} ?>'>
         <!-- main form -->
         <div>
             <label for="post[title]">Post Title</label>
             <!-- maxlength="50" minlength="2" required -->
-            <input type="text" name="post[title]" value="<?php echo $Post_obj->title ?>" >
+            <input id="title" type="text" name="post[title]" value="<?php echo $Post_obj->title ?>" >
         </div>
         <br>
 

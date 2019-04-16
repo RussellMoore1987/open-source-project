@@ -5,6 +5,14 @@
 
         // set defaults
         $tagId = $_GET["tagId"] ?? "add";
+        // if not add make number
+        if (!($tagId == "add")) {
+            // this forces the $tagId to be an integer
+            $tagId = (int) $tagId;
+        }
+        // ctr, make number
+        // * collection_type_reference, located at: root/private/reference_information.php
+        $ctr = get_url_ctr();
         
 
         // # check to see if we have a real ID
@@ -25,6 +33,19 @@
                 $Tag_obj = new Tag();
             }
 
+        // # delete tag
+            // check to see if we have a valid number
+            if (isset($_GET["delete"]) && is_int($tagId) && $tagId > 0 && !$Tag_obj->errors) {
+                // delete record
+                $Tag_obj->delete();
+                // set ctr
+                $ctr = (int) $Tag_obj->useTag;
+                // create new record
+                $Tag_obj = new Tag();
+                // switch tagId to add
+                $tagId = "add";
+            }
+
         // # if post request
             if (is_post_request() && isset($_POST["tag"])) { 
                 // populate new object
@@ -37,10 +58,14 @@
                 // set id
                 $tagId = (int) $Tag_obj->get_id();
                 // echo $tagId. "**************";
+                // set ctr
+                $ctr = (int) $Tag_obj->useTag;
                 // check to see if we have in ID
                 if (!($tagId === 0 || is_blank($tagId)) && !$Tag_obj->errors) {
-                    // get full tag object
-                    $Tag_obj = Tag::find_by_id($tagId);
+                    // create new record
+                    $Tag_obj = new Tag();
+                    // switch tagId to add
+                    $tagId = "add";
                 }
             }
         
@@ -62,10 +87,13 @@
                 }
             }
             // sort alphabetically
-            asort($postTags_array);
-            asort($mediaContentTags_array);
-            asort($usersTags_array);
-            asort($contentTags_array);
+            natcasesort($postTags_array);
+            natcasesort($mediaContentTags_array);
+            natcasesort($usersTags_array);
+            natcasesort($contentTags_array);
+
+            // set ctr correctly
+            $Tag_obj->useTag = $Tag_obj->useTag ?? $ctr;
             
     // @ logic for add_edit_tag.php END
 ?>

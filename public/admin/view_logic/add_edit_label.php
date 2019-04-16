@@ -5,6 +5,14 @@
 
         // set defaults
         $labelId = $_GET["labelId"] ?? "add";
+        // if not add make number
+        if (!($labelId == "add")) {
+            // this forces the $labelId to be an integer
+            $labelId = (int) $labelId;
+        }
+        // ctr, make number
+        // * collection_type_reference, located at: root/private/reference_information.php
+        $ctr = get_url_ctr();
         
 
         // # check to see if we have a real ID
@@ -25,6 +33,20 @@
                 $Label_obj = new Label();
             }
 
+        // # delete label
+            // check to see if we have a valid number
+            if (isset($_GET["delete"]) && is_int($labelId) && $labelId > 0 && !$Label_obj->errors) {
+                // delete record
+                $Label_obj->delete();
+                // set ctr
+                $ctr = (int) $Label_obj->useLabel;
+                // create new record
+                $Label_obj = new Label();
+                // switch labelId to add
+                $labelId = "add";
+            }
+
+
         // # if post request
             if (is_post_request() && isset($_POST["label"])) { 
                 // populate new object
@@ -37,10 +59,14 @@
                 // set id
                 $labelId = (int) $Label_obj->get_id();
                 // echo $labelId. "**************";
+                // set ctr
+                $ctr = (int) $Label_obj->useLabel;
                 // check to see if we have in ID
                 if (!($labelId === 0 || is_blank($labelId)) && !$Label_obj->errors) {
-                    // get full label object
-                    $Label_obj = Label::find_by_id($labelId);
+                    // create new record
+                    $Label_obj = new Label();
+                    // switch labelId to add
+                    $labelId = "add";
                 }
             }
         
@@ -62,10 +88,13 @@
                 }
             }
             // sort alphabetically
-            asort($postLabels_array);
-            asort($mediaContentLabels_array);
-            asort($usersLabels_array);
-            asort($contentLabels_array);
+            natcasesort($postLabels_array);
+            natcasesort($mediaContentLabels_array);
+            natcasesort($usersLabels_array);
+            natcasesort($contentLabels_array);
+
+            // set ctr correctly
+            $Label_obj->useLabel = $Label_obj->useLabel ?? $ctr;
             
     // @ logic for add_edit_label.php END
 ?>

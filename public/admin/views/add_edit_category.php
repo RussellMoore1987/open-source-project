@@ -1,6 +1,6 @@
 <div class="temp_flex_sb">
     <!-- category form -->
-    <form method="post" action='add_edit_category<?php if($categoryId != 'add' && is_int($categoryId)) { echo "?categoryId={$categoryId}";} ?>'>
+    <form method="post" action='add_edit_category<?php if($categoryId != 'add') { echo "?categoryId={$categoryId}";} ?>'>
         <div class="error">
             <?php
                 // check for errors
@@ -13,10 +13,13 @@
         </div>
         <!-- main form -->
         <div>
+            <a href="add_edit_category">Add New Category</a>
+        </div>
+        <div>
             <label for="category[title]">Title/Name</label>
             <br>
             <!-- minlength="2" maxlength="50" required -->
-            <input type="text" name="category[title]" value="<?php echo $Category_obj->title ?>" >
+            <input id="title" type="text" name="category[title]" value="<?php echo $Category_obj->title ?>" >
         </div>
         <br>
 
@@ -36,6 +39,7 @@
                     }
                 ?>
             </select>
+            <input type="hidden" name="category[subCatIdOld]" value="<?php echo $Category_obj->subCatId ?? 0; ?>">
         </div>
         <br>
 
@@ -57,6 +61,7 @@
                 <option <?php if ($Category_obj->useCat == 3) { echo "selected";} ?> value="3">Users</option>
                 <option <?php if ($Category_obj->useCat == 4) { echo "selected";} ?> value="4">Content</option>
             </select>
+            <input type="hidden" name="category[useCatOld]" value="<?php echo $Category_obj->useCat ?? $ctr; ?>">
         </div>
         <br>
 
@@ -73,21 +78,27 @@
     <div>
         <h2>Post Categories</h2>
         <?php Category::layout_categoryStructure($Categories_array, 1); ?>
+        <a href="add_edit_category?ctr=1">Add New Post Category</a>
     </div>
     <!-- media content categories -->
     <div>
         <h2>Media Content Categories</h2>
         <?php Category::layout_categoryStructure($Categories_array, 2); ?>
+        <a href="add_edit_category?ctr=2">Add New Media Content Category</a>
     </div>
     <!-- users categories -->
     <div>
-        <h2>Users Categories</h2>
+        <h2>User Categories</h2>
         <?php Category::layout_categoryStructure($Categories_array, 3); ?>
+        <a href="add_edit_category?ctr=3">Add New User Category</a>
+
     </div>
     <!-- content categories -->
     <div>
         <h2>Content Categories</h2>
         <?php Category::layout_categoryStructure($Categories_array, 4); ?>
+        <a href="add_edit_category?ctr=4">Add New Content Category</a>
+
     </div>
 </div>
 
@@ -98,3 +109,23 @@
     usersCategories_obj = <?php echo json_encode($usersJsCategories_array)?>;
     contentCategories_obj = <?php echo json_encode($contentJsCategories_array)?>;
 </script>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>

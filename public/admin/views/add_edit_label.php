@@ -1,6 +1,6 @@
 <div class="temp_flex_sb">
     <!-- label form -->
-    <form method="post" action='add_edit_label<?php if($labelId != 'add' && is_int($labelId)) { echo "?labelId={$labelId}";} ?>'>
+    <form method="post" action='add_edit_label<?php if($labelId != 'add') { echo "?labelId={$labelId}";} ?>'>
         <div class="error">
             <?php
                 // check for errors
@@ -11,12 +11,15 @@
                 }   
             ?>
         </div>
+        <div>
+            <a href='add_edit_label'>Add New Label</a>
+        </div>
         <!-- main form -->
         <div>
             <label for="label[title]">Title/Name</label>
             <br>
             <!-- minlength="2" maxlength="50" required -->
-            <input type="text" name="label[title]" value="<?php echo $Label_obj->title ?>" >
+            <input id="title" type="text" name="label[title]" value="<?php echo $Label_obj->title ?>" >
         </div>
         <br>
 
@@ -48,6 +51,7 @@
          <div>
             <button type="submit"><?php echo $labelId == "add" ? "ADD" : "EDIT"; ?> LABEL</button>
         </div>
+        
     </form>
 
     <!-- post labels -->
@@ -57,9 +61,15 @@
             foreach ($postLabels_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_label?labelId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_label?labelId={$key}'>{$value}</a>
+                    [<a href='add_edit_label?labelId={$key}'>edit</a>
+                    <a href='add_edit_label?labelId={$key}&delete=yes'>delete</a>]<br>
+                
+                ";
             }
         ?>
+        <a href="add_edit_label?ctr=1">Add New Post Label</a>
     </div>
     <!-- media content labels -->
     <div>
@@ -68,20 +78,30 @@
             foreach ($mediaContentLabels_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_label?labelId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_label?labelId={$key}'>{$value}</a>
+                    [<a href='add_edit_label?labelId={$key}'>edit</a>
+                    <a href='add_edit_label?labelId={$key}&delete=yes'>delete</a>]<br>
+                ";
             }
         ?>
+        <a href="add_edit_label?ctr=2">Add New Media Content Label</a>
     </div>
-    <!-- users labels -->
+    <!-- user labels -->
     <div>
-        <h2>Users Labels</h2>
+        <h2>User Labels</h2>
         <?php
             foreach ($usersLabels_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_label?labelId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_label?labelId={$key}'>{$value}</a>
+                    [<a href='add_edit_label?labelId={$key}'>edit</a>
+                    <a href='add_edit_label?labelId={$key}&delete=yes'>delete</a>]<br>
+                ";
             }
         ?>
+        <a href="add_edit_label?ctr=3">Add New User Label</a>
     </div>
     <!-- content labels -->
     <div>
@@ -90,8 +110,13 @@
             foreach ($contentLabels_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_label?labelId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_label?labelId={$key}'>{$value}</a>
+                    [<a href='add_edit_label?labelId={$key}'>edit</a>
+                    <a href='add_edit_label?labelId={$key}&delete=yes'>delete</a>]<br>
+                ";
             }
         ?>
+        <a href="add_edit_label?ctr=4">Add New Content Label</a>
     </div>
 </div>
