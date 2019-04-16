@@ -205,11 +205,45 @@
             }
 
             // find by id
-            // TODO: Refactor this code to accept an array of ids as well
-            static public function find_by_id(int $id) {
-                // sql
-                $sql = "SELECT * FROM " . static::$tableName . " ";
-                $sql .= "WHERE id='" . self::db_escape($id) . "'";
+            // Accepts single id or array of ids as well as options for columns
+            static public function find_by_id($id, array $columns = NULL) {
+                // Begin building the sql
+                $sql = "SELECT ";
+                // Add all the columns to select if defined
+                if (isset($columns)) {
+                    foreach($columns as $col) {
+                        $sql .= self::db_escape($col);
+                        // Add the comma if not at the end of the array
+                        if ($col !== end($columns)) {
+                            $sql .= ", ";
+                        } else {
+                            $sql .= " ";
+                        }
+                    }
+                // If no custom columns given then add the *
+                } else {
+                    $sql .= "* ";
+                }
+                // Add the rest of our SQL statement
+                $sql .= "FROM " . static::$tablename . " ";
+                // Add the WHERE clause if it is an array
+                if(is_array($id)) {
+                    $sql .= "WHERE id IN ( ";
+                    foreach($id as $singleId) {
+                        $sql .= self::db_escape($singleId);
+                        // Add the end parentheses if at the end otherwise add a comma separator
+                        if($singleId === end($id)) {
+                            $sql .= " ) ";
+                        } else {
+                            $sql .= ", ";
+                        }
+                    }
+                // Add the WHERE clause if not an array
+                } else {
+                    $sql .= "WHERE id='" . self::db_escape($id) . "'";
+                }
+                
+                // TODO: Do we need to still return an object array?
                 // get object array
                 $obj_array = static::find_by_sql($sql);
                 // check to see if $obj_array is empty
