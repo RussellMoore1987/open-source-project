@@ -118,32 +118,32 @@
             static protected $apiParameters = [
                 // ...api/v1/posts/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
                 'id'=>[
-                    'refersTo' => ['id'],
-                    'type' => ['int'],
+                    'refersTo' => 'id',
+                    'type' => 'int',
                     'connection' => [
                         'int' => "=",
                         'list' => 'in'
                     ]
                 ],
                 'greaterThen' => [
-                    'refersTo' => ['postDate'],
-                    'type' => ['str'],
+                    'refersTo' => 'postDate',
+                    'type' => 'str',
                     'connection' => [
                         'str' => ">"
                     ]
                 ], 
                 // ...api/v1/posts/?lessThen=1/37/2010
                 'lessThen' => [
-                    'refersTo' => ['postDate'],
-                    'type' => ['str'],
+                    'refersTo' => 'postDate',
+                    'type' => 'str',
                     'connection' => [
                         'str' => "<"
                     ]
                 ],
                 // ...api/v1/posts/?search=sale // ? ...api/v1/posts/?search=sale,off,marked down     more then one value!???
                 'search' => [
-                    'refersTo' => ['title', 'content'],
-                    'type' => ['str'],
+                    'refersTo' => 'title',
+                    'type' => 'str',
                     'connection' => [
                         'str' => "like",
                         'list' => [
@@ -161,24 +161,24 @@
                     ]
                 ],
                 'postDate' => [
-                    'refersTo' => ['postDate'],
-                    'type' => ['str'],
+                    'refersTo' => 'postDate',
+                    'type' => 'str',
                     'connection' => [
                         'str' => "="
                     ]
                 ],
                 // ...api/v1/posts/?createdDate=1910
                 'createdDate' => [
-                    'refersTo' => ['createdDate'],
-                    'type' => ['str'],
+                    'refersTo' => 'createdDate',
+                    'type' => 'str',
                     'connection' => [
                         'str' => "="
                     ]
                 ],
                 // ...api/v1/posts/?status=0
                 'status' => [
-                    'refersTo' => ['status'],
-                    'type' => ['int'],
+                    'refersTo' => 'status',
+                    'type' => 'int',
                     'connection' => [
                         'int' => "="
                     ]
@@ -186,7 +186,7 @@
                 // ! this is possibly a global parameter and may not need to be in the individual classes, probably shouldn't
                 // ...api/v1/posts/?orderBy=postDate::DECS,createdDate // ? what is default ascending or descending
                 'orderBy' => [
-                    'refersTo' => ['sortingOptions'],
+                    'refersTo' => 'sortingOptions',
                 ]
             ];
 

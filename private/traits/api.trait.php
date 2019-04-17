@@ -3,11 +3,10 @@
 // The trait for the API
 trait Api {
 
-    // ! feel free to change the names, should be located in the databaseObject class
     // pseudo code for get API functionality
     static function get_api_info() {
         // validate incoming parameters
-        $PrepApiData_array = static::validateAndPrepApiParameters($_GET);
+        $PrepApiData_array = static::validate_and_prep_api_parameters($_GET);
         // check to see if we have errors
         if (!$PrepApiData_array['errors']) {
             // send in query
@@ -35,7 +34,7 @@ trait Api {
     }
 
     // Validate and prep the API parameters
-    static function validateAndPrepApiParameters($getParams_array) {
+    static function validate_and_prep_api_parameters($getParams_array) {
         // Prepare the array we will use to hold our preped API data
         $prepApiData_array['errors'] = [];
 
@@ -53,36 +52,86 @@ trait Api {
                     // Turn the list into an array and add it to our list of whereOptions
                     $newList_array = split_string_by_comma($paramValue);
                     foreach($newList_array as $listItem) {
-                        // The parameter was found, add the info needed to our array
-                        $prepApiData_array['sqlOptions']['whereOptions'] = [
-                            "column" => static::$apiParameters[$paramKey]['refersTo'],
-                            "operator" => static::$apiParameters[$paramKey]['connection']['list'],
-                            "value" => $listItem
-                        ];
+                        // Validate the value
+                        $errors = self::validate_api_params($listItem, $paramKey);
+
+                        // If there are errors then exit the function with the errors
+                        if(isset($errors)) {
+                            // Add each error from the validation error array
+                            foreach($errors as $err) {
+                                $prepApiData_array['errors'][] = $err;
+                            }
+                            return $prepApiData_array;
+
+                        // No errors were found add the data to the array
+                        } else {
+                            
+                            // The parameter was found, add the info needed to our array
+                            $prepApiData_array['sqlOptions']['whereOptions'][] = [
+                                "column" => static::$apiParameters[$paramKey]['refersTo'],
+                                "operator" => static::$apiParameters[$paramKey]['connection']['list'],
+                                "value" => $listItem
+                            ];
+                        }
                     }
 
                 // The data is not a list
                 } else {
-                    // The parameter was found, add the info needed to our array
-                    $prepApiData_array['sqlOptions']['whereOptions'] = [
-                        "column" => static::$apiParameters[$paramKey]['refersTo'],
-                        "operator" => static::$apiParameters[$paramKey]['connection'][static::$apiParameters[$paramKey]['type']],
-                        "value" => $paramValue
-                    ];
-                }
-                // The parameter was found, add the info needed to our array
-                $prepApiData_array['sqlOptions']['whereOptions'] = [$paramKey];
+                    // Validate the value
+                    $errors = self::validate_api_params($paramValue, $paramKey);
 
+                    // If there are errors then exit the function with the errors
+                    if(isset($errors)) {
+                        // Add each error from the validation error array
+                        foreach($errors as $err) {
+                            $prepApiData_array['errors'][] = $err;
+                        }
+                        return $prepApiData_array;
+
+                    // No errors were found add the data to the array
+                    } else {
+                        // The parameter was found, add the info needed to our array
+                        $prepApiData_array['sqlOptions']['whereOptions'][] = [
+                            "column" => static::$apiParameters[$paramKey]['refersTo'],
+                            "operator" => static::$apiParameters[$paramKey]['connection'][static::$apiParameters[$paramKey]['type']],
+                            "value" => $paramValue
+                        ];
+                    }
+                }
             // There was no matching parameter, add to the errors array and return the array
             } else {
                 $prepApiData_array['errors'][] = "{$paramKey} is not a valid parameter!";
                 return $prepApiData_array;
             }
         }
+    }
 
-        // Validate the parameters from the $getParams_array
-        foreach($getParams_array as $param) {
-            static::validate($param);
+    // This function leverages the val_validation function.
+    static function validate_api_params($value, $param) {
+
+        // If there is a custom validation column then use it for validation
+        if(isset(static::$validation_columns[static::$apiParameters[$param]['refersTo']])){
+            // Set the custom validation
+            $customValidation = static::$apiParameters[$param]['validation'];
+            // Validate based on the custom validation
+            $errors = val_validation($value, $customValidation);
+            // Return the validation errors array
+            return $errors;
+
+        // elseIf there is a default validation column then use it
+        } elseif(isset(static::$validation_columns[static::$apiParameters[$param]['refersTo']])) {
+            // Set the default validation
+            $defaultValidation = static::$validation_columns[static::$apiParameters[$param]['refersTo']];
+            // Validate based on the default validation
+            $errors = val_validation($value, $defaultValidation);
+            // Return the validation errors array
+            return $errors;
+
+        // else there were no validation defined. Return the error.
+        } else {
+            $errors[] = "Parameter: {$param} with Value: {$value} was rejected as there are no validation rules defined.";
+            // Return the error
+            return $errors;
         }
     }
 
