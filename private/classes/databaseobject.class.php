@@ -22,6 +22,8 @@
 
 
     abstract class DatabaseObject {
+        // Use the api trait
+        use Api;
         // database connection
         static protected $database;
         // database information
@@ -501,73 +503,6 @@
             }
 
         // @ active record code end
-
-        // @ API specific queries start
-            // create an associative array, key value pair from the static::$columns excluding id
-            public function api_attributes() {
-                // empty array to be filled below
-                $attributes = [];
-                // column and API attributes merge arrays
-                $apiAttributes_array = array_merge(static::$columns, static::$apiProperties);
-                // loop over and make a key value pair array of api attributes
-                foreach ($apiAttributes_array as $attribute) {
-                    // construct attribute list with object values
-                    $attributes[$attribute] = $this->$attribute;
-                }
-                // return array of attributes
-                return $attributes;
-            }
-
-            // get api data plus extended data
-            public function get_full_api_data() {
-                // get api data
-                $data_array['properties'] = $this->api_attributes();
-                // if of the correct type get categories, tags, or labels
-                if ($this->ctr() == 1 || $this->ctr() == 2 || $this->ctr() == 3 || $this->ctr() == 4) {
-                    $data_array['categories'] = $this->get_obj_categories_tags_labels('categories');
-                    $data_array['tags'] = $this->get_obj_categories_tags_labels('tags');
-                    $data_array['labels'] = $this->get_obj_categories_tags_labels('labels');
-                }
-                // if of the correct type get all images
-                if ($this->ctr() == 1 || $this->ctr() == 3) {
-                    // set blank array, set below
-                    $image_array = [];
-                    // get image(s)
-                    if ($this->ctr() == 1) {
-                        $temp_array = $this->get_post_images();
-                    } else {                                               
-                        $temp_array = $this->get_user_image();
-                    }
-                    // loop over info to make new array
-                    $image_array = obj_array_api_prep($temp_array);
-                    // put images into the correct spot
-                    $data_array['images'] = $image_array;
-                }
-                // return data
-                return $data_array;
-            }
-        
-            // get api data
-            public function get_basic_api_data() {
-                // get api data
-                $data_array['properties'] = $this->api_attributes();
-                // return data
-                return $data_array;
-            }
-
-            // get data and turn it into json
-            public function get_api_data($type = 'basic') {
-                // check to see which api data to use
-                if ($type == 'basic') {
-                    $data_array = $this->get_basic_api_data();
-                } else {
-                    $data_array = $this->get_full_api_data();
-                }
-                // turn array into Jason
-                $jsonData_array = json_encode($data_array);
-                // return data
-                return $jsonData_array;
-            }
 
         // @ class functionality methods start
             // stands for database escape, you sanitized data, and to protect against my SQL injection

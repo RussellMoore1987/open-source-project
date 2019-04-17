@@ -114,6 +114,16 @@ function split_string_by_comma($string) {
   }
 }
 
+// Determine the string is a comma separated list
+function is_list($data) {
+    // Check if it is a comma separated list inside the string
+    if(strpos(",", $data)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // make a list into an array where key and value are the same
 function list_to_array($list) {
     // make array from ids
