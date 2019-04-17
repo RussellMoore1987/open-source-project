@@ -49,3 +49,8 @@ mediaContentId
 mediaContentId
 
 `postId` int(10) unsigned NOT NULL, `mediaContentId` int(10) unsigned NOT NULL, PRIMARY KEY (`postId`,`mediaContentId`), KEY `mediaContentId` (`mediaContentId`), CONSTRAINT `posts_to_media_content_ibfk_1` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`), CONSTRAINT `posts_to_media_content_ibfk_2` FOREIGN KEY (`mediaContentId`) REFERENCES `media_content` (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+SELECT *
+FROM table_name
+INNER JOIN table_name
+    ON column_name = column_name;

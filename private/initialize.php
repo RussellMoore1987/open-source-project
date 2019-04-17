@@ -28,6 +28,9 @@
     // set default time MST and MDT = America/Denver = daylight savings (MST or America/Denver)
     date_default_timezone_set('America/Denver'); // todo: find a better method so that this will switch automatically
 
+    // version for CSS and JavaScript, increment this number upwards to reset CSS and JavaScript caches
+    $assetVersion = 12372;
+
     // Autoload class definitions
     function my_autoload($class) {
         if(preg_match('/\A\w+\Z/', $class)) {

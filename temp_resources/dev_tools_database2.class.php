@@ -869,7 +869,7 @@ class Database {
         public function create_users_table() {
             $sql = "CREATE TABLE IF NOT EXISTS users ( ";
             $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
-            $sql .= "username VARCHAR(35) NOT NULL, ";
+            $sql .= "username VARCHAR(35) NOT NULL UNIQUE, ";
             $sql .= "password VARCHAR(50) NOT NULL, ";
             $sql .= "firstName VARCHAR(25) NOT NULL, ";
             $sql .= "lastName VARCHAR(25) NOT NULL, ";

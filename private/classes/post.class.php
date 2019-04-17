@@ -112,6 +112,86 @@
                     'html' => 'yes' // mostly just to allow special characters like () []
                 ]
             ];
+
+
+            // ! temp
+            static protected $apiParameters = [
+                // ...api/v1/posts/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
+                'id'=>[
+                    'refersTo' => ['id'],
+                    'type' => ['int', 'list'],
+                    'connection' => [
+                        'int' => "=",
+                        'list' => 'in'
+                    ]
+                ],
+                'greaterThen' => [
+                    'refersTo' => ['postDate'],
+                    'type' => ['str'],
+                    'connection' => [
+                        'str' => ">"
+                    ]
+                ], 
+                // ...api/v1/posts/?lessThen=1/37/2010
+                'lessThen' => [
+                    'refersTo' => ['postDate'],
+                    'type' => ['str'],
+                    'connection' => [
+                        'str' => "<"
+                    ]
+                ],
+                // ...api/v1/posts/?search=sale // ? ...api/v1/posts/?search=sale,off,marked down     more then one value!???
+                'search' => [
+                    'refersTo' => ['title', 'content'],
+                    'type' => ['str, list'],
+                    'connection' => [
+                        'str' => "like",
+                        'list' => "like::or"
+                    ],
+                    'validation' => [
+                        'name'=>'search',
+                        'required' => 'yes',
+                        'type' => 'str', // type of string
+                        'min'=> 2, // string length
+                        'max' => 50, // string length
+                        'html' => 'no'
+                    ]
+                ],
+                'postDate' => [
+                    'refersTo' => ['postDate'],
+                    'type' => ['str'],
+                    'connection' => [
+                        'str' => "="
+                    ]
+                ],
+                // ...api/v1/posts/?createdDate=1910
+                'createdDate' => [
+                    'refersTo' => ['createdDate'],
+                    'type' => ['str'],
+                    'connection' => [
+                        'str' => "="
+                    ]
+                ],
+                // ...api/v1/posts/?status=0
+                'status' => [
+                    'refersTo' => ['status'],
+                    'type' => ['int'],
+                    'connection' => [
+                        'int' => "="
+                    ]
+                ],
+                // ! this is possibly a global parameter and may not need to be in the individual classes, probably shouldn't
+                // ...api/v1/posts/?orderBy=postDate::DECS,createdDate // ? what is default ascending or descending
+                'orderBy' => [
+                    'refersTo' => ['sortingOptions'],
+                ]
+            ];
+
+            // page, perPage, and perhapses others should be global
+            // ! temp
+
+
+
         // @ class database information end
         
         // @ class specific queries start

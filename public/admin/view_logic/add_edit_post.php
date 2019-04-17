@@ -6,6 +6,11 @@
 
         // set defaults
         $postId = $_GET["postId"] ?? "add";
+        // if not add make number
+        if (!($postId == "add")) {
+            // this forces the $postId to be an integer
+            $postId = (int) $postId;
+        }
 
         // # check to see if we have a real ID
             if (!($postId == "add")) {

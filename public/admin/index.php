@@ -1,12 +1,4 @@
 <?php
-    // todo: which one
-    // open_source_project/public/admin/add_edit_post?postId=299
-    // open_source_project/public/admin/add_edit_post.php?postId=299
-    // open_source_project/public/admin/add_edit_post/postId=299&user=55 ***** but more work
-
-    // echo $_SERVER['QUERY_STRING'];
-    // var_dump($_GET);
-
     // @ main layout start
         // include main logic for all pages
         require_once('../../private/initialize.php');

@@ -1,6 +1,6 @@
 <div class="temp_flex_sb">
     <!-- tag form -->
-    <form method="post" action='add_edit_tag<?php if($tagId != 'add' && is_int($tagId)) { echo "?tagId={$tagId}";} ?>'>
+    <form method="post" action='add_edit_tag<?php if($tagId != 'add') { echo "?tagId={$tagId}";} ?>'>
         <div class="error">
             <?php
                 // check for errors
@@ -11,12 +11,15 @@
                 }   
             ?>
         </div>
+        <div>
+            <a href='add_edit_tag'>Add New Tag</a>
+        </div>
         <!-- main form -->
         <div>
             <label for="tag[title]">Title/Name</label>
             <br>
             <!-- minlength="2" maxlength="50" required -->
-            <input type="text" name="tag[title]" value="<?php echo $Tag_obj->title ?>" >
+            <input id="title" type="text" name="tag[title]" value="<?php echo $Tag_obj->title ?>" >
         </div>
         <br>
 
@@ -57,9 +60,14 @@
             foreach ($postTags_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_tag?tagId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_tag?tagId={$key}'>{$value}</a>
+                    [<a href='add_edit_tag?tagId={$key}'>edit</a>
+                    <a href='add_edit_tag?tagId={$key}&delete=yes'>delete</a>]<br>
+                ";
             }
         ?>
+        <a href="add_edit_tag?ctr=1">Add New Post Tag</a>
     </div>
     <!-- media content tags -->
     <div>
@@ -68,20 +76,30 @@
             foreach ($mediaContentTags_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_tag?tagId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_tag?tagId={$key}'>{$value}</a>
+                    [<a href='add_edit_tag?tagId={$key}'>edit</a>
+                    <a href='add_edit_tag?tagId={$key}&delete=yes'>delete</a>]<br>
+                ";
             }
         ?>
+        <a href="add_edit_tag?ctr=2">Add New Media Content Tag</a>
     </div>
-    <!-- users tags -->
+    <!-- user tags -->
     <div>
-        <h2>Users Tags</h2>
+        <h2>User Tags</h2>
         <?php
             foreach ($usersTags_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_tag?tagId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_tag?tagId={$key}'>{$value}</a>
+                    [<a href='add_edit_tag?tagId={$key}'>edit</a>
+                    <a href='add_edit_tag?tagId={$key}&delete=yes'>delete</a>]<br>
+                ";
             }
         ?>
+        <a href="add_edit_tag?ctr=3">Add New User Tag</a>
     </div>
     <!-- content tags -->
     <div>
@@ -90,8 +108,13 @@
             foreach ($contentTags_array as $key => $value) {
                 // escape potential html characters
                 $value = h($value);
-                echo "<a href='add_edit_tag?tagId={$key}'>{$value}</a><br>";
+                echo "
+                    <a href='add_edit_tag?tagId={$key}'>{$value}</a>
+                    [<a href='add_edit_tag?tagId={$key}'>edit</a>
+                    <a href='add_edit_tag?tagId={$key}&delete=yes'>delete</a>]<br>
+                ";
             }
         ?>
+        <a href="add_edit_tag?ctr=4">Add New Content Tag</a>
     </div>
 </div>
