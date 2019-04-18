@@ -199,8 +199,30 @@
                 // ! this is possibly a global parameter and may not need to be in the individual classes, probably shouldn't
                 // ...api/v1/posts/?orderBy=postDate::DECS,createdDate // ? what is default ascending or descending
                 'orderBy' => [
-                    'refersTo' => 'sortingOptions',
-                ]
+                    'refersTo' => 'sortingOption',
+                    'type' => 'list',
+                    'connection' => [
+                        'list' => [
+                            'ASC',
+                            'DESC'
+                        ]
+                    ]
+                ],
+                'page' => [
+                    'refersTo' => 'sortingOption',
+                    'type' => 'int',
+                    "connection" => [
+                        'int' => 'OFFSET'
+                    ]
+                ],
+                'perPage' => [
+                    'refersTo' => 'sortingOption',
+                    'type' => 'int',
+                    "connection" => [
+                        'int' => 'LIMIT'
+                    ]
+                ],
+
             ];
 
             // page, perPage, and perhapses others should be global
