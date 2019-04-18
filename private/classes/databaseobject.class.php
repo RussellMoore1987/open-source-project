@@ -35,6 +35,8 @@
         static protected $collectionTypeReference = 0;
         // db validation, // * validation_options located at: root/private/reference_information.php
         static protected $validation_columns = [];
+        // The default global parameters
+        static protected $apiParameters = [];
         public $errors = [];
 
         // @ active record code start
@@ -177,15 +179,15 @@
             }
 
             // find all
-            static public function find_all(array $options = NULL, array $columns = NULL) {
+            static public function find_all(array $sqlOptions) {
                 // Begin building the sql
                 $sql = "SELECT ";
                 // Add all the columns to select if defined
-                if (isset($columns)) {
-                    foreach($columns as $col) {
+                if (isset($sqlOptions['columnOptions'])) {
+                    foreach($sqlOptions['columnOptions'] as $col) {
                         $sql .= self::db_escape($col);
                         // Add the comma if not at the end of the array
-                        if ($col !== end($columns)) {
+                        if ($col !== end($sqlOptions['columnOptions'])) {
                             $sql .= ", ";
                         } else {
                             $sql .= " ";
@@ -198,8 +200,8 @@
                 // Add the rest of our SQL statement
                 $sql .= "FROM " . static::$tablename;
                 // Add the options if defined
-                if (isset($options)) {
-                    foreach($options as $optKey => $optValue) {
+                if (isset($sqlOptions['sortingOptions'])) {
+                    foreach($sqlOptions['sortingOptions'] as $optKey => $optValue) {
                         $sql .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
                     }
                 }
@@ -207,16 +209,17 @@
             }
 
             // find by id
+            // TODO: will not work. Needs refactoring
             // Accepts single id or array of ids as well as options for columns
-            static public function find_by_id($id, array $columns = NULL) {
+            static public function find_by_id($id, array $sqlOptions) {
                 // Begin building the sql
                 $sql = "SELECT ";
                 // Add all the columns to select if defined
-                if (isset($columns)) {
-                    foreach($columns as $col) {
+                if (isset($sqlOptions['columnOptions'])) {
+                    foreach($sqlOptions['columnOptions'] as $col) {
                         $sql .= self::db_escape($col);
                         // Add the comma if not at the end of the array
-                        if ($col !== end($columns)) {
+                        if ($col !== end($sqlOptions['columnOptions'])) {
                             $sql .= ", ";
                         } else {
                             $sql .= " ";
@@ -258,15 +261,15 @@
             }
 
             // find where
-            static public function find_where(array $whereClauses = NULL, array $options = NULL, array $columns = NULL) {
+            static public function find_where(array $sqlOptions) {
                 // Begin building the SQL
                 $sql = "SELECT ";
                 // Add all the columns to select if defined
-                if (isset($columns)) {
-                    foreach($columns as $col) {
+                if (isset($sqlOptions['columnOptions'])) {
+                    foreach($sqlOptions['columnOptions'] as $col) {
                         $sql .= self::db_escape($col);
                         // Add the comma if not at the end of the array
-                        if ($col !== end($columns)) {
+                        if ($col !== end($sqlOptions['columnOptions'])) {
                             $sql .= ", ";
                         } else {
                             $sql .= " "; 
@@ -279,38 +282,25 @@
                 // Add the rest of our SQL statement
                 $sql .= "FROM " . static::$tablename;
                 // Add the where clauses if defined
-                if (isset($whereClauses)) {
+                if (isset($sqlOptions['whereOptions'])) {
                     // Begin the WHERE SQL
                     $sql .= " WHERE ";
                     // Loop through all of the where clauses given
-                    foreach($whereClauses as $where) {
-                        // Check if the value in the where clause is an array of values or not
-                        if(is_array($where['value'])) {
-                            $sql .= "WHERE " . self::db_escape($where['column']) . " IN ( ";
-                            foreach($where['value'] as $singleValue) {
-                                $sql .= self::db_escape($singleValue);
-                                // Add the end parentheses if at the end otherwise add a comma separator
-                                if($singleId === end($id)) {
-                                    $sql .= " ) ";
-                                } else {
-                                    $sql .= ", ";
-                                }
-                            }
-                        // If the value in the where clause is not an array
-                        } else {
-                            $sql .= self::db_escape($where['column']) . " ";
-                            $sql .= self::db_escape($where['operator']) . " ";
-                            $sql .= self::db_escape($where['value']) . " ";
-                        }
+                    foreach($sqlOptions['whereOptions'] as $where) {
+
+                        $sql .= self::db_escape($where['column']) . " ";
+                        $sql .= self::db_escape($where['operator']) . " ";
+                        $sql .= self::db_escape($where['value']) . " ";
+
                         // Add the AND if not at the end of the array
-                        if ($where !== end($whereClauses)) {
+                        if ($where !== end($sqlOptions['whereOptions'])) {
                             $sql .= "AND ";
                         }
                     }
                 }
-                // Add the options if defined
-                if (isset($options)) {
-                    foreach($options as $optKey => $optValue) {
+                // Add the sorting options if defined
+                if (isset($sqlOptions['sortingOptions'])) {
+                    foreach($sqlOptions['sortingOptions'] as $optKey => $optValue) {
                         $sql .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
                     }
                 }
@@ -472,10 +462,10 @@
                 }
             }
 
-            // create an associative array, key value pair from the static::$columns excluding id
+            // create an associative array, key value pair from the static::$sqlOptions['columnOptions'] excluding id
             public function attributes($type = "update") {
                 $attributes = [];
-                foreach (static::$columns as $column) {
+                foreach (static::$sqlOptions['columnOptions'] as $column) {
                     // skip class column exclusions
                     if (in_array($column, static::$columnExclusions)) { continue; }
                     // if in type = update mode do not add values with NULL

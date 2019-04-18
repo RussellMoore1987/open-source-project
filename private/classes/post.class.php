@@ -141,18 +141,31 @@
                     ]
                 ],
                 // ...api/v1/posts/?search=sale // ? ...api/v1/posts/?search=sale,off,marked down     more then one value!???
-                'search' => [
+                'searchTitle' => [
                     'refersTo' => 'title',
                     'type' => 'str',
                     'connection' => [
                         'str' => "like",
-                        'list' => [
-                            "like",
-                            "or"
-                        ]
+                        'list' => 'like'
                     ],
                     'validation' => [
-                        'name'=>'search',
+                        'name'=>'searchTitle',
+                        'required' => 'yes',
+                        'type' => 'str', // type of string
+                        'min'=> 2, // string length
+                        'max' => 50, // string length
+                        'html' => 'no'
+                    ]
+                ],
+                'searchContent' => [
+                    'refersTo' => 'content',
+                    'type' => 'str',
+                    'connection' => [
+                        'str' => "like",
+                        'list' => 'like'
+                    ],
+                    'validation' => [
+                        'name'=>'searchContent',
                         'required' => 'yes',
                         'type' => 'str', // type of string
                         'min'=> 2, // string length

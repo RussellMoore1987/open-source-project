@@ -22,8 +22,23 @@ trait Api {
                     $apiData_array[] = $ObjApiInfo;
                 }
             }
+
+        // There were errors, construct the error message
         } else {
-            // todo: construct error message
+            // Errors response
+            $responseData = [
+                "success" => false,
+                "statusCode" => 400,
+                "errors" => [
+                    "code" => 400,
+                    "statusMessage" => "Bad Request",
+                    "errorMessages" => $prepApiData_array['errors']
+                ],
+                "requestMethod" => $_SERVER['REQUEST_METHOD'],
+                "totalPages" => 1,
+                "currentPages" => 1,
+                "paramsSent" => $_GET
+            ];
         }
         // create normal return body
             // todo: construct return body see if we need to add apiData_array, also check to see whether not we need to send back an error message
@@ -51,6 +66,9 @@ trait Api {
                     }
                     // Turn the list into an array and add it to our list of whereOptions
                     $newList_array = split_string_by_comma($paramValue);
+
+                    // Prep the beginning of the string for holding our list of values
+                    $valueList = "( ";
                     foreach($newList_array as $listItem) {
                         // Validate the value
                         $errors = self::validate_api_params($listItem, $paramKey);
@@ -63,17 +81,24 @@ trait Api {
                             }
                             return $prepApiData_array;
 
-                        // No errors were found add the data to the array
+                        // No errors were found add to our sql prepped list
                         } else {
-                            
-                            // The parameter was found, add the info needed to our array
-                            $prepApiData_array['sqlOptions']['whereOptions'][] = [
-                                "column" => static::$apiParameters[$paramKey]['refersTo'],
-                                "operator" => static::$apiParameters[$paramKey]['connection']['list'],
-                                "value" => $listItem
-                            ];
+                            // If at not at the end of the array add the comma
+                            if($listItem !== end($newList_array)) {
+                                $valueList .= self::db_escape($listItem) . ", ";
+
+                            // If at the end of the array then add a paranetheses instead
+                            } else {
+                                $valueList .= self::db_escape($listItem) . " )";
+                            }
                         }
                     }
+                    // Add the sql preped list to the whereOptions
+                    $prepApiData_array['sqlOptions']['whereOptions'][] = [
+                        "column" => static::$apiParameters[$paramKey]['refersTo'],
+                        "operator" => static::$apiParameters[$paramKey]['connection']['list'],
+                        "value" => $valueList
+                    ];
 
                 // The data is not a list
                 } else {
