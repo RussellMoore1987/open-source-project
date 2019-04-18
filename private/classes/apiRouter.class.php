@@ -13,6 +13,7 @@
             "users" => "User"
         ];
         public $path;
+        public $pathStr;
 
         // Constructor method, We expect the path and then parameters
         public function __construct($url) {
@@ -20,19 +21,29 @@
             $parameters_array = explode("&", $url);
             // unset $_GET path, So that it doesn't show up as an option
             unset($_GET[$parameters_array[0]]);
+            // set path into local variable
+            $this->pathStr = $parameters_array[0];
+            // see if we need to remove the "/"
+            if (substr($this->pathStr, -1) == "/") {
+                // remove that character
+                $this->pathStr = substr_replace($this->pathStr,"",-1);
+            }
 
             // check to see if we are getting the index, a particular path, or if that path does not exist
-            if ($parameters_array[0] == " " || $parameters_array[0] == "index") {
+            if ($this->pathStr == " " || $this->pathStr == "index") {
                 $this->path = "index";
             } else {
                 // check to see if we have a path defined, if so set class name
-                if (isset($this->pathInterpretation_array[$parameters_array[0]])) {
+                if (isset($this->pathInterpretation_array[$this->pathStr])) {
                     // set className
-                    $this->className = $this->pathInterpretation_array[$parameters_array[0]];
-                }
-                // double check just to see if the class exists
-                if (class_exists($this->className)) {
-                    $this->path = "class";
+                    $this->className = $this->pathInterpretation_array[$this->pathStr];
+
+                    // double check just to see if the class exists
+                    if (class_exists($this->className)) {
+                        $this->path = "class";
+                    } else {
+                        $this->path = "index";
+                    }
                 } else {
                     $this->path = "index";
                 }
@@ -46,8 +57,8 @@
                 require_once PUBLIC_PATH . '/api/v1/apiIndex.php';
             } else {
                 // run class api
-                echo $this->className::get_api_info();
-                // echo "Got class:{$this->className}, From path:{$parameters_array[0]}";
+                // echo $this->className::get_api_info();
+                echo "Got class:{$this->className}, From path:{$this->pathStr}";
             }
         }
     }

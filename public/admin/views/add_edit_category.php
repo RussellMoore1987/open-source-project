@@ -1,6 +1,6 @@
 <div class="temp_flex_sb">
     <!-- category form -->
-    <form method="post" action='add_edit_category<?php if($categoryId != 'add') { echo "?categoryId={$categoryId}";} ?>'>
+    <form method="post" action='add_edit_category<?php if($categoryId != 'add' && $categoryId > 0) { echo "?categoryId={$categoryId}";} ?>'>
         <div class="error">
             <?php
                 // check for errors

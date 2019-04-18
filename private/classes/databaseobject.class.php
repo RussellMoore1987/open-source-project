@@ -33,6 +33,7 @@
         static protected $collectionTypeReference = 0;
         // db validation, // * validation_options located at: root/private/reference_information.php
         static protected $validation_columns = [];
+        public $message = [];
         public $errors = [];
 
         // @ active record code start

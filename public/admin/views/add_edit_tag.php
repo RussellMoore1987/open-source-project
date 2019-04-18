@@ -1,6 +1,6 @@
 <div class="temp_flex_sb">
     <!-- tag form -->
-    <form method="post" action='add_edit_tag<?php if($tagId != 'add') { echo "?tagId={$tagId}";} ?>'>
+    <form method="post" action='add_edit_tag<?php if($tagId != 'add' && $tagId > 0) { echo "?tagId={$tagId}";} ?>'>
         <div class="error">
             <?php
                 // check for errors
