@@ -1,5 +1,4 @@
 <?php
-
     // todo:
         // possibly store images after query
         // possibly function for extended data
@@ -494,7 +493,7 @@
 
             // Get the objects api info and return it
             protected function get_obj_api_info() {
-                
+
             }
 
         // @ active record code end
