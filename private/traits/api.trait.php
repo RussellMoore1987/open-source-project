@@ -17,7 +17,7 @@ trait Api {
                 // loop over and get api info
                 foreach ($Obj_array as $Obj) {
                     // get api info
-                    $ObjApiInfo = $Obj->get_obj_api_info();
+                    $ObjApiInfo = $Obj->get_full_api_data();
                     // put info into a new array
                     $apiData_array[] = $ObjApiInfo;
                 }
@@ -275,10 +275,8 @@ trait Api {
         } else {
             $data_array = $this->get_full_api_data();
         }
-        // turn array into Jason
-        $jsonData_array = json_encode($data_array);
-        // return data
-        return $jsonData_array;
+        // return the data array
+        return $data_array;
     }
 
 }

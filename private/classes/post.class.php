@@ -113,8 +113,6 @@
                 ]
             ];
 
-
-            // ! temp
             static protected $apiParameters = [
                 // ...api/v1/posts/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
                 'id'=>[

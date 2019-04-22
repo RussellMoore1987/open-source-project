@@ -492,6 +492,11 @@
                 return $sanitized_array;
             }
 
+            // Get the objects api info and return it
+            protected function get_obj_api_info() {
+                
+            }
+
         // @ active record code end
 
         // @ class functionality methods start
