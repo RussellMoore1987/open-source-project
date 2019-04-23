@@ -5,6 +5,7 @@ trait Api {
 
     // Method for getting api info from the DB
     static function get_api_info() {
+        // Get the page and perpage
         // validate incoming parameters
         $prepApiData_array = static::validate_and_prep_api_parameters($_GET);
         // check to see if we have errors
@@ -22,6 +23,9 @@ trait Api {
                     $apiData_array[] = $ObjApiInfo;
                 }
             }
+
+            // Check if we have defined page and perPage get parameters
+            if()
 
             // Create the response message
             $responseData = [
@@ -186,6 +190,47 @@ trait Api {
         }
         // Return the array
         return $prepApiData_array;
+    }
+
+    static function get_page_and_perPage($_GET) {
+        // An array to hold the paginiation options
+        $paginationOptions_array = [];
+
+        // Determine if the page and perPage are set
+        if(isset($_GET['page']) && isset($_GET['perPage'])) {
+            // Set the values
+            $paginationOptions_array['page'] = $_GET['page'];
+            $paginationOptions_array['perPage'] = $_GET['perPage'];
+
+        // If only the page is defined
+        } elseif(isset($_GET['page'])) {
+            // Set the values
+            $paginationOptions_array['page'] = $_GET['page'];
+            $paginationOptions_array['perPage'] = static::$apiParameters['perPage']['default'];
+
+        // if only the perPage is defined
+        } elseif(isset($_GET['perPage'])) {
+            // Set the values
+            $paginationOptions_array['page'] = static::$apiParameters['page']['default'];
+            $paginationOptions_array['perPage'] = $_GET['perPage'];
+
+        // If neither are defined
+        } else {
+            // Set the values
+            $paginationOptions_array['page'] = static::$apiParameters['page']['default'];
+            $paginationOptions_array['perPage'] = static::$apiParameters['perPage']['default'];
+        }
+
+        // Calculate the limit and offset
+        $limit = $paginationOptions_array['perPage'];
+        $offset = (($paginationOptions_array['page'] - 1) * $limit) + ($paginationOptions_array['page'] - 1);
+
+        // Add the limit and offset to the array
+        $paginationOptions_array['limit'] = $limit;
+        $paginationOptions_array['offset'] = $offset;
+
+        // Return the array
+        return $paginationOptions_array;
     }
 
     // This function leverages the val_validation function.

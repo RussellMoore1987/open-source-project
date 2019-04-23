@@ -199,6 +199,7 @@
                 'orderBy' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'list',
+                    'default' => 'ASC',
                     'connection' => [
                         'list' => [
                             'ASC',
@@ -209,6 +210,7 @@
                 'page' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'int',
+                    'default' => 1,
                     "connection" => [
                         'int' => 'OFFSET'
                     ]
@@ -216,6 +218,7 @@
                 'perPage' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'int',
+                    'default' => 500,
                     "connection" => [
                         'int' => 'LIMIT'
                     ]
