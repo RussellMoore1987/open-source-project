@@ -96,7 +96,7 @@ function obj_array_api_prep(array $obj_array, $type = 'basic') {
 function split_string_by_comma($string) {
 
   // Return false if there are no commas in the string
-  if (strpos(",", $string) == false) {
+  if (strpos($string, ",") == false) {
     return false;
     
   } else {
@@ -117,7 +117,7 @@ function split_string_by_comma($string) {
 // Determine the string is a comma separated list
 function is_list($data) {
     // Check if it is a comma separated list inside the string
-    if(strpos(",", $data)) {
+    if(strpos($data, ',') !== false) {
         return true;
     } else {
         return false;

@@ -52,7 +52,7 @@ trait Api {
                 "paramsSent" => $_GET
             ];
         }
-        
+
         // Package the response into json and return it
         $jsonData = json_encode($responseData);
         return $jsonData;
@@ -115,9 +115,9 @@ trait Api {
                 // Check if the data is a list
                 } elseif(is_list($paramValue)) {
                     // Check if we accept a list as a data type
-                    if(isset(static::$apiParameters[$paramKey]['connection']['list'])) {
+                    if(!isset(static::$apiParameters[$paramKey]['connection']['list'])) {
                         $prepApiData_array['errors'][] = "{$paramKey} does not accept a list of values!";
-                        return $prepApiData_array;
+                        break;
                     }
                     // Turn the list into an array and add it to our list of whereOptions
                     $newList_array = split_string_by_comma($paramValue);
@@ -129,7 +129,7 @@ trait Api {
                         $errors = self::validate_api_params($listItem, $paramKey);
 
                         // If there are errors then exit the function with the errors
-                        if(isset($errors)) {
+                        if(!empty($errors)) {
                             // Add each error from the validation error array
                             foreach($errors as $err) {
                                 $prepApiData_array['errors'][] = $err;
