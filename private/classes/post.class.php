@@ -120,7 +120,7 @@
                     'type' => 'int',
                     'connection' => [
                         'int' => "=",
-                        'list' => 'int'
+                        'list' => 'IN'
                     ]
                 ],
                 'greaterThen' => [
