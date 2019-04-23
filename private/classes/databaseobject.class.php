@@ -279,7 +279,7 @@
                     $sql .= "* ";
                 }
                 // Add the rest of our SQL statement
-                $sql .= "FROM " . static::$tablename;
+                $sql .= "FROM " . static::$tableName;
                 // Add the where clauses if defined
                 if (isset($sqlOptions['whereOptions'])) {
                     // Begin the WHERE SQL

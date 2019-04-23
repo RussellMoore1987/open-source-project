@@ -23,25 +23,19 @@
             // The url is defined
             } else {
                 // get path from url
-                $parameters_array = explode("&", $url);
-                // unset $_GET path, So that it doesn't show up as an option
-                unset($_GET[$parameters_array[0]]);
+                $checkClassName = $this->get_class_path($url);
     
-                // check to see if we are getting the index, a particular path, or if that path does not exist
-                if ($parameters_array[0] == " " || $parameters_array[0] == "index") {
-                    $this->path = "index";
+                // check to see if we have a path defined, if so set class name
+                if (isset($this->pathInterpretation_array[$checkClassName])) {
+                    // set className
+                    $this->className = $this->pathInterpretation_array[$checkClassName];
+                }
+                
+                // double check just to see if the class exists
+                if (class_exists($this->className)) {
+                    $this->path = "class";
                 } else {
-                    // check to see if we have a path defined, if so set class name
-                    if (isset($this->pathInterpretation_array[$parameters_array[0]])) {
-                        // set className
-                        $this->className = $this->pathInterpretation_array[$parameters_array[0]];
-                    }
-                    // double check just to see if the class exists
-                    if (class_exists($this->className)) {
-                        $this->path = "class";
-                    } else {
-                        $this->path = "index";
-                    }
+                    $this->path = "index";
                 }
             }
         }
@@ -56,6 +50,30 @@
                 echo $this->className::get_api_info();
                 // echo "Got class:{$this->className}, From path:{$parameters_array[0]}";
             }
+        }
+
+        // Function to help get what class the path is trying to access
+        private function get_class_path($url) {
+            // Split up the url to find what class to access
+            $splitPaths_array = explode('/', $url);
+            $tempClassName = NULL;
+
+            // Loop through the split up array to find what class to access and what the params are
+            foreach($splitPaths_array as $path) {
+                // The classname should be before the list of parameters, check when the '?' appears
+                if(strpos($path, '?')) {
+                    // explode the string into an array and get the classname
+                    $temp_array = explode('?', $path);
+
+                    // Set the classname
+                    $tempClassName = $temp_array[0];
+                    //break out of the loop
+                    break;
+                }
+            }
+
+            // Return the tempClassName
+            return $tempClassName;
         }
     }
 ?>

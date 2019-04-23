@@ -6,12 +6,12 @@ trait Api {
     // Method for getting api info from the DB
     static function get_api_info() {
         // validate incoming parameters
-        $PrepApiData_array = static::validate_and_prep_api_parameters($_GET);
+        $prepApiData_array = static::validate_and_prep_api_parameters($_GET);
         // check to see if we have errors
-        if (!$PrepApiData_array['errors']) {
+        if (!$prepApiData_array['errors']) {
             // send in query
             // sqlOptions will contain [whereOptions],[sortingOptions],[columnOptions]
-            $Obj_array = static::find_where($PrepApiData_array['sqlOptions']);
+            $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
             // check to see if you got anything back, if yes move over and get API info
             if ($Obj_array) {
                 // loop over and get api info
@@ -32,7 +32,7 @@ trait Api {
                 "totalPages" => 1,
                 "currentPage" => 1,
                 "paramsSent" => $_GET,
-                static::$tablename => $apiData_array
+                static::$tableName => $apiData_array
             ];
 
         // There were errors, construct the error message
@@ -51,11 +51,11 @@ trait Api {
                 "currentPage" => 1,
                 "paramsSent" => $_GET
             ];
-
-            // Package the response into json and return it
-            $jsonData = json_encode($responseData);
-            return $jsonData;
         }
+        
+        // Package the response into json and return it
+        $jsonData = json_encode($responseData);
+        return $jsonData;
     }
 
     // Validate and prep the API parameters
@@ -67,15 +67,15 @@ trait Api {
         // Prep the API parameters to be used in the SQL
         foreach($getParams_array as $paramKey => $paramValue) {
             // Check if the parameter is defined in the class
-            if(isset(static::$apiParameters[$paramKey]) && static::$apiParameters[$paramKey] == $paramKey) {
+            if(isset(static::$apiParameters[$paramKey])) {
                 // Check if it is a sorting option
                 if(static::$apiParameters[$paramKey]['refersTo'] === 'sortingOption') {
                     // Check if the data is a list
-                    if(isList($paramValue)) {
+                    if(is_list($paramValue)) {
                         // Check if we accept a list as a data type
                         if(isset(static::$apiParameters[$paramKey]['connection']['list'])) {
                             $prepApiData_array['errors'][] = "{$paramKey} does not accept a list of values!";
-                            return $prepApiData_array;
+                            break;
                         }
 
                         // Turn the list into an array
@@ -86,19 +86,19 @@ trait Api {
                         // If the array is > 2 then throw an error
                         if(sizeof($list_array) > 2) {
                             $prepApiData_array['errors'][] = "{$paramKey} only accepts a list of 2 values!";
-                            return $prepApiData_array;
+                            break;
                         }
 
                         // Validate that the first item in the list is the column name
                         if(!isset(static::$apiParameters[$list_array[0]])) {
                             $prepApiData_array['errors'][] = "{$paramKey} must have a valid column name listed first!";
-                            return $prepApiData_array;
+                            break;
                         }
 
                         // Validate that the second item in the list is a correct order by
                         if($list_array[1] != 'ASC' || $list_array[1] != 'DESC') {
                             $prepApiData_array['errors'][] = "{$paramKey} must have a valid  value listed second! Valid values are 'ASC' or 'DESC'";
-                            return $prepApiData_array;
+                            break;
                         }
 
                         // Add the data to the sortingOptions
@@ -113,7 +113,7 @@ trait Api {
                     }
                 
                 // Check if the data is a list
-                } elseif(isList($paramValue)) {
+                } elseif(is_list($paramValue)) {
                     // Check if we accept a list as a data type
                     if(isset(static::$apiParameters[$paramKey]['connection']['list'])) {
                         $prepApiData_array['errors'][] = "{$paramKey} does not accept a list of values!";
@@ -134,7 +134,7 @@ trait Api {
                             foreach($errors as $err) {
                                 $prepApiData_array['errors'][] = $err;
                             }
-                            return $prepApiData_array;
+                            break;
 
                         // No errors were found add to our sql prepped list
                         } else {
@@ -161,12 +161,12 @@ trait Api {
                     $errors = self::validate_api_params($paramValue, $paramKey);
 
                     // If there are errors then exit the function with the errors
-                    if(isset($errors)) {
+                    if(!empty($errors)) {
                         // Add each error from the validation error array
                         foreach($errors as $err) {
                             $prepApiData_array['errors'][] = $err;
                         }
-                        return $prepApiData_array;
+                        break;
 
                     // No errors were found add the data to the array
                     } else {
@@ -181,16 +181,18 @@ trait Api {
             // There was no matching parameter, add to the errors array and return the array
             } else {
                 $prepApiData_array['errors'][] = "{$paramKey} is not a valid parameter!";
-                return $prepApiData_array;
+                break;
             }
         }
+        // Return the array
+        return $prepApiData_array;
     }
 
     // This function leverages the val_validation function.
     static function validate_api_params($value, $param) {
 
         // If there is a custom validation column then use it for validation
-        if(isset(static::$validation_columns[static::$apiParameters[$param]['refersTo']])){
+        if(isset(static::$apiParameters[$param]['validation'])){
             // Set the custom validation
             $customValidation = static::$apiParameters[$param]['validation'];
             // Validate based on the custom validation
