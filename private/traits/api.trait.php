@@ -5,18 +5,37 @@ trait Api {
 
     // Method for getting api info from the DB
     static function get_api_info() {
-        // Get the page and perpage
-        // validate incoming parameters
-        $prepApiData_array = static::validate_and_prep_api_parameters($_GET);
+        // Array for holding the prepped api data
+        $prepApiData_array['errors'] = [];
+
+        // Get the paginationOptions
+        $paginationOptions_array = static::get_page_and_perPage($_GET);
+
+        // If the GET params are not empty then validate and prep the parameters
+        if(!empty($_GET)) {
+            // validate incoming parameters
+            $prepApiData_array = static::validate_and_prep_api_parameters($_GET);
+        }
+
         // check to see if we have errors
         if (!$prepApiData_array['errors']) {
-            // send in query
-            // sqlOptions will contain [whereOptions],[sortingOptions],[columnOptions]
-            $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
+
+            // If there are not GET params then just get all the data
+            if(!empty($_GET)) {
+                // sqlOptions will contain [whereOptions],[sortingOptions],[columnOptions]
+                $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
+
+            } else {
+                $Obj_array = static::find_all();
+            }
+
+            // Set the totalPages by getting a count
+            $totalPages = ceil(($Obj_array['count'] / $paginationOptions_array['perPage']));
+
             // check to see if you got anything back, if yes move over and get API info
-            if ($Obj_array) {
+            if (isset($Obj_array['data'])) {
                 // loop over and get api info
-                foreach ($Obj_array as $Obj) {
+                foreach ($Obj_array['data'] as $Obj) {
                     // get api info
                     $ObjApiInfo = $Obj->get_full_api_data();
                     // put info into a new array
@@ -24,17 +43,14 @@ trait Api {
                 }
             }
 
-            // Check if we have defined page and perPage get parameters
-            if()
-
             // Create the response message
             $responseData = [
                 "success" => true,
                 "statusCode" => 200,
                 "errors" => [],
                 "requestMethod" => $_SERVER['REQUEST_METHOD'],
-                "totalPages" => 1,
-                "currentPage" => 1,
+                "totalPages" => $totalPages,
+                "currentPage" => $paginationOptions_array['page'],
                 "paramsSent" => $_GET,
                 static::$tableName => $apiData_array
             ];
@@ -192,7 +208,7 @@ trait Api {
         return $prepApiData_array;
     }
 
-    static function get_page_and_perPage($_GET) {
+    static function get_page_and_perPage($params) {
         // An array to hold the paginiation options
         $paginationOptions_array = [];
 

@@ -178,7 +178,8 @@
             }
 
             // find all
-            static public function find_all(array $sqlOptions) {
+            static public function find_all(array $sqlOptions = []) {
+                // TODO: Add the second count sql query
                 // Begin building the sql
                 $sql = "SELECT ";
                 // Add all the columns to select if defined
@@ -261,29 +262,41 @@
 
             // find where
             static public function find_where(array $sqlOptions) {
+                // Set the array to hold our return values
+                $returnValues_array = [];
+
                 // Begin building the SQL
                 $sql = "SELECT ";
+                $sql2 = "SELECT ";
+
                 // Add all the columns to select if defined
                 if (isset($sqlOptions['columnOptions'])) {
+                    $sql2 .= "COUNT(*) ";
+
                     foreach($sqlOptions['columnOptions'] as $col) {
                         $sql .= self::db_escape($col);
                         // Add the comma if not at the end of the array
                         if ($col !== end($sqlOptions['columnOptions'])) {
                             $sql .= ", ";
                         } else {
-                            $sql .= " "; 
+                            $sql .= " ";
                         }
                     }
                 // If no custom columns given then add the *
                 } else {
                     $sql .= "* ";
+                    $sql2 .= "COUNT(*) ";
                 }
+
                 // Add the rest of our SQL statement
                 $sql .= "FROM " . static::$tableName;
+                $sql2 .= "FROM " . static::$tableName;
+
                 // Add the where clauses if defined
                 if (isset($sqlOptions['whereOptions'])) {
                     // Begin the WHERE SQL
                     $sql .= " WHERE ";
+                    $sql2 .= " WHERE ";
                     // Loop through all of the where clauses given
                     foreach($sqlOptions['whereOptions'] as $where) {
 
@@ -291,9 +304,14 @@
                         $sql .= self::db_escape($where['operator']) . " ";
                         $sql .= self::db_escape($where['value']) . " ";
 
+                        $sql2 .= self::db_escape($where['column']) . " ";
+                        $sql2 .= self::db_escape($where['operator']) . " ";
+                        $sql2 .= self::db_escape($where['value']) . " ";
+
                         // Add the AND if not at the end of the array
                         if ($where !== end($sqlOptions['whereOptions'])) {
                             $sql .= "AND ";
+                            $sql2 .= "AND ";
                         }
                     }
                 }
@@ -301,10 +319,12 @@
                 if (isset($sqlOptions['sortingOptions'])) {
                     foreach($sqlOptions['sortingOptions'] as $optKey => $optValue) {
                         $sql .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
+                        $sql2 .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
                     }
                 }
-                // Submit the SQL query
-                return static::find_by_sql($sql);
+                // Submit the SQL query(s)
+                $returnValues_array['data'] = static::find_by_sql($sql);
+                $returnValues_array['count'] = static::find_by_sql($sql2);
             }
 
             // count all records
