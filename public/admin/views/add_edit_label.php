@@ -1,6 +1,6 @@
 <div class="temp_flex_sb">
     <!-- label form -->
-    <form method="post" action='add_edit_label<?php if($labelId != 'add') { echo "?labelId={$labelId}";} ?>'>
+    <form method="post" action='add_edit_label<?php if($labelId != 'add' && $labelId > 0) { echo "?labelId={$labelId}";} ?>'>
         <div class="error">
             <?php
                 // check for errors

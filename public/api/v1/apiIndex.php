@@ -1,16 +1,13 @@
 <?php
 require_once('../../../private/functions/functions.php');
-
 // This is the endpoint that will display general information and navigation for the API
 // the information is displayed in JSON format upon a request to this endpoint: root/public/api/v1/
-
 // Check to be sure we are using https communication, if not then force it.
 // if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
 //     $redirectUrl = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 //     redirect_to($redirectUrl);
 //     exit();
 // }
-
 // TODO: 
 // 1- Dynamic companyName
 // 2- Dynamic termsOfUse
@@ -18,10 +15,8 @@ require_once('../../../private/functions/functions.php');
 // 4- Dynamic root
 // 5- Force HTTPS communication
 // 6- HTTP status codes and error returning
-
 // ----------------------------------------- Root API Data -------------------------------------------------
 $apiRoot = array(
-
     // General Info
     "companyName" => "Placeholder Company",
     "termsOfUse" => "Placeholder Terms URL",
@@ -30,17 +25,14 @@ $apiRoot = array(
     "description" => "V1.0.0 of the api. This API may be used to retrieve data fromt the CMS system and in some cases create data. If the system has an API key it is required on all requests.",
     "root" => "https://www.placeholdersite.com",
     "mainPath" => "/public/api/v1/",
-
     // Routes
     "routes" => [
-
         // Main Authentication
         "mainAuthentication" => [
             "required" => "If the system has an API key, it is required on all requests",
             "default" => "none",
             "example" => "root/public/api/v1/categories/?authToken=12466486351864sd4f8164g89rt6rgfsdfunwiuf74"
         ],
-
         // Categories
         "/categories" => [
             "methods" => [
@@ -81,7 +73,6 @@ $apiRoot = array(
                 ]
             ]
         ],
-
         // Posts
         "/posts" => [
             "methods" => [
@@ -211,7 +202,6 @@ $apiRoot = array(
                 ]
             ]
         ],
-
         // Tags
         "/tags" => [
             "methods" => [
@@ -243,7 +233,6 @@ $apiRoot = array(
                 ]
             ]
         ],
-
         // Labels
         "/labels" => [
             "methods" => [
@@ -277,14 +266,10 @@ $apiRoot = array(
         ]
     ]
 );
-
 // Dynamic content
-
 // API Root dynamic content
 $apiRoot['mainPath'] = $apiRoot['root'] . $apiRoot['mainPath'];
-
 // JSON encode the data structure and return it
 $jsonData = json_encode($apiRoot);
 echo $jsonData;
-
 ?>

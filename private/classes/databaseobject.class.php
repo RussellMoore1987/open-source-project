@@ -36,6 +36,7 @@
         static protected $validation_columns = [];
         // The default global parameters
         static protected $apiParameters = [];
+        public $message = [];
         public $errors = [];
 
         // @ active record code start
