@@ -218,7 +218,7 @@
                 'perPage' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'int',
-                    'default' => 500,
+                    'default' => 10,
                     "connection" => [
                         'int' => 'LIMIT'
                     ]
