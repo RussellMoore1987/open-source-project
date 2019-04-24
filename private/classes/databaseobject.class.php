@@ -265,7 +265,9 @@
                 }
                 // Submit the SQL query(s)
                 $returnValues_array['data'] = static::find_by_sql($sql);
-                $returnValues_array['count'] = static::find_by_sql($sql2, false);
+                // Separate the count data
+                $result = static::find_by_sql($sql2, false);
+                $returnValues_array['count'] = $result[0]['COUNT(*)'];
 
                 // return the data
                 return $returnValues_array;

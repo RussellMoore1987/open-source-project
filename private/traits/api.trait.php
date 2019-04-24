@@ -9,7 +9,7 @@ trait Api {
         $prepApiData_array['errors'] = [];
 
         // Get the paginationOptions
-        $paginationOptions_array = static::get_page_and_perPage($_GET);
+        $options_array = static::get_sorting_options($_GET);
 
         // If the GET params are not empty then validate and prep the parameters
         if(!empty($_GET)) {
@@ -29,7 +29,7 @@ trait Api {
             $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
 
             // Set the totalPages by getting a count
-            $totalPages = ceil(($Obj_array['count'] / $paginationOptions_array['perPage']));
+            $totalPages = ceil(($Obj_array['count'] / $options_array['perPage']));
 
             // check to see if you got anything back, if yes move over and get API info
             if (isset($Obj_array['data'])) {
@@ -48,8 +48,9 @@ trait Api {
                 "statusCode" => 200,
                 "errors" => [],
                 "requestMethod" => $_SERVER['REQUEST_METHOD'],
+                "currentPage" => $options_array['page'],
                 "totalPages" => $totalPages,
-                "currentPage" => $paginationOptions_array['page'],
+                "resultsPerPage" => $options_array['perPage'],
                 "paramsSent" => $_GET,
                 "endpoint" => static::$tableName,
                 "content" => $apiData_array
@@ -67,8 +68,9 @@ trait Api {
                     "errorMessages" => $prepApiData_array['errors']
                 ],
                 "requestMethod" => $_SERVER['REQUEST_METHOD'],
-                "totalPages" => 1,
                 "currentPage" => 1,
+                "totalPages" => 1,
+                "resultsPerPage" => 1,
                 "paramsSent" => $_GET,
                 "endpoint" => static::$tableName,
                 "content" => []
@@ -92,47 +94,8 @@ trait Api {
             if(isset(static::$apiParameters[$paramKey])) {
                 // Check if it is a sorting option
                 if(static::$apiParameters[$paramKey]['refersTo'] === 'sortingOption') {
-                    // Check if the data is a list
-                    if(is_list($paramValue)) {
-                        // Check if we accept a list as a data type
-                        if(isset(static::$apiParameters[$paramKey]['connection']['list'])) {
-                            $prepApiData_array['errors'][] = "{$paramKey} does not accept a list of values!";
-                            break;
-                        }
-
-                        // Turn the list into an array
-                        $list_array = split_string_by_comma($paramValue);
-
-                        // TODO: see if we can move this validation to somewhere else
-
-                        // If the array is > 2 then throw an error
-                        if(sizeof($list_array) > 2) {
-                            $prepApiData_array['errors'][] = "{$paramKey} only accepts a list of 2 values!";
-                            break;
-                        }
-
-                        // Validate that the first item in the list is the column name
-                        if(!isset(static::$apiParameters[$list_array[0]])) {
-                            $prepApiData_array['errors'][] = "{$paramKey} must have a valid column name listed first!";
-                            break;
-                        }
-
-                        // Validate that the second item in the list is a correct order by
-                        if($list_array[1] != 'ASC' || $list_array[1] != 'DESC') {
-                            $prepApiData_array['errors'][] = "{$paramKey} must have a valid  value listed second! Valid values are 'ASC' or 'DESC'";
-                            break;
-                        }
-
-                        // Add the data to the sortingOptions
-                        $prepApiData_array['sortingOptions'] = [
-                            "option" => $paramKey,
-                            "value" => $listItem
-                        ];
-
-                    // The data was not a list
-                    } else {
-                        // TODO: add the rest of the code here to add sortingOptions that are not a list
-                    }
+                   // Validate and prep the sortingOptions
+                   $temp_array = static::validate_and_prep_sorting_options($getParams_array);
                 
                 // Check if the data is a list
                 } elseif(is_list($paramValue)) {
@@ -210,45 +173,68 @@ trait Api {
         return $prepApiData_array;
     }
 
-    static function get_page_and_perPage($params) {
-        // An array to hold the paginiation options
-        $paginationOptions_array = [];
+    static function validate_and_prep_sorting_options($getParams_array) {
+        // An array to hold the sorting options
+        $options_array['data'] = [];
+        $options_array['errors'] = [];
 
         // Determine if the page and perPage are set
-        if(isset($_GET['page']) && isset($_GET['perPage'])) {
-            // Set the values
-            $paginationOptions_array['page'] = $_GET['page'];
-            $paginationOptions_array['perPage'] = $_GET['perPage'];
+        if(isset($getParams_array['page']) && isset($getParams_array['perPage'])) {
+            // Validate the values
+            $options_array['errors'][] = self::validate_api_params($getParams_array['page']);
+            $options_array['errors'][] = self::validate_api_params($getParams_array['perPage']);
+
+            // If the there are no errors set the values
+            if(empty($options_array['errors'])) {
+                // Set the values
+                $options_array['data']['page'] = $getParams_array['page'];
+                $options_array['data']['perPage'] = $getParams_array['perPage'];
+            }
 
         // If only the page is defined
-        } elseif(isset($_GET['page'])) {
-            // Set the values
-            $paginationOptions_array['page'] = $_GET['page'];
-            $paginationOptions_array['perPage'] = static::$apiParameters['perPage']['default'];
+        } elseif(isset($getParams_array['page'])) {
+            // Validate the values
+            $options_array['errors'][] = self::validate_api_params($getParams_array['page']);
+
+            // If there are no errors set the values
+            if(empty($options_array['errors'])) {
+                // Set the values
+                $options_array['data']['page'] = $getParams_array['page'];
+                $options_array['data']['perPage'] = static::$apiParameters['perPage']['default'];
+            }
 
         // if only the perPage is defined
-        } elseif(isset($_GET['perPage'])) {
-            // Set the values
-            $paginationOptions_array['page'] = static::$apiParameters['page']['default'];
-            $paginationOptions_array['perPage'] = $_GET['perPage'];
+        } elseif(isset($getParams_array['perPage'])) {
+            // Validate the values
+            $options_array['errors'][] = self::validate_api_params($getParams_array['perPage']);
+
+            // If there are no errors set the values
+            if(empty($options_array['errors'])) {
+                // Set the values
+                $options_array['page'] = static::$apiParameters['page']['default'];
+                $options_array['perPage'] = $getParams_array['perPage'];
+            }
 
         // If neither are defined
         } else {
             // Set the values
-            $paginationOptions_array['page'] = static::$apiParameters['page']['default'];
-            $paginationOptions_array['perPage'] = static::$apiParameters['perPage']['default'];
+            $options_array['page'] = static::$apiParameters['page']['default'];
+            $options_array['perPage'] = static::$apiParameters['perPage']['default'];
         }
 
         // Calculate the limit and offset
-        $limit = $paginationOptions_array['perPage'];
-        $offset = (($paginationOptions_array['page'] - 1) * $limit) + ($paginationOptions_array['page'] - 1);
+        $limit = $options_array['perPage'];
+        $offset = (($options_array['page'] - 1) * $limit) + ($options_array['page'] - 1);
+
+        // TODO: check for other sorting options to validate and prep
+        // TODO: also set up the sorting options in the correct format before returning
 
         // Add the limit and offset to the array
-        $paginationOptions_array['limit'] = $limit;
-        $paginationOptions_array['offset'] = $offset;
+        $options_array['data']['sortingOptions']['limit'] = $limit;
+        $options_array['data']['sortingOptions']['offset'] = $offset;
 
         // Return the array
-        return $paginationOptions_array;
+        return $options_array;
     }
 
     // This function leverages the val_validation function.
