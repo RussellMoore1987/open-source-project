@@ -163,102 +163,42 @@
             
 
             // find by sql
-            static public function find_by_sql($sql) {
+            static public function find_by_sql($sql, $createObjects = true) {
 
                 $result = self::$database->query($sql);
                 // error handling
                 $result = self::db_error_check($result);
-                // turn results into an array of objects
-                $object_array = [];
+                // array to hold the results
+                $data_array = [];
                 // loop through query
                 while ($record = $result->fetch_assoc()) {
-                    $object_array[] = static::instantiate($record);    
+                    // If objects were requested then instantiate objects
+                    if($createObjects == true) {
+                        $data_array[] = static::instantiate($record);
+                    } else {
+                        $data_array[] = $record;
+                    }
                 }
-                // return an array of populated objects
-                return $object_array;   
+                // return the array of data
+                return $data_array;   
             }
 
             // find all
-            static public function find_all(array $sqlOptions = []) {
-                // TODO: Add the second count sql query
-                // Begin building the sql
-                $sql = "SELECT ";
-                // Add all the columns to select if defined
-                if (isset($sqlOptions['columnOptions'])) {
-                    foreach($sqlOptions['columnOptions'] as $col) {
-                        $sql .= self::db_escape($col);
-                        // Add the comma if not at the end of the array
-                        if ($col !== end($sqlOptions['columnOptions'])) {
-                            $sql .= ", ";
-                        } else {
-                            $sql .= " ";
-                        }
-                    }
-                // If no custom columns given then add the *
-                } else {
-                    $sql .= "* ";
-                }
-                // Add the rest of our SQL statement
-                $sql .= "FROM " . static::$tablename;
-                // Add the options if defined
-                if (isset($sqlOptions['sortingOptions'])) {
-                    foreach($sqlOptions['sortingOptions'] as $optKey => $optValue) {
-                        $sql .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
-                    }
-                }
-                return static::find_by_sql($sql);
+            static public function find_all() {
+                // Submit the query to the find_where with no options
+                return static::find_where($sqlOptions = []);
             }
 
             // find by id
-            // TODO: will not work. Needs refactoring
-            // Accepts single id or array of ids as well as options for columns
-            static public function find_by_id($id, array $sqlOptions) {
-                // Begin building the sql
-                $sql = "SELECT ";
-                // Add all the columns to select if defined
-                if (isset($sqlOptions['columnOptions'])) {
-                    foreach($sqlOptions['columnOptions'] as $col) {
-                        $sql .= self::db_escape($col);
-                        // Add the comma if not at the end of the array
-                        if ($col !== end($sqlOptions['columnOptions'])) {
-                            $sql .= ", ";
-                        } else {
-                            $sql .= " ";
-                        }
-                    }
-                // If no custom columns given then add the *
-                } else {
-                    $sql .= "* ";
-                }
-                // Add the rest of our SQL statement
-                $sql .= "FROM " . static::$tablename . " ";
-                // Add the WHERE clause if it is an array
-                if(is_array($id)) {
-                    $sql .= "WHERE id IN ( ";
-                    foreach($id as $singleId) {
-                        $sql .= self::db_escape($singleId);
-                        // Add the end parentheses if at the end otherwise add a comma separator
-                        if($singleId === end($id)) {
-                            $sql .= " ) ";
-                        } else {
-                            $sql .= ", ";
-                        }
-                    }
-                // Add the WHERE clause if not an array
-                } else {
-                    $sql .= "WHERE id='" . self::db_escape($id) . "'";
-                }
+            static public function find_by_id(int $id) {
+                // Prep the SQL options
+                $sqlOptions['whereOptions'] = [
+                    "column" => 'id',
+                    'operator' => "=",
+                    "value" => $id
+                ];
 
-                // TODO: Do we need to still return an object array?
-                // get object array
-                $obj_array = static::find_by_sql($sql);
-                // check to see if $obj_array is empty
-                if (!empty($obj_array)) {
-                    // send back only one object, it will only have one
-                    return array_shift($obj_array);
-                } else {
-                    return false;
-                }
+                return static::find_where($sqlOptions);
             }
 
             // find where
@@ -325,7 +265,10 @@
                 }
                 // Submit the SQL query(s)
                 $returnValues_array['data'] = static::find_by_sql($sql);
-                $returnValues_array['count'] = static::find_by_sql($sql2);
+                $returnValues_array['count'] = static::find_by_sql($sql2, false);
+
+                // return the data
+                return $returnValues_array;
             }
 
             // count all records
@@ -510,11 +453,6 @@
                 // echo "sanitized_attributes ***********";
                 // var_dump($sanitized_array); 
                 return $sanitized_array;
-            }
-
-            // Get the objects api info and return it
-            protected function get_obj_api_info() {
-
             }
 
         // @ active record code end

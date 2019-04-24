@@ -14,20 +14,19 @@ trait Api {
         // If the GET params are not empty then validate and prep the parameters
         if(!empty($_GET)) {
             // validate incoming parameters
-            $prepApiData_array = static::validate_and_prep_api_parameters($_GET);
+            $prepApiData_array['sqlOptions'] = static::validate_and_prep_api_parameters($_GET);
+
+        } else {
+            // create the empty sqlOptions
+            $prepApiData_array['sqlOptions'] = [];
         }
 
         // check to see if we have errors
         if (!$prepApiData_array['errors']) {
 
-            // If there are not GET params then just get all the data
-            if(!empty($_GET)) {
-                // sqlOptions will contain [whereOptions],[sortingOptions],[columnOptions]
-                $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
-
-            } else {
-                $Obj_array = static::find_all();
-            }
+            // sqlOptions will contain [whereOptions],[sortingOptions],[columnOptions]
+            // Submit the query to get the data
+            $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
 
             // Set the totalPages by getting a count
             $totalPages = ceil(($Obj_array['count'] / $paginationOptions_array['perPage']));
@@ -52,7 +51,8 @@ trait Api {
                 "totalPages" => $totalPages,
                 "currentPage" => $paginationOptions_array['page'],
                 "paramsSent" => $_GET,
-                static::$tableName => $apiData_array
+                "endpoint" => static::$tableName,
+                "content" => $apiData_array
             ];
 
         // There were errors, construct the error message
@@ -69,7 +69,9 @@ trait Api {
                 "requestMethod" => $_SERVER['REQUEST_METHOD'],
                 "totalPages" => 1,
                 "currentPage" => 1,
-                "paramsSent" => $_GET
+                "paramsSent" => $_GET,
+                "endpoint" => static::$tableName,
+                "content" => []
             ];
         }
 
@@ -168,7 +170,7 @@ trait Api {
                             }
                         }
                     }
-                    // Add the sql preped list to the whereOptions
+                    // Add the sql prepped list to the whereOptions
                     $prepApiData_array['sqlOptions']['whereOptions'][] = [
                         "column" => static::$apiParameters[$paramKey]['refersTo'],
                         "operator" => static::$apiParameters[$paramKey]['connection']['list'],

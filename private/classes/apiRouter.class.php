@@ -36,7 +36,7 @@
             // The url is defined
             } else {
                 // get path from url
-                $checkClassName = $this->get_class_path($url);
+                $this->pathStr = $this->get_class_path($url);
     
                 // check to see if we have a path defined, if so set class name
                 if (isset($this->pathInterpretation_array[$this->pathStr])) {
@@ -62,8 +62,8 @@
                 require_once PUBLIC_PATH . '/api/v1/apiIndex.php';
             } else {
                 // run class api
-                // echo $this->className::get_api_info();
-                echo "Got class:{$this->className}, From path:{$this->pathStr}";
+                echo $this->className::get_api_info();
+                // echo "Got class:{$this->className}, From path:{$this->pathStr}";
             }
         }
 
