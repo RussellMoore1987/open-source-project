@@ -230,24 +230,24 @@
                 }
 
                 // Add the rest of our SQL statement
-                $sql .= "FROM " . static::$tableName;
-                $sql2 .= "FROM " . static::$tableName;
+                $sql .= "FROM " . static::$tableName . " ";
+                $sql2 .= "FROM " . static::$tableName . " ";
 
                 // Add the where clauses if defined
                 if (isset($sqlOptions['whereOptions']) && !empty($sqlOptions['whereOptions'])) {
                     // Begin the WHERE SQL
-                    $sql .= " WHERE ";
-                    $sql2 .= " WHERE ";
+                    $sql .= "WHERE ";
+                    $sql2 .= "WHERE ";
                     // Loop through all of the where clauses given
                     foreach($sqlOptions['whereOptions'] as $where) {
 
                         $sql .= self::db_escape($where['column']) . " ";
                         $sql .= self::db_escape($where['operator']) . " ";
-                        $sql .= self::db_escape($where['value']) . " ";
+                        $sql .= "'" . self::db_escape($where['value']) . "' ";
 
                         $sql2 .= self::db_escape($where['column']) . " ";
                         $sql2 .= self::db_escape($where['operator']) . " ";
-                        $sql2 .= self::db_escape($where['value']) . " ";
+                        $sql2 .= "'" . self::db_escape($where['value']) . "' ";
 
                         // Add the AND if not at the end of the array
                         if ($where !== end($sqlOptions['whereOptions'])) {
@@ -259,20 +259,17 @@
                 // Add the sorting options if defined
                 if (isset($sqlOptions['sortingOptions'])) {
                     foreach($sqlOptions['sortingOptions'] as $option) {
-                        // Hold a few values
-                        $offsetAdded = false;
-                        $limitAdded = false;
 
                         // If the sortingOption is orderBy
                         if($option['operator'] == 'ORDER BY') {
 
                             $sql .= self::db_escape($option['operator']) . " ";
                             $sql .= self::db_escape($option['column']) . " ";
-                            $sql .= self::db_escape($option['value']) . " ";
+                            $sql .= "'" . self::db_escape($option['value']) . "' ";
 
                             $sql2 .= self::db_escape($option['operator']) . " ";
                             $sql2 .= self::db_escape($option['column']) . " ";
-                            $sql2 .= self::db_escape($option['value']) . " ";
+                            $sql2 .= "'" . self::db_escape($option['value']) . "' ";
 
                         // Else the sortingOption is not order by
                         } else {

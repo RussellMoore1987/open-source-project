@@ -185,6 +185,7 @@ trait Api {
             }
         }
 
+        // TODO: Make sure to check if the perPage is defined in the class
         // Use the default value if the perPage is not defined
         if(!isset($options_array['perPage'])) {
 
@@ -310,7 +311,7 @@ trait Api {
                                 }
                             }
                             // Add the sql prepped list to the whereOptions
-                            $options_array['whereOptions'][] = [
+                            $options_array['data'][] = [
                                 "column" => static::$apiParameters[$paramKey]['refersTo'],
                                 "operator" => static::$apiParameters[$paramKey]['connection']['list'],
                                 "value" => $valueList
@@ -332,7 +333,7 @@ trait Api {
                         // No errors were found add the data to the array
                         } else {
                             // The parameter was found, add the info needed to our array
-                            $options_array['whereOptions'][] = [
+                            $options_array['data'][] = [
                                 "column" => static::$apiParameters[$paramKey]['refersTo'],
                                 "operator" => static::$apiParameters[$paramKey]['connection'][static::$apiParameters[$paramKey]['type']],
                                 "value" => $paramValue

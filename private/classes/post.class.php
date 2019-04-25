@@ -143,8 +143,8 @@
                     'refersTo' => 'title',
                     'type' => 'str',
                     'connection' => [
-                        'str' => "like",
-                        'list' => 'like'
+                        'str' => "LIKE",
+                        'list' => 'LIKE'
                     ],
                     'validation' => [
                         'name'=>'searchTitle',
@@ -159,8 +159,8 @@
                     'refersTo' => 'content',
                     'type' => 'str',
                     'connection' => [
-                        'str' => "like",
-                        'list' => 'like'
+                        'str' => "LIKE",
+                        'list' => 'LIKE'
                     ],
                     'validation' => [
                         'name'=>'searchContent',
