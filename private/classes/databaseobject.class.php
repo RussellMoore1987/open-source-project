@@ -258,9 +258,23 @@
                 }
                 // Add the sorting options if defined
                 if (isset($sqlOptions['sortingOptions'])) {
-                    foreach($sqlOptions['sortingOptions'] as $optKey => $optValue) {
-                        $sql .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
-                        $sql2 .= " " . self::db_escape($optKey) . " = " . self::db_escape($optValue);
+                    foreach($sqlOptions['sortingOptions'] as $option) {
+                        // If the sortingOption is orderBy
+                        if($optKey == 'ORDER BY') {
+
+                            $sql .= self::db_escape($option['operator']) . " ";
+                            $sql .= self::db_escape($option['column']) . " ";
+                            $sql .= self::db_escape($option['value']) . " ";
+
+                            $sql2 .= self::db_escape($option['operator']) . " ";
+                            $sql2 .= self::db_escape($option['column']) . " ";
+                            $sql2 .= self::db_escape($option['value']) . " ";
+
+                        // Else the sortingOption is no orderBy
+                        } else {
+                            $sql .= " " . self::db_escape($option['operator']) . " = " . self::db_escape($option['value']);
+                            $sql2 .= " " . self::db_escape($option['operator']) . " = " . self::db_escape($option['value']);
+                        }
                     }
                 }
                 // Submit the SQL query(s)

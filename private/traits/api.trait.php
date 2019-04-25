@@ -85,8 +85,11 @@ trait Api {
     // Validate and prep the API parameters
     // TODO: Add handling for sortingOptions
     static function validate_and_prep_api_parameters($getParams_array) {
-        // Prepare the array we will use to hold our preped API data
+        // Prepare the array we will use to hold our prepped API data
         $prepApiData_array['errors'] = [];
+
+        // First get all of our sorting options validated and prepped
+        $temp_array = static::validate_and_prep_sorting_options($getParams_array);
 
         // Prep the API parameters to be used in the SQL
         foreach($getParams_array as $paramKey => $paramValue) {
@@ -94,8 +97,7 @@ trait Api {
             if(isset(static::$apiParameters[$paramKey])) {
                 // Check if it is a sorting option
                 if(static::$apiParameters[$paramKey]['refersTo'] === 'sortingOption') {
-                   // Validate and prep the sortingOptions
-                   $temp_array = static::validate_and_prep_sorting_options($getParams_array);
+
                 
                 // Check if the data is a list
                 } elseif(is_list($paramValue)) {
@@ -173,10 +175,67 @@ trait Api {
         return $prepApiData_array;
     }
 
+    // orderBy=postDate,ASC
     static function validate_and_prep_sorting_options($getParams_array) {
         // An array to hold the sorting options
         $options_array['data'] = [];
         $options_array['errors'] = [];
+
+        // Loop through the params array to get all of the sorting options
+        foreach($getParams_array as $paramKey => $paramValue) {
+
+             // Check if the parameter is defined in the class
+             if(isset(static::$apiParameters[$paramKey])) {
+
+                // Check if it is a sorting option
+                if(static::$apiParameters[$paramKey]['refersTo'] === 'sortingOption') {
+
+                    // Check if the value is page or perPage then add it accordingly
+                    if($paramKey = 'page' || $paramKey == 'perPage') {
+                        // Validate the value if the validation is set
+                        if(isset(static::$apiParameters[$paramKey]['validation'])) {
+                            $options_array['errors'][] = self::validate_api_params($getParams_array[$paramKey]);
+                        }
+                        // Add it to the options array
+                        $options_array['data'][] = [
+                            'operator' => static::$apiParameters[$paramKey]['operator'],
+                            'column' => NULL,
+                            'value' => $paramValue
+                        ];
+
+                    // The value must be orderBy
+                    } else {
+                        // Check to see if we have alist of values
+                        if(is_list($paramValue)) {
+                            // Get the values from the list
+                            $tempList_array = split_string_by_comma($paramValue);
+                            $tempCol = NULL;
+                            $tempVal = NULL;
+
+                            // Temporarily store the data in a variable
+                            foreach($tempList_array as $item) {
+                                if($item == 'ASC' || 'DESC') {
+                                    $tempVal = $item;
+                                } else {
+                                    $tempCol = $item;
+                                }
+                            }
+
+                            // Put the data in our options array
+
+                        // Send an error
+                        } else {
+                            $options_array['errors'][] = "{$paramKey} expects a comma separated list of values!";
+                            break;
+                        }
+                    }
+                }
+            // The Parameter given is not accepted
+            } else {
+                $options_array['errors'][] = "{$paramKey} is not a valid parameter!";
+                break;
+            }
+        }
 
         // Determine if the page and perPage are set
         if(isset($getParams_array['page']) && isset($getParams_array['perPage'])) {
@@ -227,6 +286,7 @@ trait Api {
         $offset = (($options_array['page'] - 1) * $limit) + ($options_array['page'] - 1);
 
         // TODO: check for other sorting options to validate and prep
+
         // TODO: also set up the sorting options in the correct format before returning
 
         // Add the limit and offset to the array

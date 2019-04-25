@@ -195,33 +195,24 @@
                     ]
                 ],
                 // ! this is possibly a global parameter and may not need to be in the individual classes, probably shouldn't
-                // ...api/v1/posts/?orderBy=postDate::DECS,createdDate // ? what is default ascending or descending
+                // ...api/v1/posts/?orderBy=postDate::DECS,createdDate::ASC // ? what is default ascending or descending
                 'orderBy' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'list',
                     'default' => 'ASC',
-                    'connection' => [
-                        'list' => [
-                            'ASC',
-                            'DESC'
-                        ]
-                    ]
+                    'operator' => 'ORDER BY'
                 ],
                 'page' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'int',
                     'default' => 1,
-                    "connection" => [
-                        'int' => 'OFFSET'
-                    ]
+                    'operator' => 'OFFSET'
                 ],
                 'perPage' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'int',
                     'default' => 10,
-                    "connection" => [
-                        'int' => 'LIMIT'
-                    ]
+                    'operator' => 'LIMIT'
                 ],
 
             ];
