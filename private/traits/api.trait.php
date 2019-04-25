@@ -8,18 +8,15 @@ trait Api {
         // Array for holding the prepped api data
         $prepApiData_array['errors'] = [];
 
-        // Get the paginationOptions
-        $options_array = static::get_sorting_options($_GET);
+        // validate incoming parameters
+        $temp_array_1 = static::validate_and_prep_api_parameters($_GET);
 
-        // If the GET params are not empty then validate and prep the parameters
-        if(!empty($_GET)) {
-            // validate incoming parameters
-            $prepApiData_array['sqlOptions'] = static::validate_and_prep_api_parameters($_GET);
+        // Add the errors to the array
+        $prepApiData_array['errors'] = $temp_array_1['errors'];
 
-        } else {
-            // create the empty sqlOptions
-            $prepApiData_array['sqlOptions'] = [];
-        }
+        // Add the data and the extras to the array
+        $prepApiData_array['sqlOptions'] = $temp_array_1['sqlOptions'];
+        $prepApiData_array['extra'] = $temp_array_1['extra'];
 
         // check to see if we have errors
         if (!$prepApiData_array['errors']) {
@@ -29,7 +26,7 @@ trait Api {
             $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
 
             // Set the totalPages by getting a count
-            $totalPages = ceil(($Obj_array['count'] / $options_array['perPage']));
+            $totalPages = ceil(($Obj_array['count'] / $prepApiData_array['extra']['perPage']));
 
             // check to see if you got anything back, if yes move over and get API info
             if (isset($Obj_array['data'])) {
@@ -48,9 +45,9 @@ trait Api {
                 "statusCode" => 200,
                 "errors" => [],
                 "requestMethod" => $_SERVER['REQUEST_METHOD'],
-                "currentPage" => $options_array['page'],
+                "currentPage" => $prepApiData_array['extra']['page'],
                 "totalPages" => $totalPages,
-                "resultsPerPage" => $options_array['perPage'],
+                "resultsPerPage" => $prepApiData_array['extra']['perPage'],
                 "paramsSent" => $_GET,
                 "endpoint" => static::$tableName,
                 "content" => $apiData_array
@@ -83,100 +80,40 @@ trait Api {
     }
 
     // Validate and prep the API parameters
-    // TODO: Add handling for sortingOptions
     static function validate_and_prep_api_parameters($getParams_array) {
         // Prepare the array we will use to hold our prepped API data
         $prepApiData_array['errors'] = [];
 
-        // First get all of our sorting options validated and prepped
-        $temp_array = static::validate_and_prep_sorting_options($getParams_array);
+        // Prep and validate the sorting options
+        $temp_array_1 = static::prep_sorting_options($getParams_array);
 
-        // Prep the API parameters to be used in the SQL
-        foreach($getParams_array as $paramKey => $paramValue) {
-            // Check if the parameter is defined in the class
-            if(isset(static::$apiParameters[$paramKey])) {
-                // Check if it is a sorting option
-                if(static::$apiParameters[$paramKey]['refersTo'] === 'sortingOption') {
+        // Add any errors to our array
+        $prepApiData_array['errros'] = $temp_array_1['errors'];
 
-                
-                // Check if the data is a list
-                } elseif(is_list($paramValue)) {
-                    // Check if we accept a list as a data type
-                    if(!isset(static::$apiParameters[$paramKey]['connection']['list'])) {
-                        $prepApiData_array['errors'][] = "{$paramKey} does not accept a list of values!";
-                        break;
-                    }
-                    // Turn the list into an array and add it to our list of whereOptions
-                    $newList_array = split_string_by_comma($paramValue);
+        // Add the prepped sorting options to the array
+        $prepApiData_array['sqlOptions']['sortingOptions'] = $temp_array_1['data'];
 
-                    // Prep the beginning of the string for holding our list of values
-                    $valueList = "( ";
-                    foreach($newList_array as $listItem) {
-                        // Validate the value
-                        $errors = self::validate_api_params($listItem, $paramKey);
+        // Add the extra things we need for some overhead
+        $prepApiData_array['extra'] = [
+            'page' => $temp_array1['page'],
+            'perPage' => $temp_array1['perPage']
+        ];
 
-                        // If there are errors then exit the function with the errors
-                        if(!empty($errors)) {
-                            // Add each error from the validation error array
-                            foreach($errors as $err) {
-                                $prepApiData_array['errors'][] = $err;
-                            }
-                            break;
+        // Prep and validate the where options
+        $temp_array_2 = static::prep_where_options($getParams_array);
 
-                        // No errors were found add to our sql prepped list
-                        } else {
-                            // If at not at the end of the array add the comma
-                            if($listItem !== end($newList_array)) {
-                                $valueList .= self::db_escape($listItem) . ", ";
+        // Add any errors to the array
+        $prepApiData_array['errors'] = $temp_array_2['errors'];
 
-                            // If at the end of the array then add a paranetheses instead
-                            } else {
-                                $valueList .= self::db_escape($listItem) . " )";
-                            }
-                        }
-                    }
-                    // Add the sql prepped list to the whereOptions
-                    $prepApiData_array['sqlOptions']['whereOptions'][] = [
-                        "column" => static::$apiParameters[$paramKey]['refersTo'],
-                        "operator" => static::$apiParameters[$paramKey]['connection']['list'],
-                        "value" => $valueList
-                    ];
-
-                // The data is not a list or a sorting option
-                } else {
-                    // Validate the value
-                    $errors = self::validate_api_params($paramValue, $paramKey);
-
-                    // If there are errors then exit the function with the errors
-                    if(!empty($errors)) {
-                        // Add each error from the validation error array
-                        foreach($errors as $err) {
-                            $prepApiData_array['errors'][] = $err;
-                        }
-                        break;
-
-                    // No errors were found add the data to the array
-                    } else {
-                        // The parameter was found, add the info needed to our array
-                        $prepApiData_array['sqlOptions']['whereOptions'][] = [
-                            "column" => static::$apiParameters[$paramKey]['refersTo'],
-                            "operator" => static::$apiParameters[$paramKey]['connection'][static::$apiParameters[$paramKey]['type']],
-                            "value" => $paramValue
-                        ];
-                    }
-                }
-            // There was no matching parameter, add to the errors array and return the array
-            } else {
-                $prepApiData_array['errors'][] = "{$paramKey} is not a valid parameter!";
-                break;
-            }
-        }
+        // Add the prepped where options to the array
+        $prepApiData_array['sqlOptions']['whereOptions'] = $temp_array_2['data'];
+        
         // Return the array
         return $prepApiData_array;
     }
 
-    // orderBy=postDate,ASC
-    static function validate_and_prep_sorting_options($getParams_array) {
+    // For validating and preping the sorting options
+    static private function prep_sorting_options($getParams_array) {
         // An array to hold the sorting options
         $options_array['data'] = [];
         $options_array['errors'] = [];
@@ -203,6 +140,9 @@ trait Api {
                             'value' => $paramValue
                         ];
 
+                        // Make note of the perameter
+                        $options_array[$paramKey] = $paramValue;
+
                     // The value must be orderBy
                     } else {
                         // Check to see if we have alist of values
@@ -221,15 +161,23 @@ trait Api {
                                 }
                             }
 
-                            // Put the data in our options array
+                            // TODO: Any validation for the order by?
 
-                        // Send an error
+                            // Put the data in our options array
+                            $options_array['data'][] = [
+                                'operator' => static::$apiParameters[$paramKey]['operator'],
+                                'column' => $tempCol,
+                                'value' => $tempVal
+                            ];
+
+                        // Send an error if the value is not a list
                         } else {
                             $options_array['errors'][] = "{$paramKey} expects a comma separated list of values!";
                             break;
                         }
                     }
                 }
+
             // The Parameter given is not accepted
             } else {
                 $options_array['errors'][] = "{$paramKey} is not a valid parameter!";
@@ -237,62 +185,152 @@ trait Api {
             }
         }
 
-        // Determine if the page and perPage are set
-        if(isset($getParams_array['page']) && isset($getParams_array['perPage'])) {
-            // Validate the values
-            $options_array['errors'][] = self::validate_api_params($getParams_array['page']);
-            $options_array['errors'][] = self::validate_api_params($getParams_array['perPage']);
+        // use the default values if the page is not defined
+        if(!isset($options_array['page'])) {
 
             // If the there are no errors set the values
             if(empty($options_array['errors'])) {
                 // Set the values
-                $options_array['data']['page'] = $getParams_array['page'];
-                $options_array['data']['perPage'] = $getParams_array['perPage'];
-            }
+                $options_array['data'][] = [
+                    'operator' => static::$apiParameters['page']['operator'],
+                    'column' => NULL,
+                    'value' => static::$apiParameters['page']['default']
+                ];
 
-        // If only the page is defined
-        } elseif(isset($getParams_array['page'])) {
-            // Validate the values
-            $options_array['errors'][] = self::validate_api_params($getParams_array['page']);
-
-            // If there are no errors set the values
-            if(empty($options_array['errors'])) {
-                // Set the values
-                $options_array['data']['page'] = $getParams_array['page'];
-                $options_array['data']['perPage'] = static::$apiParameters['perPage']['default'];
-            }
-
-        // if only the perPage is defined
-        } elseif(isset($getParams_array['perPage'])) {
-            // Validate the values
-            $options_array['errors'][] = self::validate_api_params($getParams_array['perPage']);
-
-            // If there are no errors set the values
-            if(empty($options_array['errors'])) {
-                // Set the values
+                // Also keep note of the page
                 $options_array['page'] = static::$apiParameters['page']['default'];
-                $options_array['perPage'] = $getParams_array['perPage'];
             }
+        }
 
-        // If neither are defined
-        } else {
-            // Set the values
-            $options_array['page'] = static::$apiParameters['page']['default'];
-            $options_array['perPage'] = static::$apiParameters['perPage']['default'];
+        // Use the default value if the perPage is not defined
+        if(!isset($options_array['perPage'])) {
+
+            // If the there are no errors set the values
+            if(empty($options_array['errors'])) {
+                // Set the values
+                $options_array['data'][] = [
+                    'operator' => static::$apiParameters['perPage']['operator'],
+                    'column' => NULL,
+                    'value' => static::$apiParameters['perPage']['default']
+                ];
+
+                // Also keep note of the page
+                $options_array['perPage'] = static::$apiParameters['perPage']['default'];
+            }
         }
 
         // Calculate the limit and offset
         $limit = $options_array['perPage'];
         $offset = (($options_array['page'] - 1) * $limit) + ($options_array['page'] - 1);
 
-        // TODO: check for other sorting options to validate and prep
+        // Make sure the limit and offset are the correct values in our prepped data array
+        for($i = 0; $i < sizeof($options_array['data']); $i++) {
+            // If it is the limit, set the correct limit
+            if($options_array['data'][$i]['operator'] = "LIMIT") {
+                $options_array['data'][$i]['value'] = $limit;
+            }
+            // if it is the offset, set the correct offset
+            if($options_array['data'][$i]['operator'] = "OFFSET") {
+                $options_array['data'][$i]['value'] = $offset;
+            }
+            // If it is neither then do nothing
+        }
 
-        // TODO: also set up the sorting options in the correct format before returning
+        // Return the array
+        return $options_array;
+    }
 
-        // Add the limit and offset to the array
-        $options_array['data']['sortingOptions']['limit'] = $limit;
-        $options_array['data']['sortingOptions']['offset'] = $offset;
+    // For validating and prepping the where options
+    static private function prep_where_options($getParams_array) {
+        // An array to hold the where options
+        $options_array['data'] = [];
+        $options_array['errors'] = [];
 
+        // Loop through the parameters and get all of the where options
+        foreach($getParams_array as $paramKey => $paramValue) {
+
+            // Check if the parameter is defined in the class
+            if(isset(static::$apiParameters[$paramKey])) {
+
+                // Make sure the parameter is not a sorting option option
+                if(static::$apiParameters[$paramKey]['refersTo'] !== 'sortingOption') {
+
+                    // Check if the data is a list
+                    if(is_list($paramValue)) {
+
+                        // Check if we accept a list as a data type if not then add the error
+                        if(!isset(static::$apiParameters[$paramKey]['connection']['list'])) {
+                            $options_array['errors'][] = "{$paramKey} does not accept a list of values!";
+
+                        // The data is accepted as a list type so sort through the list
+                        } else {
+                            // Turn the list into an array and add it to our list of whereOptions
+                            $newList_array = split_string_by_comma($paramValue);
+        
+                            // Prep the beginning of the string for holding our list of values
+                            $valueList = "( ";
+                            foreach($newList_array as $listItem) {
+                                // Validate the value
+                                $errors = self::validate_api_params($listItem, $paramKey);
+        
+                                // If there are errors then add them to the errors array
+                                if(!empty($errors)) {
+                                    // Add each error from the validation error array
+                                    foreach($errors as $err) {
+                                        $options_array['errors'][] = $err;
+                                    }
+        
+                                // No errors were found add to our sql prepped list
+                                } else {
+                                    // If at not at the end of the array add the comma
+                                    if($listItem !== end($newList_array)) {
+                                        $valueList .= self::db_escape($listItem) . ", ";
+        
+                                    // If at the end of the array then add a paranetheses instead
+                                    } else {
+                                        $valueList .= self::db_escape($listItem) . " )";
+                                    }
+                                }
+                            }
+                            // Add the sql prepped list to the whereOptions
+                            $options_array['whereOptions'][] = [
+                                "column" => static::$apiParameters[$paramKey]['refersTo'],
+                                "operator" => static::$apiParameters[$paramKey]['connection']['list'],
+                                "value" => $valueList
+                            ];
+                        }
+
+                    // The data is not a list
+                    } else {
+                        // Validate the value
+                        $errors = self::validate_api_params($paramValue, $paramKey);
+
+                        // If there are errors then add the errors to the array
+                        if(!empty($errors)) {
+                            // Add each error from the validation error array
+                            foreach($errors as $err) {
+                                $options_array['errors'][] = $err;
+                            }
+
+                        // No errors were found add the data to the array
+                        } else {
+                            // The parameter was found, add the info needed to our array
+                            $options_array['whereOptions'][] = [
+                                "column" => static::$apiParameters[$paramKey]['refersTo'],
+                                "operator" => static::$apiParameters[$paramKey]['connection'][static::$apiParameters[$paramKey]['type']],
+                                "value" => $paramValue
+                            ];
+                        }
+                    }
+                }
+                // If the parameter is a sorting option then continue the loop
+                continue;
+
+            // There was no matching parameter, add to the errors array
+            } else {
+                $options_array['errors'][] = "{$paramKey} is not a valid parameter!";
+            }
+        }
         // Return the array
         return $options_array;
     }
