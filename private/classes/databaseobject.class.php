@@ -259,6 +259,10 @@
                 // Add the sorting options if defined
                 if (isset($sqlOptions['sortingOptions'])) {
                     foreach($sqlOptions['sortingOptions'] as $option) {
+                        // Hold a few values
+                        $offsetAdded = false;
+                        $limitAdded = false;
+
                         // If the sortingOption is orderBy
                         if($option['operator'] == 'ORDER BY') {
 
@@ -270,7 +274,7 @@
                             $sql2 .= self::db_escape($option['column']) . " ";
                             $sql2 .= self::db_escape($option['value']) . " ";
 
-                        // Else the sortingOption is no orderBy
+                        // Else the sortingOption is not order by
                         } else {
                             $sql .= " " . self::db_escape($option['operator']) . " " . self::db_escape($option['value']);
                             $sql2 .= " " . self::db_escape($option['operator']) . " " . self::db_escape($option['value']);

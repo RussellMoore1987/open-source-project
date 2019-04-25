@@ -128,7 +128,7 @@ trait Api {
                 if(static::$apiParameters[$paramKey]['refersTo'] === 'sortingOption') {
 
                     // Check if the value is page or perPage then add it accordingly
-                    if($paramKey = 'page' || $paramKey == 'perPage') {
+                    if($paramKey == 'page' || $paramKey == 'perPage') {
                         // Validate the value if the validation is set
                         if(isset(static::$apiParameters[$paramKey]['validation'])) {
                             $options_array['errors'][] = self::validate_api_params($getParams_array[$paramKey]);
@@ -154,7 +154,7 @@ trait Api {
 
                             // Temporarily store the data in a variable
                             foreach($tempList_array as $item) {
-                                if($item == 'ASC' || 'DESC') {
+                                if($item == 'ASC' || $item == 'DESC') {
                                     $tempVal = $item;
                                 } else {
                                     $tempCol = $item;
@@ -185,24 +185,6 @@ trait Api {
             }
         }
 
-        // DEBUG: May not need this code. I don't think we want a default OFFSET value
-        // // use the default values if the page is not defined
-        // if(!isset($options_array['page'])) {
-
-        //     // If the there are no errors set the values
-        //     if(empty($options_array['errors'])) {
-        //         // Set the values
-        //         $options_array['data'][] = [
-        //             'operator' => static::$apiParameters['page']['operator'],
-        //             'column' => NULL,
-        //             'value' => static::$apiParameters['page']['default']
-        //         ];
-
-        //         // Also keep note of the page
-        //         $options_array['page'] = static::$apiParameters['page']['default'];
-        //     }
-        // }
-
         // Use the default value if the perPage is not defined
         if(!isset($options_array['perPage'])) {
 
@@ -222,19 +204,53 @@ trait Api {
 
         // Calculate the limit and offset
         $limit = $options_array['perPage'];
-        $offset = (($options_array['page'] - 1) * $limit) + ($options_array['page'] - 1);
+        // Use the page for calculation only if it is defined
+        if(isset($options_array['page'])) {
+            $offset = (($options_array['page'] - 1) * $limit) + ($options_array['page'] - 1);
+        } else {
+            $offset = ((static::$apiParameters['page']['default'] - 1) * $limit) + (static::$apiParameters['page']['default'] - 1);
+        }
 
         // Make sure the limit and offset are the correct values in our prepped data array
+        // also order the values to be in the correct order for the MySQL query
+        // The order must be 1 - ORDER BY, 2 - LIMIT, 3 - OFFSET
         for($i = 0; $i < sizeof($options_array['data']); $i++) {
-            // If it is the limit, set the correct limit
+            // Used for juggling the array elements
+            $temp;
+            $end = sizeof($options_array['data']) - 1;
+
+            // If it is the ORDER BY then put it at the beginning of the array
+            if($options_array['data'][$i]['operator'] == "ORDER BY") {
+                // Move the ORDER BY to the beginning of the array
+                $temp = $options_array['data'][0];
+                $options_array['data'][0] = $options_array['data'][$i];
+                $options_array['data'][$i] = $temp;
+            }
+
+            // If it is the LIMIT, set the correct limit and order it correctly
             if($options_array['data'][$i]['operator'] == "LIMIT") {
+                // Set the LIMIT
                 $options_array['data'][$i]['value'] = $limit;
+
+                // This should be moved correctly due the juggling of the other two sort options
             }
-            // if it is the offset, set the correct offset
+
+            // if it is the OFFSET, set the correct offset
             if($options_array['data'][$i]['operator'] == "OFFSET") {
+                // Set the OFFSET
                 $options_array['data'][$i]['value'] = $offset;
+
+                // Move the OFFSET to the end of the array
+                $temp = $options_array['data'][$end];
+                $options_array['data'][$end] = $options_array['data'][$i];
+                $options_array['data'][$i] = $temp;
             }
-            // If it is neither then do nothing
+            // If it is none then do nothing
+        }
+
+        // If we have not defined the default page yet then define it
+        if(!isset($options_array['page'])) {
+            $options_array['page'] = static::$apiParameters['page']['default'];
         }
 
         // Return the array
