@@ -88,15 +88,15 @@ trait Api {
         $temp_array_1 = static::prep_sorting_options($getParams_array);
 
         // Add any errors to our array
-        $prepApiData_array['errros'] = $temp_array_1['errors'];
+        $prepApiData_array['errors'] = $temp_array_1['errors'];
 
         // Add the prepped sorting options to the array
         $prepApiData_array['sqlOptions']['sortingOptions'] = $temp_array_1['data'];
 
         // Add the extra things we need for some overhead
         $prepApiData_array['extra'] = [
-            'page' => $temp_array1['page'],
-            'perPage' => $temp_array1['perPage']
+            'page' => $temp_array_1['page'],
+            'perPage' => $temp_array_1['perPage']
         ];
 
         // Prep and validate the where options
@@ -185,22 +185,23 @@ trait Api {
             }
         }
 
-        // use the default values if the page is not defined
-        if(!isset($options_array['page'])) {
+        // DEBUG: May not need this code. I don't think we want a default OFFSET value
+        // // use the default values if the page is not defined
+        // if(!isset($options_array['page'])) {
 
-            // If the there are no errors set the values
-            if(empty($options_array['errors'])) {
-                // Set the values
-                $options_array['data'][] = [
-                    'operator' => static::$apiParameters['page']['operator'],
-                    'column' => NULL,
-                    'value' => static::$apiParameters['page']['default']
-                ];
+        //     // If the there are no errors set the values
+        //     if(empty($options_array['errors'])) {
+        //         // Set the values
+        //         $options_array['data'][] = [
+        //             'operator' => static::$apiParameters['page']['operator'],
+        //             'column' => NULL,
+        //             'value' => static::$apiParameters['page']['default']
+        //         ];
 
-                // Also keep note of the page
-                $options_array['page'] = static::$apiParameters['page']['default'];
-            }
-        }
+        //         // Also keep note of the page
+        //         $options_array['page'] = static::$apiParameters['page']['default'];
+        //     }
+        // }
 
         // Use the default value if the perPage is not defined
         if(!isset($options_array['perPage'])) {
@@ -226,11 +227,11 @@ trait Api {
         // Make sure the limit and offset are the correct values in our prepped data array
         for($i = 0; $i < sizeof($options_array['data']); $i++) {
             // If it is the limit, set the correct limit
-            if($options_array['data'][$i]['operator'] = "LIMIT") {
+            if($options_array['data'][$i]['operator'] == "LIMIT") {
                 $options_array['data'][$i]['value'] = $limit;
             }
             // if it is the offset, set the correct offset
-            if($options_array['data'][$i]['operator'] = "OFFSET") {
+            if($options_array['data'][$i]['operator'] == "OFFSET") {
                 $options_array['data'][$i]['value'] = $offset;
             }
             // If it is neither then do nothing

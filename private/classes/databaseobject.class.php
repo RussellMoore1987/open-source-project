@@ -234,7 +234,7 @@
                 $sql2 .= "FROM " . static::$tableName;
 
                 // Add the where clauses if defined
-                if (isset($sqlOptions['whereOptions'])) {
+                if (isset($sqlOptions['whereOptions']) && !empty($sqlOptions['whereOptions'])) {
                     // Begin the WHERE SQL
                     $sql .= " WHERE ";
                     $sql2 .= " WHERE ";
@@ -260,7 +260,7 @@
                 if (isset($sqlOptions['sortingOptions'])) {
                     foreach($sqlOptions['sortingOptions'] as $option) {
                         // If the sortingOption is orderBy
-                        if($optKey == 'ORDER BY') {
+                        if($option['operator'] == 'ORDER BY') {
 
                             $sql .= self::db_escape($option['operator']) . " ";
                             $sql .= self::db_escape($option['column']) . " ";
@@ -272,8 +272,8 @@
 
                         // Else the sortingOption is no orderBy
                         } else {
-                            $sql .= " " . self::db_escape($option['operator']) . " = " . self::db_escape($option['value']);
-                            $sql2 .= " " . self::db_escape($option['operator']) . " = " . self::db_escape($option['value']);
+                            $sql .= " " . self::db_escape($option['operator']) . " " . self::db_escape($option['value']);
+                            $sql2 .= " " . self::db_escape($option['operator']) . " " . self::db_escape($option['value']);
                         }
                     }
                 }
