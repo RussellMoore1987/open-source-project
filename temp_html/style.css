@@ -12,6 +12,7 @@ html, body {
     justify-content: center;
     min-height: 100vh;
     width: 100%;
+    font-family: 'Raleway', sans-serif;
     color: #AFAFAF;
     font-size: 16px;
     scroll-behavior: smooth;
@@ -25,13 +26,54 @@ html, body {
 a {
     color: #BBBBBB;
     text-decoration: none;
-    transition: color 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
 }
 
 a:hover {
     color: #73E6F2;
 }
 
+i {
+    color: #ABABAB;
+}
+
+a:hover i {
+    color: #73E6F2;
+}
+
+/* scrollbar pieces ============================================== */
+/* https://css-tricks.com/custom-scrollbars-in-webkit/ */
+::-webkit-scrollbar { 
+    width: 7px;
+    background-color: transparent;
+ }
+::-webkit-scrollbar-button { 
+    display: none;
+ }
+::-webkit-scrollbar-thumb { 
+    border-radius: 10px;
+    background-color: #A5A5A5;   
+}
+
+/*  buttons ====================================================== */
+
+.btn_box {
+    padding: 5px 30px;
+    border-radius: 4px;
+    background-color: #F5F5F5;
+    box-shadow: 2px 0px 8px 0px rgba(0, 0, 0, 0.16);
+    font-size: 20px;
+    transition: all 300ms ease-in-out;
+}
+
+.btn_box:hover {
+    background-color: #e4e4e4;   
+}
+
+.btn_box i,
+.btn_box:hover i {
+    color: #ABABAB;
+}
 /* 
 ----------------------------------------------------- 
 background patterns
@@ -54,23 +96,30 @@ background patterns
 dashboard
 ----------------------------------------------------- 
 */
+/* dashboard = d */
 
-.dashboard_container {
-    position: relative;
+.d_container {
+    /* they both need the same criteria in order to animate smoothly at least in height and width */
+    position: absolute;
     min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    min-width: 100%;
+    max-width: 100%;
     width: 100%;
     background-color: #F5F5F5;
     overflow: hidden;
+    transition: all 400ms ease-in-out;
 }
 
-.dashboard_container.box {
-    position: absolute;
-    height: 80%;
+.d_container.d_box {
+    /* they both need the same criteria in order to animate smoothly at least in height and width */
     min-height: 400px;
     max-height: 80%;
-    width: 80%;
+    height: 80%;
     min-width: 350px;
     max-width: 1200px;
+    width: 80%;
     border-radius: 17px;
 }
 
@@ -84,6 +133,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    z-index: 3;
     box-sizing: border-box;
     padding: 0px;
     padding-left: 65px;
@@ -101,12 +151,19 @@ header h4 {
     margin: 0px;
 }
 
-header span {
+header .header_job_title {
     font-size: 10px;
 }
 
 header .header_bookmark {
     cursor: pointer;
+}
+
+.header_bookmark_list {
+    display: grid;
+    grid-template-columns: 165px 20px;
+    justify-content: center;
+    align-items: center;
 }
 
 .header_default_icons i {
@@ -116,22 +173,23 @@ header .header_bookmark {
     cursor: pointer;
 }
 
-header .dropdown {
+.header_dropdown {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 3;
     min-width: 215px;
     height: 60px;
     cursor: pointer;
     transition: background-color 300ms ease-in-out;
 }
 
-header .dropdown:hover {
+.header_dropdown:hover {
     background-color: #F5F5F5;
 }
 
-header .dropdown_menu {
+.header_dropdown_menu {
     position: absolute;
     top: -100vh;
     left: 0px;
@@ -146,42 +204,50 @@ header .dropdown_menu {
     cursor: default;
     transition: all 400ms ease-in-out;
 }
-header .dropdown_menu h5 {
+.header_dropdown_menu h5 {
     margin: 5px 0px;
     text-align: center;
 }
 
-header .dropdown_menu hr {
+.header_dropdown_menu hr {
     border: 0px solid #EAE9E9;
     border-top: 1px solid #EAE9E9;
 }
 
-header .dropdown_menu a {
+.header_dropdown_menu a {
     display: block;
     padding: 5px 0px;
     font-size: 14px;
     color: #BBBBBB;
 }
 
-header .dropdown_menu a:hover {
+.header_dropdown_menu a:hover {
     color: #73E6F2;
 }
 
-header .dropdown_menu i {
-    padding-right: 10px;
+.header_dropdown_menu i {
+    padding-right: 5px;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
 }
 
-header .dropdown_menu a .fa-times {
-    float: right;
+.header_dropdown_menu .fa-times {
+    padding-right: 0px;
+    padding-left: 5px;
+    transition: all 300ms ease-in-out;
 }
 
-.logo {
+.header_dropdown_menu .fa-times:hover {
+    color: #73E6F2;
+}
+
+.header_logo {
     padding: 0px 10px;
     height: 35px;
     max-width: 300px;
 }
 
-.profile {
+.header_profile {
     padding: 0px 10px;
     height: 45px;
     max-width: 250px;
@@ -189,14 +255,19 @@ header .dropdown_menu a .fa-times {
 
 /* 
 ----------------------------------------------------- 
-dashboard sideBar
+dashboard left sideBar
 ----------------------------------------------------- 
 */
+/* dashboard_sidebar = ds */
+/* dashboard_sidebar_top = dst */
+/* dashboard_sidebar_middle = dsm */
+/* dashboard_sidebar_bottom = dsb */
 
-.dashboard_sidebar {
+.ds {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 4;
     width: 50px;
     height: 100%;
     background-color: #ffffff;
@@ -205,10 +276,243 @@ dashboard sideBar
     transition: width 300ms ease-in-out;
 }
 
-.dashboard_sidebar:hover {
+.ds_open {
+    width: 250px;
+}
+
+.ds:hover {
     width: 250px;   
 }
 
-.dashboard_sidebar:hover a span {
+/* dashboard_sidebar_top =============================================== */
+
+.dst {
+    padding: 10px 0px 30px 8px;
+}
+
+.dst i {
+    padding: 10px;
+    font-size: 20px;
+    opacity: .3;
+    color: #A5A5A5;
+    cursor: pointer;
+    transition: opacity 300ms ease-in-out;
+}
+
+i.dst_i_active {
     opacity: 1;
+}
+
+/* dashboard_sidebar_middle =============================================== */
+ 
+.dsm a {
+    position: relative;
+    display: inline-block;
+    padding: 10px 15px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.dsm a i {
+    padding-right: 5px;
+    font-size: 20px;
+    transition: all 300ms ease-in-out;
+}
+
+.dsm a.active::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 47px;
+    height: 100%;
+    width: 3px;
+    opacity: 1;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #73E6F2;
+    transition: all 350ms ease-in-out;
+}
+
+.ds:hover .dsm a.active::after,
+.ds_open .dsm a.active::after {
+    content: "";
+    position: absolute;
+    left: calc(100% - 3px);
+    opacity: 0;
+}
+
+.dsm a span{
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+}
+
+.dsm a:hover, 
+.dsm a:hover i {
+    color: #73E6F2;
+}
+
+.dsm a.active,
+.dsm a.active i {
+    color: #73E6F2;
+}
+
+.ds:hover .dsm a.active,
+.ds_open .dsm a.active {
+    background-color: #73E6F2;
+}
+
+.ds:hover .dsm a.active,
+.ds_open .dsm a.active,
+.ds:hover .dsm a.active i,
+.ds_open .dsm a.active i {
+    color: #ffffff;
+}
+
+.ds:hover .dsm a span,
+.ds_open .dsm a span{
+    opacity: 1;
+}
+
+/* dashboard_sidebar_bottom =============================================== */
+
+.dsb {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    bottom: 0;
+    left: 0;
+    padding: 10px 25px;
+    width: 250px;
+    opacity: 0;
+    box-sizing: border-box;
+    box-shadow: 0px -3px 8px 0px rgba(0, 0, 0, 0.07);
+    transition: opacity 300ms ease-in-out;
+}
+
+.ds_open .dsb,
+.ds:hover .dsb {
+    opacity: 1;
+}
+
+/* 
+----------------------------------------------------- 
+dashboard body
+----------------------------------------------------- 
+*/
+/* dashboard_body = db */
+
+.db {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    height: calc(100% - 60px);
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 60px;
+    padding: 30px 30px 80px 80px;
+    overflow: hidden;
+    overflow-y: scroll;  
+}
+
+/* 
+----------------------------------------------------- 
+dashboard right sideBar
+----------------------------------------------------- 
+*/
+/* dashboard_sidebar_options = dso */
+
+.dso {
+    position: absolute;
+    top: 0;
+    right: -310px;
+    z-index: 6;
+    height: 100%;
+    width: 300px;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.07);
+    transition: right 300ms ease-in-out; 
+}
+
+.dso_open {
+    right: 0px;
+}
+
+/* 
+----------------------------------------------------- 
+dashboard modals
+----------------------------------------------------- 
+*/
+/* dashboard_modal = dm */
+/* dashboard_modal_full = dmf */
+
+/* put bottom to 0 show modal */
+.dm {
+    position: absolute;
+    bottom: -100%;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    height: calc(100% - 60px);
+    width: calc(100% - 50px); 
+}
+
+.dm_open {
+    bottom: 0;   
+}
+
+/* put bottom to 0 show modal */
+.dmf {
+    position: absolute;
+    bottom: -100%;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    height: 100%;
+    width: 100%; 
+}
+
+.dmf_open {
+    bottom: 0;   
+}
+
+/* ? whichever model you would like to use put the bottom to 0  */
+/* dashboard_sidebar_options_modal = dso_modal */
+.dso_modal {
+    position: absolute;
+    bottom: -100%;
+    right: 0;
+    height: 100%;
+    width: 100%; 
+    background-color: rgba(0, 0, 0, 0.67);
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+}
+
+.dso_modal_open {
+    bottom: 0;
+    opacity: 1;
+}
+
+/* dashboard_media_content_modal = dmc_modal */
+.dmc_modal {
+    position: absolute;
+    bottom: -100%;
+    right: 0;
+    height: 100%;
+    width: 100%; 
+    background-color: rgba(0, 0, 0, 0.67);
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+}
+
+.dmc_modal_open {
+    bottom: 0;
+    opacity: 1;   
 }
