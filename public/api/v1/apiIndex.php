@@ -8,7 +8,7 @@ require_once('../../../private/functions/functions.php');
 //     redirect_to($redirectUrl);
 //     exit();
 // }
-// TODO: 
+// TODO: See 6 todos below
 // 1- Dynamic companyName
 // 2- Dynamic termsOfUse
 // 3- Dynamic contact
@@ -16,6 +16,8 @@ require_once('../../../private/functions/functions.php');
 // 5- Force HTTPS communication
 // 6- HTTP status codes and error returning
 // ----------------------------------------- Root API Data -------------------------------------------------
+
+// TODO: Change the format based on the updated API response
 $apiRoot = array(
     // General Info
     "companyName" => "Placeholder Company",
