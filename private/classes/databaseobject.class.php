@@ -170,6 +170,7 @@
                 $result = self::db_error_check($result);
                 // array to hold the results
                 $data_array = [];
+
                 // loop through query
                 while ($record = $result->fetch_assoc()) {
                     // If objects were requested then instantiate objects
@@ -179,6 +180,7 @@
                         $data_array[] = $record;
                     }
                 }
+
                 // return the array of data
                 return $data_array;   
             }
@@ -207,12 +209,13 @@
                 $returnValues_array = [];
 
                 // Begin building the SQL
-                $sql = "SELECT ";
-                $sql2 = "SELECT ";
+                $sql = "SELECT SQL_CALC_FOUND_ROWS ";
+
+                // The SQL for counting rows, must be executed after the query to get the total row count
+                $sql2 = "SELECT FOUND_ROWS();";
 
                 // Add all the columns to select if defined
                 if (isset($sqlOptions['columnOptions'])) {
-                    $sql2 .= "COUNT(*) ";
 
                     foreach($sqlOptions['columnOptions'] as $col) {
                         $sql .= self::db_escape($col);
@@ -226,18 +229,15 @@
                 // If no custom columns given then add the *
                 } else {
                     $sql .= "* ";
-                    $sql2 .= "COUNT(*) ";
                 }
 
                 // Add the rest of our SQL statement
                 $sql .= "FROM " . static::$tableName . " ";
-                $sql2 .= "FROM " . static::$tableName . " ";
 
                 // Add the where clauses if defined
                 if (isset($sqlOptions['whereOptions']) && !empty($sqlOptions['whereOptions'])) {
                     // Begin the WHERE SQL
                     $sql .= "WHERE ";
-                    $sql2 .= "WHERE ";
                     // Loop through all of the where clauses given
                     foreach($sqlOptions['whereOptions'] as $where) {
 
@@ -245,17 +245,13 @@
                         $sql .= self::db_escape($where['operator']) . " ";
                         $sql .= "'" . self::db_escape($where['value']) . "' ";
 
-                        $sql2 .= self::db_escape($where['column']) . " ";
-                        $sql2 .= self::db_escape($where['operator']) . " ";
-                        $sql2 .= "'" . self::db_escape($where['value']) . "' ";
-
                         // Add the AND if not at the end of the array
                         if ($where !== end($sqlOptions['whereOptions'])) {
                             $sql .= "AND ";
-                            $sql2 .= "AND ";
                         }
                     }
                 }
+
                 // Add the sorting options if defined
                 if (isset($sqlOptions['sortingOptions'])) {
                     foreach($sqlOptions['sortingOptions'] as $option) {
@@ -265,24 +261,19 @@
 
                             $sql .= self::db_escape($option['operator']) . " ";
                             $sql .= self::db_escape($option['column']) . " ";
-                            $sql .= "'" . self::db_escape($option['value']) . "' ";
-
-                            $sql2 .= self::db_escape($option['operator']) . " ";
-                            $sql2 .= self::db_escape($option['column']) . " ";
-                            $sql2 .= "'" . self::db_escape($option['value']) . "' ";
+                            $sql .= self::db_escape($option['value']) . " ";
 
                         // Else the sortingOption is not order by
                         } else {
-                            $sql .= " " . self::db_escape($option['operator']) . " " . self::db_escape($option['value']);
-                            $sql2 .= " " . self::db_escape($option['operator']) . " " . self::db_escape($option['value']);
+                            $sql .= self::db_escape($option['operator']) . " " . self::db_escape($option['value']) . " ";
                         }
                     }
                 }
                 // Submit the SQL query(s)
                 $returnValues_array['data'] = static::find_by_sql($sql);
-                // Separate the count data
+                // Get the total possible row count from the query
                 $result = static::find_by_sql($sql2, false);
-                $returnValues_array['count'] = $result[0]['COUNT(*)'];
+                $returnValues_array['count'] = $result[0]['FOUND_ROWS()'];
 
                 // return the data
                 return $returnValues_array;
