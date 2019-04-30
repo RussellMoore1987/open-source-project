@@ -123,7 +123,7 @@
                         'list' => 'IN'
                     ]
                 ],
-                'greaterThen' => [
+                'greaterThan' => [
                     'refersTo' => 'postDate',
                     'type' => 'str',
                     'connection' => [
@@ -131,7 +131,7 @@
                     ]
                 ], 
                 // ...api/v1/posts/?lessThen=1/37/2010
-                'lessThen' => [
+                'lessThan' => [
                     'refersTo' => 'postDate',
                     'type' => 'str',
                     'connection' => [
@@ -213,7 +213,8 @@
                     'type' => 'int',
                     'default' => 10,
                     'operator' => 'LIMIT'
-                ],
+                ]
+                // TODO: Add column options
 
             ];
 

@@ -124,6 +124,18 @@ function is_list($data) {
     }
 }
 
+// Determine if the string contains a specific word or group of characters
+function contains($string, $data) {
+    // The regular expression to match against
+    $regEx = "/" . $data . "/";
+    // Use RegEx to determine if the word is contained in the string
+    if (preg_match($regEx, $string)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // make a list into an array where key and value are the same
 function list_to_array($list) {
     // make array from ids

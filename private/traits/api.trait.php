@@ -5,6 +5,9 @@ trait Api {
 
     // Method for getting api info from the DB
     static function get_api_info() {
+        // Array for holding the finished API Data
+        $apiData_array = [];
+
         // Array for holding the prepped api data
         $prepApiData_array['errors'] = [];
 
@@ -48,6 +51,7 @@ trait Api {
                 "currentPage" => $prepApiData_array['extra']['page'],
                 "totalPages" => $totalPages,
                 "resultsPerPage" => $prepApiData_array['extra']['perPage'],
+                "totalResults" => $Obj_array['count'],
                 "paramsSent" => $_GET,
                 "endpoint" => static::$tableName,
                 "content" => $apiData_array
@@ -68,6 +72,7 @@ trait Api {
                 "currentPage" => 1,
                 "totalPages" => 1,
                 "resultsPerPage" => 1,
+                "totalResults" => 0,
                 "paramsSent" => $_GET,
                 "endpoint" => static::$tableName,
                 "content" => []
@@ -185,26 +190,22 @@ trait Api {
             }
         }
 
-        // TODO: Make sure to check if the perPage is defined in the class
         // Use the default value if the perPage is not defined
         if(!isset($options_array['perPage'])) {
+            // Set the values
+            $options_array['data'][] = [
+                'operator' => static::$apiParameters['perPage']['operator'],
+                'column' => NULL,
+                'value' => static::$apiParameters['perPage']['default']
+            ];
 
-            // If the there are no errors set the values
-            if(empty($options_array['errors'])) {
-                // Set the values
-                $options_array['data'][] = [
-                    'operator' => static::$apiParameters['perPage']['operator'],
-                    'column' => NULL,
-                    'value' => static::$apiParameters['perPage']['default']
-                ];
-
-                // Also keep note of the page
-                $options_array['perPage'] = static::$apiParameters['perPage']['default'];
-            }
+            // Also keep note of the page
+            $options_array['perPage'] = static::$apiParameters['perPage']['default'];
         }
 
         // Calculate the limit and offset
         $limit = $options_array['perPage'];
+
         // Use the page for calculation only if it is defined
         if(isset($options_array['page'])) {
             $offset = (($options_array['page'] - 1) * $limit) + ($options_array['page'] - 1);
@@ -272,6 +273,10 @@ trait Api {
 
                 // Make sure the parameter is not a sorting option option
                 if(static::$apiParameters[$paramKey]['refersTo'] !== 'sortingOption') {
+                    // If the param key is a search then add the % to the value for the SQL prep
+                    if(contains($paramKey, "search")) {
+                        $paramValue = "%" . $paramValue . "%";
+                    }
 
                     // Check if the data is a list
                     if(is_list($paramValue)) {
