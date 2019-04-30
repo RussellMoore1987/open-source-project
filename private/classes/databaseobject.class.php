@@ -243,7 +243,13 @@
 
                         $sql .= self::db_escape($where['column']) . " ";
                         $sql .= self::db_escape($where['operator']) . " ";
-                        $sql .= "'" . self::db_escape($where['value']) . "' ";
+
+                        // Determine if we need to put the quotes in or not
+                        if ($where['operator'] !== 'IN') {
+                            $sql .= "'" . self::db_escape($where['value']) . "' ";
+                        } else {
+                            $sql .= self::db_escape($where['value']) . " ";
+                        }
 
                         // Add the AND if not at the end of the array
                         if ($where !== end($sqlOptions['whereOptions'])) {
