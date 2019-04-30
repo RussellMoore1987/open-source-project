@@ -259,6 +259,7 @@ trait Api {
         return $options_array;
     }
 
+    // TODO: refractor lessThan and greaterThan for accepting multiple date formats
     // For validating and prepping the where options
     static private function prep_where_options($getParams_array) {
         // An array to hold the where options
