@@ -201,7 +201,7 @@ trait Api {
                                 }
                             }
 
-                            // TODO: Add Validation for orderBy
+                            // TODO: Add Validation for orderBy (In Progress)
 
                         // Check to see if it is just a comma separated list
                         }  elseif (is_list($paramValue, ",")) {
