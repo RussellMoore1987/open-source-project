@@ -8,13 +8,7 @@ require_once('../../../private/functions/functions.php');
 //     redirect_to($redirectUrl);
 //     exit();
 // }
-// TODO: 
-// 1- Dynamic companyName
-// 2- Dynamic termsOfUse
-// 3- Dynamic contact
-// 4- Dynamic root
-// 5- Force HTTPS communication
-// 6- HTTP status codes and error returning
+
 // ----------------------------------------- Root API Data -------------------------------------------------
 $apiRoot = array(
     // General Info

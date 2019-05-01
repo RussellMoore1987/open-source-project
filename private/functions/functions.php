@@ -136,6 +136,17 @@ function contains($string, $data) {
     }
 }
 
+// function for formating the date to the Y-m-d SQL format
+function format_date($date) {
+    // Turn date to time string
+    $dateStr = strtotime($date);
+    // Format the string to an SQL format
+    $formatDate = date("Y-m-d", $dateStr);
+
+    // Return the formatted date
+    return $formatDate;
+}
+
 // make a list into an array where key and value are the same
 function list_to_array($list) {
     // make array from ids

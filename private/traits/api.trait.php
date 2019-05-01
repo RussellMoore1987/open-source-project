@@ -1,6 +1,12 @@
 <?php
 
 // The trait for the API
+
+// TODO: Implement API Authentication
+// TODO: Update logic for orderBy to accept a list of lists
+// e.g. orderBy=postDate::DECS,createdDate::ASC
+// TODO: Update error handling for invalid parameters
+// Return accepted vs rejected parameters
 trait Api {
 
     // Method for getting api info from the DB
@@ -259,7 +265,6 @@ trait Api {
         return $options_array;
     }
 
-    // TODO: lessThan / greaterThan multiple date formats
     // For validating and prepping the where options
     static private function prep_where_options($getParams_array) {
         // An array to hold the where options
@@ -296,6 +301,20 @@ trait Api {
                             foreach($newList_array as $listItem) {
                                 // Validate the value
                                 $errors = self::validate_api_params($listItem, $paramKey);
+
+                                // If the parameter accepts a date value then format the date correctly
+                                if(static::$apiParameters[$paramKey]['type'] === 'date') {
+                                    // Get the new format for the list item
+                                    $newDate = format_date($listItem);
+
+                                    // If there was an error then add to the errors array
+                                    if($newDate === false) {
+                                        $errors[] = "The value {$listItem} for parameter {$paramKey} is not a valid date!";
+                                    }
+
+                                    // Set the correct format for the list item
+                                    $listItem = $newDate;
+                                }
         
                                 // If there are errors then add them to the errors array
                                 if(!empty($errors)) {
@@ -328,6 +347,20 @@ trait Api {
                     } else {
                         // Validate the value
                         $errors = self::validate_api_params($paramValue, $paramKey);
+
+                        // If the parameter accepts a date value then format the date correctly
+                        if(static::$apiParameters[$paramKey]['type'] === 'date') {
+                            // Get the new format for the list item
+                            $newDate = format_date($paramValue);
+
+                            // If there was an error then add to the errors array
+                            if($newDate === false) {
+                                $errors[] = "The value {$paramValue} for parameter {$paramKey} is not a valid date!";
+                            }
+
+                            // Set the correct format for the parameter Value
+                            $paramValue = $newDate;
+                        }
 
                         // If there are errors then add the errors to the array
                         if(!empty($errors)) {

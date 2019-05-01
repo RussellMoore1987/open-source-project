@@ -125,17 +125,17 @@
                 ],
                 'greaterThan' => [
                     'refersTo' => 'postDate',
-                    'type' => 'str',
+                    'type' => 'date',
                     'connection' => [
-                        'str' => ">"
+                        'date' => ">"
                     ]
                 ], 
                 // ...api/v1/posts/?lessThen=1/37/2010
                 'lessThan' => [
                     'refersTo' => 'postDate',
-                    'type' => 'str',
+                    'type' => 'date',
                     'connection' => [
-                        'str' => "<"
+                        'date' => "<"
                     ]
                 ],
                 // ...api/v1/posts/?search=sale // ? ...api/v1/posts/?search=sale,off,marked down     more then one value!???
@@ -173,17 +173,17 @@
                 ],
                 'postDate' => [
                     'refersTo' => 'postDate',
-                    'type' => 'str',
+                    'type' => 'date',
                     'connection' => [
-                        'str' => "="
+                        'date' => "="
                     ]
                 ],
                 // ...api/v1/posts/?createdDate=1910
                 'createdDate' => [
                     'refersTo' => 'createdDate',
-                    'type' => 'str',
+                    'type' => 'date',
                     'connection' => [
-                        'str' => "="
+                        'date' => "="
                     ]
                 ],
                 // ...api/v1/posts/?status=0
