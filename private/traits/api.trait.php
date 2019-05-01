@@ -182,6 +182,10 @@ trait Api {
                                             $tempCol = $item2;
                                         }
                                     }
+
+                                    // Validate that the column and value are correct for the column
+                                    // FIXME: Validation cannot handle the ASC or DESC as a value
+                                    $options_array['errors'][] = self::validate_api_params($tempVal, $tempCol);
                                     
                                     // Put the data in our options array
                                     $options_array['data'][] = [
@@ -202,7 +206,7 @@ trait Api {
                         // Check to see if it is just a comma separated list
                         }  elseif (is_list($paramValue, ",")) {
                             // Get the values from the list
-                            $newList_array = split_string_by_separator($paramValue, "::");
+                            $newList_array = split_string_by_separator($paramValue, ",");
                             $tempCol = NULL;
                             $tempVal = NULL;
 
@@ -214,6 +218,10 @@ trait Api {
                                     $tempCol = $item;
                                 }
                             }
+
+                            // Validate that the column and value are correct for the column
+                            // FIXME: Validation cannot handle the ASC or DESC as a value
+                            $options_array['errors'][] = self::validate_api_params($tempVal, $tempCol);
 
                             // Put the data in our options array
                             $options_array['data'][] = [
@@ -465,7 +473,7 @@ trait Api {
             return $errors;
 
         // elseIf there is a default validation column then use it
-        } elseif(isset(static::$validation_columns[static::$apiParameters[$param]['refersTo']])) {
+        } elseif(isset(static::$apiParameters[$param]['refersTo']) && isset(static::$validation_columns[static::$apiParameters[$param]['refersTo']])) {
             // Set the default validation
             $defaultValidation = static::$validation_columns[static::$apiParameters[$param]['refersTo']];
             // Validate based on the default validation
@@ -475,7 +483,7 @@ trait Api {
 
         // else there were no validation defined. Return the error.
         } else {
-            $errors[] = "Parameter: {$param} with Value: {$value} was rejected as there are no validation rules defined.";
+            $errors = "Parameter: {$param} with Value: {$value} was rejected as there are no validation rules defined.";
             // Return the error
             return $errors;
         }
