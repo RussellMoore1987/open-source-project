@@ -100,7 +100,9 @@ trait Api {
         $temp_array_1 = static::prep_sorting_options($getParams_array);
 
         // Add any errors to our array
-        $prepApiData_array['errors'] = $temp_array_1['errors'];
+        foreach($temp_array_1['errors'] as $error) {
+            $prepApiData_array['errors'][] = $error;
+        }
 
         // Add the prepped sorting options to the array
         $prepApiData_array['sqlOptions']['sortingOptions'] = $temp_array_1['data'];
@@ -115,7 +117,9 @@ trait Api {
         $temp_array_2 = static::prep_where_options($getParams_array);
 
         // Add any errors to the array
-        $prepApiData_array['errors'] = $temp_array_2['errors'];
+        foreach($temp_array_2['errors'] as $error) {
+            $prepApiData_array['errors'][] = $error;
+        }
 
         // Add the prepped where options to the array
         $prepApiData_array['sqlOptions']['whereOptions'] = $temp_array_2['data'];
@@ -188,7 +192,7 @@ trait Api {
 
                                 // Send an error if each item is not a comma separated list
                                 } else {
-                                    $options_array['errors'][] = "{$paramKey} expects a comma separated list of values! Example: {paramKey}=createdDate,ASC";
+                                    $options_array['errors'][] = "{$paramKey} expects a comma separated list of values! Example: {$paramKey}=createdDate,ASC";
                                     break;
                                 }
                             }
@@ -220,7 +224,7 @@ trait Api {
 
                         // Send an error if the value is not a list
                         } else {
-                            $options_array['errors'][] = "{$paramKey} expects a :: separated list of values! Example: {paramKey}=createdDate,ASC";
+                            $options_array['errors'][] = "{$paramKey} expects a list of values! Example: {$paramKey}=createdDate,ASC::postDate,DESC";
                             break;
                         }
                     }
