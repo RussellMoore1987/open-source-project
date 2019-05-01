@@ -93,16 +93,16 @@ function obj_array_api_prep(array $obj_array, $type = 'basic') {
 }
 
 // Checks if a string is a comma separated list of values then turns it into an array and returns it
-function split_string_by_comma($string) {
+function split_string_by_separator($string, $separator=",") {
 
   // Return false if there are no commas in the string
-  if (strpos($string, ",") == false) {
+  if (strpos($string, $separator) == false) {
     return false;
     
   } else {
 
     // Get the array of values from the comma separated string
-    $new_array = explode(',', $string);
+    $new_array = explode($separator, $string);
 
     // Clean the whitespace from each value, put into new array and return it
     $clean_array = [];
@@ -115,9 +115,9 @@ function split_string_by_comma($string) {
 }
 
 // Determine the string is a comma separated list
-function is_list($data) {
+function is_list($data, $separator=",") {
     // Check if it is a comma separated list inside the string
-    if(strpos($data, ',') !== false) {
+    if(strpos($data, $separator) !== false) {
         return true;
     } else {
         return false;

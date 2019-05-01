@@ -5,6 +5,7 @@
 // TODO: Implement API Authentication
 // TODO: Update logic for orderBy to accept a list of lists
 // e.g. orderBy=postDate::DECS,createdDate::ASC
+// DEBUG: multiple or single order by
 // TODO: Update error handling for invalid parameters
 // Return accepted vs rejected parameters
 trait Api {
@@ -156,23 +157,59 @@ trait Api {
 
                     // The value must be orderBy
                     } else {
-                        // Check to see if we have alist of values
-                        if(is_list($paramValue)) {
+                        // Check to see if we have alist of values separated by ::
+                        if(is_list($paramValue, "::")) {
                             // Get the values from the list
-                            $tempList_array = split_string_by_comma($paramValue);
+                            $firstList_array = split_string_by_separator($paramValue, "::");
                             $tempCol = NULL;
                             $tempVal = NULL;
 
-                            // Temporarily store the data in a variable
-                            foreach($tempList_array as $item) {
+                            // For each item in our list check to see if if is a comma separated list
+                            foreach($firstList_array as $item) {
+
+                                if(is_list($item, ",")) {
+                                    $secondList_array = split_string_by_separator($item, ",");
+
+                                    // Temporarily store the data in a variable
+                                    foreach($secondList_array as $item2) {
+                                        if($item2 == 'ASC' || $item2 == 'DESC') {
+                                            $tempVal = $item2;
+                                        } else {
+                                            $tempCol = $item2;
+                                        }
+                                    }
+                                    
+                                    // Put the data in our options array
+                                    $options_array['data'][] = [
+                                        'operator' => static::$apiParameters[$paramKey]['operator'],
+                                        'column' => $tempCol,
+                                        'value' => $tempVal
+                                    ];
+
+                                // Send an error if each item is not a comma separated list
+                                } else {
+                                    $options_array['errors'][] = "{$paramKey} expects a comma separated list of values! Example: {paramKey}=createdDate,ASC";
+                                    break;
+                                }
+                            }
+
+                            // TODO: Add Validation for orderBy
+
+                        // Check to see if it is just a comma separated list
+                        }  elseif (is_list($paramValue, ",")) {
+                            // Get the values from the list
+                            $newList_array = split_string_by_separator($paramValue, "::");
+                            $tempCol = NULL;
+                            $tempVal = NULL;
+
+                            // Get each item from the list and add it to our array
+                            foreach($newList_array as $item) {
                                 if($item == 'ASC' || $item == 'DESC') {
                                     $tempVal = $item;
                                 } else {
                                     $tempCol = $item;
                                 }
                             }
-
-                            // TODO: Any validation for the order by?
 
                             // Put the data in our options array
                             $options_array['data'][] = [
@@ -183,7 +220,7 @@ trait Api {
 
                         // Send an error if the value is not a list
                         } else {
-                            $options_array['errors'][] = "{$paramKey} expects a comma separated list of values!";
+                            $options_array['errors'][] = "{$paramKey} expects a :: separated list of values! Example: {paramKey}=createdDate,ASC";
                             break;
                         }
                     }
@@ -227,12 +264,31 @@ trait Api {
             $temp;
             $end = sizeof($options_array['data']) - 1;
 
+            if($i === 0) {
+                // Used to keep our multiple orderBy in the correct order at the front of the array
+                $wasAdded = false;
+                $posOfOrderBy = 0;
+            }
+
             // If it is the ORDER BY then put it at the beginning of the array
             if($options_array['data'][$i]['operator'] == "ORDER BY") {
-                // Move the ORDER BY to the beginning of the array
-                $temp = $options_array['data'][0];
-                $options_array['data'][0] = $options_array['data'][$i];
-                $options_array['data'][$i] = $temp;
+                // Keeping our orderBys in the right order
+                if($wasAdded) {
+                    // Move the ORDER BY to the beginning of the array but AFTER the orderBy that was already added
+                    $temp = $options_array['data'][$posOfOrderBy + 1];
+                    $options_array['data'][$posOfOrderBy + 1] = $options_array['data'][$i];
+                    $options_array['data'][$i] = $temp;
+
+                // This is not the first orderBy so put it at the beginning of the array
+                } else {
+                    // Move the ORDER BY to the beginning of the array
+                    $temp = $options_array['data'][0];
+                    $options_array['data'][0] = $options_array['data'][$i];
+                    $options_array['data'][$i] = $temp;
+    
+                    $wasAdded = true;
+                    $posOfOrderBy = 0;
+                }
             }
 
             // If it is the LIMIT, set the correct limit and order it correctly
@@ -285,7 +341,7 @@ trait Api {
                     }
 
                     // Check if the data is a list
-                    if(is_list($paramValue)) {
+                    if(is_list($paramValue, ",")) {
 
                         // Check if we accept a list as a data type if not then add the error
                         if(!isset(static::$apiParameters[$paramKey]['connection']['list'])) {
@@ -294,7 +350,7 @@ trait Api {
                         // The data is accepted as a list type so sort through the list
                         } else {
                             // Turn the list into an array and add it to our list of whereOptions
-                            $newList_array = split_string_by_comma($paramValue);
+                            $newList_array = split_string_by_separator($paramValue, ",");
         
                             // Prep the beginning of the string for holding our list of values
                             $valueList = "( ";

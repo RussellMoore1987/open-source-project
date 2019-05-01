@@ -260,14 +260,28 @@
 
                 // Add the sorting options if defined
                 if (isset($sqlOptions['sortingOptions'])) {
+                    // variable to help us determine if the orderBy was already added
+                    $wasAdded = false;
+
                     foreach($sqlOptions['sortingOptions'] as $option) {
 
                         // If the sortingOption is orderBy
                         if($option['operator'] == 'ORDER BY') {
 
-                            $sql .= self::db_escape($option['operator']) . " ";
-                            $sql .= self::db_escape($option['column']) . " ";
-                            $sql .= self::db_escape($option['value']) . " ";
+                            // Check if we already added the orderBy
+                            if($wasAdded) {
+                                $sql .= ", " . self::db_escape($option['column']) . " ";
+                                $sql .= self::db_escape($option['value']) . " ";
+
+                            // If the order by was not added yet
+                            } else {
+                                $sql .= self::db_escape($option['operator']) . " ";
+                                $sql .= self::db_escape($option['column']) . " ";
+                                $sql .= self::db_escape($option['value']) . " ";
+
+                                // Set the $wasAdded
+                                $wasAdded = true;
+                            }
 
                         // Else the sortingOption is not order by
                         } else {
