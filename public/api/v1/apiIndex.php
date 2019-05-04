@@ -169,7 +169,7 @@ foreach ($apiClassList_array as $key1 => $value1) {
             // set ["methods"]["availableMethods"]["POST"]
             $tempEndPoint_arry["methods"]["availableMethods"]["POST"] = "To post to {$key1}, update, insert, and delete";
 
-            // ! fake info
+            // ! fake info change
             // set ["methods"]["POST"]["parameters"]["noParamsSent"]
             $tempEndPoint_arry["methods"]["POST"]["parameters"]["noParamsSent"]["description"] = "When no parameters are passed then all {$key1} are returned";
             $tempEndPoint_arry["methods"]["POST"]["parameters"]["noParamsSent"]["example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
