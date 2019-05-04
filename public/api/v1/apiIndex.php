@@ -93,75 +93,86 @@ foreach ($apiClassList_array as $key1 => $value1) {
             $tempEndPoint_arry["methods"]["availableMethods"]["GET"] = "To get {$key1} information";
 
             // set ["methods"]["GET"]["parameters"]["noParamsSent"]
-            $tempEndPoint_arry["methods"]["parameters"]["noParamsSent"]["description"] = "When no parameters are passed then all {$key1} are returned";
-            $tempEndPoint_arry["methods"]["parameters"]["noParamsSent"]["example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
+            $tempEndPoint_arry["methods"]["GET"]["parameters"]["noParamsSent"]["description"] = "When no parameters are passed then all {$key1} are returned";
+            $tempEndPoint_arry["methods"]["GET"]["parameters"]["noParamsSent"]["example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
 
             // loop over getApiParameters
             foreach ($classGetApiInfo_arry as $key2 => $value2) {
-                // set other ["methods"]["parameters"]
+                // set other ["methods"]["GET"]["parameters"]
                     // check to see if there is a required parameter
                     $required = $value2["required"] ?? "false";
-                    $tempEndPoint_arry["methods"]["parameters"][$key2]["required"] = $required; 
+                    $tempEndPoint_arry["methods"]["GET"]["parameters"][$key2]["required"] = $required; 
                     // set type 
-                    $tempEndPoint_arry["methods"]["parameters"][$key2]["type"] = implode(" / ", $value2["type"]); 
+                    $tempEndPoint_arry["methods"]["GET"]["parameters"][$key2]["type"] = implode(" / ", $value2["type"]); 
                     // set description   
-                    $tempEndPoint_arry["methods"]["parameters"][$key2]["description"] = $value2["description"]; 
+                    $tempEndPoint_arry["methods"]["GET"]["parameters"][$key2]["description"] = $value2["description"]; 
                     // loop over each example, check if to see if there is only one example
                     if (isset($value2["customExample"]) && count($value2["customExample"]) >= 1) {
                         foreach ($value2["customExample"] as $ceKey => $customExample) {
-                            $tempEndPoint_arry["methods"]["parameters"][$key2]["example"][$ceKey] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?" . $customExample;
+                            $tempEndPoint_arry["methods"]["GET"]["parameters"][$key2]["example"][$ceKey] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?" . $customExample;
                         }   
                     } elseif (isset($value2["example"]) && count($value2["example"]) >= 1) {
                         $exampleCount = 0;
                         foreach ($value2["example"] as $example) {
-                            $tempEndPoint_arry["methods"]["parameters"][$key2]["example"][$value2["type"][$exampleCount] . "Example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?" . $example;    
+                            $tempEndPoint_arry["methods"]["GET"]["parameters"][$key2]["example"][$value2["type"][$exampleCount] . "Example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?" . $example;    
                             $exampleCount++; 
                         }  
                     } else {
                         // get the first array item
-                        $tempEndPoint_arry["methods"]["parameters"][$key2]["example"][$value2["type"][$exampleCount] . "Example"] = "No example provided"; 
+                        $tempEndPoint_arry["methods"]["GET"]["parameters"][$key2]["example"] = "No example provided"; 
                     }
             }
 
             // set default parameters 
-                // set ["methods"]["parameters"]["page"]
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["required"] = false;
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["type"] = "int";
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["description"] = "Returns the specified set of posts for the page of results requested. Default = 1";
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?page=1";
+                // set ["methods"]["GET"]["parameters"]["page"]
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["page"]["required"] = "false";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["page"]["type"] = "int";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["page"]["description"] = "Returns the specified set of posts for the page of results requested. Default = 1";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["page"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?page=1";
 
-                // set ["methods"]["parameters"]["perPage"]
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["required"] = false;
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["type"] = "int";
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["description"] = "Specifies the number of results to return with each page of information.";
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?perPage=10";
+                // set ["methods"]["GET"]["parameters"]["perPage"]
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["perPage"]["required"] = "false";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["perPage"]["type"] = "int";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["perPage"]["description"] = "Specifies the number of results to return with each page of information. By default only 10 are returned per request";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["perPage"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?perPage=10";
 
-                // set ["methods"]["parameters"]["orderBy"]
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["required"] = false;
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["type"] = "str / list";
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["description"] = "Returns data in the order you specify";
-                $tempEndPoint_arry["methods"]["parameters"]["page"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?orderBy=postDate::DESC,title";
+                // set ["methods"]["GET"]["parameters"]["orderBy"]
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["orderBy"]["required"] = "false";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["orderBy"]["type"] = "str / list";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["orderBy"]["description"] = "Returns data in the order you specify";
+                $tempEndPoint_arry["methods"]["GET"]["parameters"]["orderBy"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?orderBy=postDate::DESC,title";
               
-            // set ["methods"]["exampleResponse"], successResponse errorResponse
+            // set ["methods"]["GET"]["exampleResponse"], successResponse errorResponse
                 // make the call, get live example
                 $data = file_get_contents(PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/");
                 // check to see if we got anything back
                 $data = trim(strlen($data)) > 10 ? json_decode($data): "no data was found for " . PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
-                // set ["methods"]["exampleResponse"]["successResponse"]
-                $tempEndPoint_arry["methods"]["exampleResponse"]["successResponse"] = $data;
+                // set ["methods"]["GET"]["exampleResponse"]["successResponse"]
+                $tempEndPoint_arry["methods"]["GET"]["exampleResponse"]["successResponse"] = $data;
                 
                 // make the call, get live example
                 $data = file_get_contents(PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?error=yes");
                 // check to see if we got anything back
                 $data = trim(strlen($data)) > 10 ? json_decode($data): "no data was found for " . PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
-                // set ["methods"]["exampleResponse"]["errorResponse"]
-                $tempEndPoint_arry["methods"]["exampleResponse"]["errorResponse"] = $data;
+                // set ["methods"]["GET"]["exampleResponse"]["errorResponse"]
+                $tempEndPoint_arry["methods"]["GET"]["exampleResponse"]["errorResponse"] = $data;
     }
             
     // check to see if we have any postApiParameters
     if ($value1::get_post_api_parameters()) {
         // TODO: what do a post success message look like, successResponse errorResponse
         // not sure what to put here
+        // get api info form the class
+        $classPostApiInfo_arry = $value1::get_post_api_parameters();
+        
+        // build end point array
+            // set ["methods"]["availableMethods"]["POST"]
+            $tempEndPoint_arry["methods"]["availableMethods"]["POST"] = "To post to {$key1}, update, insert, and delete";
+
+            // ! fake info
+            // set ["methods"]["POST"]["parameters"]["noParamsSent"]
+            $tempEndPoint_arry["methods"]["POST"]["parameters"]["noParamsSent"]["description"] = "When no parameters are passed then all {$key1} are returned";
+            $tempEndPoint_arry["methods"]["POST"]["parameters"]["noParamsSent"]["example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
     }
     
     // check to see if we need to add to the documentation

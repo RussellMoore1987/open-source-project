@@ -156,7 +156,6 @@
                     // This will take precedence over the normal example. It allows for custom example names to be displayed in the API documentation
                     // This allows the consumers of your API to know what a specific parameter option will look like in the URL, only include the associative array key and the parameter option and a valid value
                 // * validation (not required, associative array)
-                    // * validation_options located at: root/private/reference_information.php
                     // example = 'validation' => [
                     //         'name'=>'search',
                     //         'required' => 'yes',
@@ -165,6 +164,7 @@
                     //         'max' => 50, // string length
                     //         'html' => 'no'
                     //     ],
+                    // Used in the same way as documented here // * validation_options located at: root/private/reference_information.php
                     // If the parameter you are wishing to set does not have validation for it you can specify how you would like to be validated. This will override the normal validation. see ***example 3 and example 4***
 
         // # examples
