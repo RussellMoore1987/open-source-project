@@ -115,15 +115,161 @@
 
         <!-- dashboard right sidebar options, right now just the to do list -->
         <div class="dso">
-            <div>
-                <div>
+            <div class="todo_list">
+                <div class="todo_list_i text_center">
                     <i class="far fa-check-circle"></i>
+                    <hr>
                 </div>
-                <hr>
-                <div>
-                    <div></div>
+                <div class="todo_list_body">
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, laboriosam.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Lorem ipsum dolor sit amet consectetur.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Lorem ipsum dolor sit amet conse.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Look up web site stuff.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Ask about routing.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, laboriosam.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Lorem ipsum dolor sit amet consectetur.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Lorem ipsum dolor sit amet conse.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Look up web site stuff.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Ask about routing.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, laboriosam.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Lorem ipsum dolor sit amet consectetur.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Lorem ipsum dolor sit amet conse.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Look up web site stuff.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Ask about routing.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Lorem ipsum dolor sit amet conse.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Look up web site stuff.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Ask about routing.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Lorem ipsum dolor sit amet conse.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" checked/> <span>Look up web site stuff.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
+                    <div class="todo_list_item">
+                        <label class="checkbox_label">
+                            <input type="checkbox" class="checkbox" /> <span>Ask about routing.</span>
+                        </label>
+                        <a class=""><i class="fas fa-pencil-alt"></i></a>
+                        <a class=""><i class="fas fa-trash"></i></a>
+                    </div>
                 </div>
-                <div class="dso_bottom">
+                <div class="todo_list_bottom">
                     <form>
                         <input type="text">
                     </form>

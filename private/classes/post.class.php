@@ -7,7 +7,7 @@
             static protected $columns = ['id', 'author', 'authorName', 'catIds', 'comments', 'content', 'createdBy', 'createdDate', 'imageName', 'labelIds', 'mediaContentIds', 'postDate', 'status', 'tagIds', 'title'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id', 'comments'];
-            // name specific properties you wish to included in the API
+            // name specific class properties you wish to included in the API
             static protected $apiProperties = ['fullDate', 'shortDate', 'imagePath_array'];
             // * collection_type_reference, located at: root/private/reference_information.php
             static protected $collectionTypeReference = 1;
@@ -115,7 +115,7 @@
 
 
             // ! temp
-            static protected $apiParameters = [
+            static protected $getApiParameters = [
                 // ...api/v1/posts/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
                 'id'=>[
                     'refersTo' => ['id'],
@@ -189,9 +189,6 @@
 
             // page, perPage, and perhapses others should be global
             // ! temp
-
-
-
         // @ class database information end
         
         // @ class specific queries start

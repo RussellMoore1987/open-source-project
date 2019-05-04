@@ -22,6 +22,30 @@
 
 
     abstract class DatabaseObject {
+        // classes that you wish to be used in the API and in the developer tools, use get_class_list() to get info
+        static protected $classList = [
+            "Category" => [
+                "apiReference" => "categories"
+            ],
+            "Content" => [
+                "apiReference" => "content"
+            ],
+            "Label" => [
+                "apiReference" => "labels"
+            ],
+            "MediaContent" => [
+                "apiReference" => "mediaContent"
+            ],
+            "Post" => [
+                "apiReference" => "posts"
+            ],
+            "Tag" => [
+                "apiReference" => "tags"
+            ],
+            "User" => [
+                "apiReference" => "users"
+            ]
+        ];
         // database connection
         static protected $database;
         // database information
@@ -33,6 +57,8 @@
         static protected $collectionTypeReference = 0;
         // db validation, // * validation_options located at: root/private/reference_information.php
         static protected $validation_columns = [];
+        static protected $getApiParameters = [];
+        static protected $postApiParameters = [];
         public $message = [];
         public $errors = [];
 
@@ -494,6 +520,11 @@
                     }
                 }
                 return $post_array;
+            }
+
+            // get class list
+            static public function get_class_list() {
+                return self::$classList;
             }
         // @ class functionality methods end
     }

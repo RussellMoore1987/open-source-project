@@ -1,7 +1,17 @@
 $(document).ready(function() {
     // # general
-        // code here
-
+        // check box label select
+        // todo: still might need so help, may need to do an initial check
+        // $(".checkbox_label").on( "click", function() {
+        //     $(this).find(".checkbox").toggle(
+        //         function() {
+        //           $( this ).prop("checked", true);
+        //         }, function() {
+        //           $( this ).prop("checked", false);
+        //         }
+        //       );
+        // });
+            
     // # header
         // header drop-down menu functionality
         $(".header_dropdown").on( "click", function() {

@@ -1,52 +1,60 @@
 <?php
     class ApiRouter {
-        // todo: check to see if there is a "/" if there is at the end of the path remove it
         // Parameters
-        public $className = "noClass";
-        public $pathInterpretation_array = [
-            "categories" => "Category",
-            "content" => "Content",
-            "labels" => "Label",
-            "mediaContent" => "MediaContent",
-            "posts" => "Post",
-            "tags" => "Tag",
-            "users" => "User"
-        ];
+        protected $className = "noClass";
+        protected $pathInterpretation_array = [];
+        protected $classList_array = [];
         public $path;
         public $pathStr;
 
         // Constructor method, We expect the path and then parameters
         public function __construct($url) {
-            // get path from url
-            $parameters_array = explode("&", $url);
-            // unset $_GET path, So that it doesn't show up as an option
-            unset($_GET[$parameters_array[0]]);
-            // set path into local variable
-            $this->pathStr = $parameters_array[0];
-            // see if we need to remove the "/"
-            if (substr($this->pathStr, -1) == "/") {
-                // remove that character
-                $this->pathStr = substr_replace($this->pathStr,"",-1);
-            }
+            // set $pathInterpretation_array
+            $this->classList_array = DatabaseObject::get_class_list();
+            // check to see if we have any classes available
+            if ($this->classList_array) {
+                // reformat classList array
+                foreach ($this->classList_array as $key => $value) {
+                    // check to see if we should add it to the array, can we even use it in the API
+                    if (!isset($this->classList_array[$key]['apiReference'])) { continue; }
+                    // load up a new array API ready classes, key => value, posts => Post
+                    $apiClassList_array[$value['apiReference']] = $key;
+                }
+                $this->pathInterpretation_array = $apiClassList_array;
 
-            // check to see if we are getting the index, a particular path, or if that path does not exist
-            if ($this->pathStr == " " || $this->pathStr == "index") {
-                $this->path = "index";
-            } else {
-                // check to see if we have a path defined, if so set class name
-                if (isset($this->pathInterpretation_array[$this->pathStr])) {
-                    // set className
-                    $this->className = $this->pathInterpretation_array[$this->pathStr];
+                // get path from url
+                $parameters_array = explode("&", $url);
+                // unset $_GET path, So that it doesn't show up as an option
+                unset($_GET[$parameters_array[0]]);
+                // set path into local variable
+                $this->pathStr = $parameters_array[0];
+                // see if we need to remove the "/"
+                if (substr($this->pathStr, -1) == "/") {
+                    // remove that character
+                    $this->pathStr = substr_replace($this->pathStr,"",-1);
+                }
 
-                    // double check just to see if the class exists
-                    if (class_exists($this->className)) {
-                        $this->path = "class";
+                // check to see if we are getting the index, a particular path, or if that path does not exist
+                if ($this->pathStr == " " || $this->pathStr == "index") {
+                    $this->path = "index";
+                } else {
+                    // check to see if we have a path defined, if so set class name
+                    if (isset($this->pathInterpretation_array[$this->pathStr])) {
+                        // set className
+                        $this->className = $this->pathInterpretation_array[$this->pathStr];
+
+                        // double check just to see if the class exists
+                        if (class_exists($this->className)) {
+                            $this->path = "class";
+                        } else {
+                            $this->path = "index";
+                        }
                     } else {
                         $this->path = "index";
                     }
-                } else {
-                    $this->path = "index";
                 }
+            } else {
+                echo "No api endpoints established for the system";
             }
         }
 

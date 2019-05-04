@@ -1,5 +1,4 @@
 <?php
-require_once('../../../private/functions/functions.php');
 // This is the endpoint that will display general information and navigation for the API
 // the information is displayed in JSON format upon a request to this endpoint: root/public/api/v1/
 // Check to be sure we are using https communication, if not then force it.
@@ -16,7 +15,124 @@ require_once('../../../private/functions/functions.php');
 // 5- Force HTTPS communication
 // 6- HTTP status codes and error returning
 // ----------------------------------------- Root API Data -------------------------------------------------
-$apiRoot = array(
+// ! pseudocode start
+
+// get list of class for the api, key => value, posts => Post
+$apiClassList_array = $this->pathInterpretation_array;
+
+// build api, this list has been checked previously, all should be good to be used in the API
+foreach ($apiClassList_array as $key => $value) {
+    // check to see if we have any getApiParameters
+    if ($value::$getApiParameters) {
+        // get api info form the class
+        $classGetApiInfo_arry = $value::$getApiParameters;
+        
+        // build end point array
+            $classReference = "/" . $key;
+            // set ["methods"]["availableMethods"]["GET"]
+            $tempEndPoint_arry[$classReference]["methods"]["availableMethods"]["GET"] = "To get {$key} information";
+
+            // set ["methods"]["GET"]["parameters"]["noParamsSent"]
+            $tempEndPoint_arry[$classReference]["methods"]["parameters"]["noParamsSent"]["description"] = "When no parameters are passed then all {$key} are returned";
+            $tempEndPoint_arry[$classReference]["methods"]["parameters"]["noParamsSent"]["example"] = PUBLIC_LINK_PATH . "api/v1/" . $key . "/";
+
+            // ! start here
+            // loop over getApiParameters
+            foreach ($classGetApiInfo_arry as $key => $value) {
+                // set other ["methods"]["parameters"]
+                $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["required"] = $value["required"];    
+                $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["type"] = implode($value["type"]);    
+                $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["description"] = $value["description"]; 
+                // loop over each example
+                foreach ($value["example"] as $key => $value) {
+                    $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["example"] = "";    
+                }   
+
+
+                'id' => [
+                    'refersTo' => ['id'],
+                    'type' => ['int', 'list'],
+                    'connection' => [
+                        'int' => "=",
+                        'list' => 'in'
+                    ]
+                ],
+
+
+                // Categories
+                "/categories" => [
+                    "methods" => [
+                        "availableMethods" => [
+                            "GET" => "To get categories information"
+                        ],
+                        "GET" => [
+                            "parameters" => [
+                                "noParamsSent" => [
+                                    "description" => "When no parameters are passed then all categories are returned",
+                                    "example" => "root/public/api/v1/categories/"
+                                ],
+                                "id" => [
+                                    "required" => false,
+                                    "type" => "int / list",
+                                    "description" => "Gets categoires by the category id or list of category ids",
+                                    "example" => [
+                                        "intExample" => "root/public/api/v1/categories/?id=5",
+                                        "listExample" => "root/public/api/v1/categories/?id=5,6,7,8,9"
+                                    ]
+                                ],
+                                "ctr" => [
+                                    "required" => false,
+                                    "type" => "int",
+                                    "description" => "Gets categories by the Collection Type Reference. 0 = all, 1 = posts, 2 = media content, 3 = users, 4 = content",
+                                    "example" => "root/public/api/v1/categories/?ctr=3"
+                                ],
+                                "subCatId" => [
+                                    "required" => false,
+                                    "type" => "int",
+                                    "description" => "Gets categories by the Sub Category id or list of sub category ids",
+                                    "example" => [
+                                        "intExample" => "root/public/api/v1/categories/?subCatId=5",
+                                        "listExample" => "root/public/api/v1/categories/?subCatId=5,6,7,8,9"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+
+
+
+
+                'id'=>[
+                    'refersTo' => ['id'],
+                    'type' => ['int', 'list'],
+                    'connection' => [
+                        'int' => "=",
+                        'list' => 'in'
+                    ]
+                ],
+
+
+
+
+
+
+
+
+
+
+            }
+    }
+    
+    // check to see if we need to add to the documentation
+    $apiRoot["routes"][] = $key;
+}
+
+
+// ! pseudocode end
+
+
+$apiRoot = [
     // General Info
     "companyName" => "Placeholder Company",
     "termsOfUse" => "Placeholder Terms URL",
@@ -265,7 +381,7 @@ $apiRoot = array(
             ]
         ]
     ]
-);
+];
 // Dynamic content
 // API Root dynamic content
 $apiRoot['mainPath'] = $apiRoot['root'] . $apiRoot['mainPath'];
