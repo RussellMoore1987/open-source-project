@@ -115,6 +115,7 @@
 
 
             // ! temp
+            // * get_api_parameters, located at: root/private/reference_information.php
             static protected $getApiParameters = [
                 // ...api/v1/posts/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
                 'id'=>[
@@ -123,13 +124,21 @@
                     'connection' => [
                         'int' => "=",
                         'list' => 'in'
-                    ]
+                    ],
+                    'description' => 'Gets posts by the post id or list of post ids',
+                    'example' => ['id=1', 'id=1,2,3,4,5']
                 ],
+                // ...api/v1/posts/?greaterThen=1/37/2010
                 'greaterThen' => [
                     'refersTo' => ['postDate'],
                     'type' => ['str'],
                     'connection' => [
-                        'str' => ">"
+                        'str' => '>'
+                    ],
+                    'description' => 'Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan paramter to get dates in posts with createdDates between the two values, see examples',
+                    'customExample' => [ 
+                        'greaterThan' => 'greaterThan=2018-02-01',
+                        'between' => 'greaterThan=2018-02-01&lessThan=2019-03-01'
                     ]
                 ], 
                 // ...api/v1/posts/?lessThen=1/37/2010
@@ -137,16 +146,21 @@
                     'refersTo' => ['postDate'],
                     'type' => ['str'],
                     'connection' => [
-                        'str' => "<"
+                        'str' => '<'
+                    ],
+                    'description' => 'Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan paramter to get dates in posts with createdDates between the two values, see examples',
+                    'customExample' => [ 
+                        'lessThan' => 'lessThan=2019-03-01',
+                        'between' => 'greaterThan=2018-02-01&lessThan=2019-03-01'
                     ]
                 ],
                 // ...api/v1/posts/?search=sale // ? ...api/v1/posts/?search=sale,off,marked down     more then one value!???
                 'search' => [
                     'refersTo' => ['title', 'content'],
-                    'type' => ['str, list'],
+                    'type' => ['str', 'list'],
                     'connection' => [
-                        'str' => "like",
-                        'list' => "like::or"
+                        'str' => 'like',
+                        'list' => 'like::or'
                     ],
                     'validation' => [
                         'name'=>'search',
@@ -155,37 +169,71 @@
                         'min'=> 2, // string length
                         'max' => 50, // string length
                         'html' => 'no'
-                    ]
+                    ],
+                    'description' => 'Gets posts by search parameters. Search will bring Posts that match the given string in both the title and the content field',
+                    'example' => ['search=sale', 'search=sale,off,marked down']
                 ],
                 'postDate' => [
                     'refersTo' => ['postDate'],
                     'type' => ['str'],
                     'connection' => [
-                        'str' => "="
-                    ]
+                        'str' => '='
+                    ],
+                    'description' => 'Gets posts by the post date',
+                    'example' => ['postDate=2019-02-01']
                 ],
                 // ...api/v1/posts/?createdDate=1910
                 'createdDate' => [
                     'refersTo' => ['createdDate'],
                     'type' => ['str'],
                     'connection' => [
-                        'str' => "="
-                    ]
+                        'str' => '='
+                    ],
+                    'description' => 'Gets posts by the date they were created',
+                    'example' => ['createdDate=2019-02-01']
                 ],
                 // ...api/v1/posts/?status=0
                 'status' => [
                     'refersTo' => ['status'],
                     'type' => ['int'],
                     'connection' => [
-                        'int' => "="
-                    ]
+                        'int' => '='
+                    ],
+                    'description' => 'Gets posts by the current post status. 0 = draft, 1 = published',
+                    'example' => ['status=1']
                 ],
-                // ! this is possibly a global parameter and may not need to be in the individual classes, probably shouldn't
-                // ...api/v1/posts/?orderBy=postDate::DECS,createdDate // ? what is default ascending or descending
-                'orderBy' => [
-                    'refersTo' => ['sortingOptions'],
-                ]
+                // ...api/v1/posts/?status=0
+                // TODO: 
+                // ! need to add ??? how to make custom yet standerd
+                'extendedData' => [
+                    'refersTo' => ['extraOptions'],
+                    'type' => ['int'],
+                    'validation' => [
+                        'name'=>'extendedData',
+                        'required' => 'yes',
+                        'type' => 'int', // type of int
+                        'num_min'=> 0, // min num
+                        'num_max' => 1, // max num
+                    ],
+                    'description' => 'Returns all extended post data. 0 = Return basic post data, 1 = Return extended post data. Default is 0.  ',
+                    'example' => ['extendedData=1']
+                ],
             ];
+
+            // TODO: 
+            // ! not sure what it should look like
+            // * post_api_parameters, located at: root/private/reference_information.php
+            static protected $postApiParameters = [
+                'id' => [
+                    'refersTo' => ['id'],
+                    'type' => ['int'],
+                    'connection' => [
+                        'int' => "where"
+                    ],
+                    'description' => 'If updating post data must have an id, else it will make a new post',
+                    'example' => ['id=1']
+                ]
+                ];
 
             // page, perPage, and perhapses others should be global
             // ! temp

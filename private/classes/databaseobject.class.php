@@ -18,18 +18,15 @@
                 // content being edited
                 // media content being edited??? 
 
-
-
-
     abstract class DatabaseObject {
         // classes that you wish to be used in the API and in the developer tools, use get_class_list() to get info
         static protected $classList = [
             "Category" => [
                 "apiReference" => "categories"
             ],
-            "Content" => [
-                "apiReference" => "content"
-            ],
+            // "Content" => [
+            //     "apiReference" => "content"
+            // ],
             "Label" => [
                 "apiReference" => "labels"
             ],
@@ -56,9 +53,9 @@
         // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/reference_information.php
         static protected $collectionTypeReference = 0;
         // db validation, // * validation_options located at: root/private/reference_information.php
-        static protected $validation_columns = [];
-        static protected $getApiParameters = [];
-        static protected $postApiParameters = [];
+        static protected $validation_columns = []; // use get_validation_columns()
+        static protected $getApiParameters = []; // use get_get_api_parameters()
+        static protected $postApiParameters = []; // use get_post_api_parameters()
         public $message = [];
         public $errors = [];
 
@@ -526,6 +523,23 @@
             static public function get_class_list() {
                 return self::$classList;
             }
+
+            // get validation columns()
+            static public function get_validation_columns() {
+                return static::$validation_columns;
+            }
+
+            // get api parameters()
+            static public function get_get_api_parameters() {
+                return static::$getApiParameters;
+            }
+
+            // get post api parameters()
+            static public function get_post_api_parameters() {
+                return static::$postApiParameters;
+            }
+            
+
         // @ class functionality methods end
     }
     

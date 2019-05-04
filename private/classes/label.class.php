@@ -13,7 +13,7 @@
             // * collection_type_reference, located at: root/private/reference_information.php
             static protected $collectionTypeReference = 0;
             // db validation, // * validation_options located at: root/private/reference_information.php
-            static protected $validation_columns = [
+            static public $validation_columns = [
                 'id' => [
                     'name' => 'Label id',
                     'required' => 'yes',

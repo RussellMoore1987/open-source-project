@@ -101,4 +101,131 @@
             // ...\public/images/original/fake_image.jpg
             // or 
             // IMAGE_PATH . /thumbnail/fake_image.jpg
+
+    // @ get_api_parameters
+        // # parameters
+            // make a parameter
+                // 'id'=>[]
+            // add parameter options
+                // 'id'=>[
+                //     'refersTo' => ['id'],
+                //     'type' => ['int', 'list'],
+                //     'connection' => [
+                //         'int' => "=",
+                //         'list' => 'in'
+                //     ],
+                //     'description' => 'Gets posts by the post id or list of post ids',
+                //     'example' => ['id=1', 'id=1,2,3,4,5']
+                // ]
+        
+        // # parameter options
+            // * refersTo (required, array)
+                // example = 'refersTo' => ['id']
+                // refersTo, makes a reference to which database column you wish to use for querying
+                // 'refersTo' => ['extraOptions'] This special refersTo Allows you to create custom code to send back additional options in the API, see ***example 4***
+            // * type (required, array)
+                // example = 'type' => ['int', 'list']
+                // Type refers to what type of content you're expecting to receive through the API
+            // * connection (required, array)
+                // example = 'connection' => [
+                //    'int' => "=",
+                //    'list' => 'in'
+                // ],
+                // (Connection)s make a reference to the (type)s to the different options available for querying in MySQL
+                // Connection options available =, in, like, >=, <=, >, <, like::or
+                    // what each option means
+                        // =, equals
+                        // in, find mach from list
+                        // like, find a match like, %like%
+                        // >=, Greater than or equal to
+                        // <=, Less than or equal to
+                        // >, Greater than or equal to
+                        // <, Less than 
+                        // like::or, find a match like, %like% or %like%, from list
+                // * description (required, str)
+                    // example = 'description' => 'Gets posts by the post id or list of post ids'
+                    // A description allows the consumers of your API to know what this parameter will do
+                // * example (not required but strongly encouraged, array)
+                    // example = 'example' => ['id=1', 'id=1,2,3,4,5']
+                    // This allows the consumers of your API to know what a specific parameter option will look like in the URL, only include the parameter option and a valid value
+                // * customExample (not required, associative array)
+                    // example = 'customExample' => [ 
+                    //         'greaterThan' => 'greaterThan=2018-02-01',
+                    //         'between' => 'greaterThan=2018-02-01&lessThan=2019-03-01'
+                    //     ]
+                    // This will take precedence over the normal example. It allows for custom example names to be displayed in the API documentation
+                    // This allows the consumers of your API to know what a specific parameter option will look like in the URL, only include the associative array key and the parameter option and a valid value
+                // * validation (not required, associative array)
+                    // * validation_options located at: root/private/reference_information.php
+                    // example = 'validation' => [
+                    //         'name'=>'search',
+                    //         'required' => 'yes',
+                    //         'type' => 'str', // type of string
+                    //         'min'=> 2, // string length
+                    //         'max' => 50, // string length
+                    //         'html' => 'no'
+                    //     ],
+                    // If the parameter you are wishing to set does not have validation for it you can specify how you would like to be validated. This will override the normal validation. see ***example 3 and example 4***
+
+        // # examples
+            // # example 1
+            // 'id'=>[
+            //     'refersTo' => ['id'],
+            //     'type' => ['int', 'list'],
+            //     'connection' => [
+            //         'int' => "=",
+            //         'list' => 'in'
+            //     ],
+            //     'description' => 'Gets posts by the post id or list of post ids',
+            //     'example' => ['id=1', 'id=1,2,3,4,5']
+            // ]
+
+            // # example 2
+            // 'greaterThen' => [
+            //     'refersTo' => ['postDate'],
+            //     'type' => ['str'],
+            //     'connection' => [
+            //         'str' => '>'
+            //     ],
+            //     'description' => 'Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan paramter to get dates in posts with createdDates between the two values, see examples',
+            //     'customExample' => [ 
+            //         'greaterThan' => 'greaterThan=2018-02-01',
+            //         'between' => 'greaterThan=2018-02-01&lessThan=2019-03-01'
+            //     ]
+            // ]
+
+            // # example 3
+            // 'search' => [
+            //     'refersTo' => ['title', 'content'],
+            //     'type' => ['str', 'list'],
+            //     'connection' => [
+            //         'str' => 'like',
+            //         'list' => 'like::or'
+            //     ],
+            //     'validation' => [
+            //         'name'=>'search',
+            //         'required' => 'yes',
+            //         'type' => 'str', // type of string
+            //         'min'=> 2, // string length
+            //         'max' => 50, // string length
+            //         'html' => 'no'
+            //     ],
+            //     'description' => 'Gets posts by search parameters. Search will bring Posts that match the given string in both the title and the content field',
+            //     'example' => ['search=sale', 'search=sale,off,marked down']
+            // ]
+
+            // # example 4
+            // 'extendedData' => [
+            //     'refersTo' => ['extraOptions'],
+            //     'type' => ['int'],
+            //     'validation' => [
+            //         'name'=>'extendedData',
+            //         'required' => 'yes',
+            //         'type' => 'int', // type of int
+            //         'num_min'=> 0, // min num
+            //         'num_max' => 1, // max num
+            //     ],
+            //     'description' => 'Returns all extended post data. 0 = Return basic post data, 1 = Return extended post data. Default is 0.  ',
+            //     'example' => ['extendedData=1']
+            // ]
 ?> 

@@ -14,377 +14,162 @@
 // 4- Dynamic root
 // 5- Force HTTPS communication
 // 6- HTTP status codes and error returning
+// TODO: PUBLIC_LINK_PATH . "/api/v1/" make variable for it
+// TODO: what dose post data/api documentation look like 
+// TODO: make it stander, with the ability to add custom, in api trait or individual class, might be able to use a interface or some thing like that
 // ----------------------------------------- Root API Data -------------------------------------------------
-// ! pseudocode start
 
-// get list of class for the api, key => value, posts => Post
-$apiClassList_array = $this->pathInterpretation_array;
-
-// build api, this list has been checked previously, all should be good to be used in the API
-foreach ($apiClassList_array as $key => $value) {
-    // check to see if we have any getApiParameters
-    if ($value::$getApiParameters) {
-        // get api info form the class
-        $classGetApiInfo_arry = $value::$getApiParameters;
-        
-        // build end point array
-            $classReference = "/" . $key;
-            // set ["methods"]["availableMethods"]["GET"]
-            $tempEndPoint_arry[$classReference]["methods"]["availableMethods"]["GET"] = "To get {$key} information";
-
-            // set ["methods"]["GET"]["parameters"]["noParamsSent"]
-            $tempEndPoint_arry[$classReference]["methods"]["parameters"]["noParamsSent"]["description"] = "When no parameters are passed then all {$key} are returned";
-            $tempEndPoint_arry[$classReference]["methods"]["parameters"]["noParamsSent"]["example"] = PUBLIC_LINK_PATH . "api/v1/" . $key . "/";
-
-            // ! start here
-            // loop over getApiParameters
-            foreach ($classGetApiInfo_arry as $key => $value) {
-                // set other ["methods"]["parameters"]
-                $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["required"] = $value["required"];    
-                $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["type"] = implode($value["type"]);    
-                $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["description"] = $value["description"]; 
-                // loop over each example
-                foreach ($value["example"] as $key => $value) {
-                    $tempEndPoint_arry[$classReference]["methods"]["parameters"][$key]["example"] = "";    
-                }   
-
-
-                'id' => [
-                    'refersTo' => ['id'],
-                    'type' => ['int', 'list'],
-                    'connection' => [
-                        'int' => "=",
-                        'list' => 'in'
-                    ]
-                ],
-
-
-                // Categories
-                "/categories" => [
-                    "methods" => [
-                        "availableMethods" => [
-                            "GET" => "To get categories information"
-                        ],
-                        "GET" => [
-                            "parameters" => [
-                                "noParamsSent" => [
-                                    "description" => "When no parameters are passed then all categories are returned",
-                                    "example" => "root/public/api/v1/categories/"
-                                ],
-                                "id" => [
-                                    "required" => false,
-                                    "type" => "int / list",
-                                    "description" => "Gets categoires by the category id or list of category ids",
-                                    "example" => [
-                                        "intExample" => "root/public/api/v1/categories/?id=5",
-                                        "listExample" => "root/public/api/v1/categories/?id=5,6,7,8,9"
-                                    ]
-                                ],
-                                "ctr" => [
-                                    "required" => false,
-                                    "type" => "int",
-                                    "description" => "Gets categories by the Collection Type Reference. 0 = all, 1 = posts, 2 = media content, 3 = users, 4 = content",
-                                    "example" => "root/public/api/v1/categories/?ctr=3"
-                                ],
-                                "subCatId" => [
-                                    "required" => false,
-                                    "type" => "int",
-                                    "description" => "Gets categories by the Sub Category id or list of sub category ids",
-                                    "example" => [
-                                        "intExample" => "root/public/api/v1/categories/?subCatId=5",
-                                        "listExample" => "root/public/api/v1/categories/?subCatId=5,6,7,8,9"
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-
-
-
-
-                'id'=>[
-                    'refersTo' => ['id'],
-                    'type' => ['int', 'list'],
-                    'connection' => [
-                        'int' => "=",
-                        'list' => 'in'
-                    ]
-                ],
-
-
-
-
-
-
-
-
-
-
-            }
-    }
-    
-    // check to see if we need to add to the documentation
-    $apiRoot["routes"][] = $key;
-}
-
-
-// ! pseudocode end
-
-
+// main object
 $apiRoot = [
     // General Info
     "companyName" => "Placeholder Company",
     "termsOfUse" => "Placeholder Terms URL",
     "version" => "1.0.0",
     "contact" => "someone@someone.com",
-    "description" => "V1.0.0 of the api. This API may be used to retrieve data fromt the CMS system and in some cases create data. If the system has an API key it is required on all requests.",
-    "root" => "https://www.placeholdersite.com",
-    "mainPath" => "/public/api/v1/",
+    "description" => "V1.0.0 of the api. This API may be used to retrieve data from the CMS system and in some cases create data. If the system has an API key it is required on all requests.",
+    "root" => MAIN_LINK_PATH,
+    "mainPath" => PUBLIC_LINK_PATH . "/api/v1/",
     // Routes
     "routes" => [
         // Main Authentication
         "mainAuthentication" => [
             "required" => "If the system has an API key, it is required on all requests",
             "default" => "none",
-            "example" => "root/public/api/v1/categories/?authToken=12466486351864sd4f8164g89rt6rgfsdfunwiuf74"
-        ],
-        // Categories
-        "/categories" => [
-            "methods" => [
-                "availableMethods" => [
-                    "GET" => "To get categories information"
-                ],
-                "GET" => [
-                    "parameters" => [
-                        "noParamsSent" => [
-                            "description" => "When no parameters are passed then all categories are returned",
-                            "example" => "root/public/api/v1/categories/"
-                        ],
-                        "id" => [
-                            "required" => false,
-                            "type" => "int / list",
-                            "description" => "Gets categoires by the category id or list of category ids",
-                            "example" => [
-                                "intExample" => "root/public/api/v1/categories/?id=5",
-                                "listExample" => "root/public/api/v1/categories/?id=5,6,7,8,9"
-                            ]
-                        ],
-                        "ctr" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Gets categories by the Collection Type Reference. 0 = all, 1 = posts, 2 = media content, 3 = users, 4 = content",
-                            "example" => "root/public/api/v1/categories/?ctr=3"
-                        ],
-                        "subCatId" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Gets categories by the Sub Category id or list of sub category ids",
-                            "example" => [
-                                "intExample" => "root/public/api/v1/categories/?subCatId=5",
-                                "listExample" => "root/public/api/v1/categories/?subCatId=5,6,7,8,9"
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        // Posts
-        "/posts" => [
-            "methods" => [
-                "availableMethods" => [
-                    "GET" => "To get posts information"
-                ],
-                "GET" => [
-                    "parameters" => [
-                        "noParamsSent" => [
-                            "description" => "When no parameters are passed then all posts are returned",
-                            "example" => "root/public/api/v1/posts/"
-                        ],
-                        "id" => [
-                            "required" => false,
-                            "type" => "int / list",
-                            "description" => "Gets posts by the post id or list of post ids",
-                            "example" => [
-                                "intExample" => "root/public/api/v1/posts/?id=5",
-                                "listExample" => "root/public/api/v1/posts/?id=5,6,7,8,9"
-                            ]
-                        ],
-                        "createdDate" => [
-                            "required" => false,
-                            "type" => "date",
-                            "description" => "Gets posts by the date they were created",
-                            "example" => "root/public/api/v1/posts/?createdDate='2019-02-01'"
-                        ],
-                        "postDate" => [
-                            "required" => false,
-                            "type" => "date",
-                            "description" => "Gets posts by the post date", // TODO: Define what the post date is....
-                            "example" => "root/public/api/v1/posts/?createdDate='2019-02-01'"
-                        ],
-                        "greaterThan" => [
-                            "required" => false,
-                            "type" => "date",
-                            "description" => "Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan paramter to get dates in posts with createdDates between the two values",
-                            "example" => [
-                                "greaterThan" => "root/public/api/v1/posts/?greaterThan='2018-02-01'",
-                                "between" => "root/public/api/v1/posts/?greaterThan='2018-02-01'&lessThan='2019-03-01'"
-                            ]
-                        ],
-                        "lessThan" => [
-                            "required" => false,
-                            "type" => "date",
-                            "description" => "Gets posts that have a createdDate <= the date given with the lessThan parameter. May be used with the greaterThan paramter to get dates in posts with createdDates between the two values",
-                            "example" => [
-                                "lessThan" => "root/public/api/v1/posts/?lessThan='2019-03-01'",
-                                "between" => "root/public/api/v1/posts/?greaterThan='2018-02-01'&lessThan='2019-03-01'"
-                            ]
-                        ],
-                        "status" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Gets posts by the current post approval status. 0 = Unapproved, 1 = Approved",
-                            "example" => "root/public/api/v1/posts/?status=1"
-                        ],
-                        "extendedData" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Returns all extended post data. 0 = Return basic post data, 1 = Return extended post data. Default is 0.  ",
-                            "example" => "root/public/api/v1/posts/?extendedData=1"
-                        ],
-                        "allImages" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Returns all images associated with the posts. 0 = Return no images, 1 = Return all images. Default is 0.  ",
-                            "example" => "root/public/api/v1/posts/?allImages=1"
-                        ],
-                        "page" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Returns the specified set of posts for the page of results requested. Default = 1",
-                            "example" => "root/public/api/v1/posts?page=1"
-                        ],
-                        "perPage" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Specifies the number of results to return with each page of information.",
-                            "example" => "root/public/api/v1/posts?perPage=50"
-                        ]
-                    ]
-                ],
-                "exampleResponse" => [
-                    // TODO: Make this example response dynamic based on the current CMS system
-                    "successResponse" => [
-                        "success" => true,
-                        "statusCode" => 200,
-                        "errors" => [],
-                        "requestType" => "GET",
-                        "totalPages" => 4,
-                        "currentPage" => 1,
-                        "posts" => [
-                            [
-                                "id" => 1,
-                                "createdBy" => 69,
-                                "catIds" => [
-                                    3, 4, 5, 6
-                                ],
-                                "tagIds" => [
-                                    2, 3
-                                ],
-                                "labelIds" => [
-                                    9, 6, 5
-                                ],
-                                "content" => [
-                                    "url" => "www.something.com/somethingelse/thisthing",
-                                    "status" => 1,
-                                    "title" => "This Title",
-                                    "description" => "A description",
-                                    "contentUrl" => "www.anotherurl.com/thisone"
-                                ]
-                            ]
-                        ]
-                    ],
-                    "errorResponse" => [
-                        "success" => false,
-                        "statusCode" => 500,
-                        "errors" => [
-                            "code" => 500,
-                            "message" => "500 Internal Server Error"
-                        ],
-                        "requestType" => "GET",
-                        "totalPages" => 1,
-                        "currentPage" => 1
-                    ]
-                ]
-            ]
-        ],
-        // Tags
-        "/tags" => [
-            "methods" => [
-                "availableMethods" => [
-                    "GET" => "To get tags information"
-                ],
-                "GET" => [
-                    "parameters" => [
-                        "noParamsSent" => [
-                            "description" => "When no parameters are passed then all tags are returned",
-                            "example" => "root/public/api/v1/tags/"
-                        ],
-                        "id" => [
-                            "required" => false,
-                            "type" => "int / list",
-                            "description" => "Gets tags by the tag id or list of tag ids",
-                            "example" => [
-                                "intExample" => "root/public/api/v1/tags/?id=5",
-                                "listExample" => "root/public/api/v1/tags/?id=5,6,7,8,9"
-                            ]
-                        ],
-                        "ctr" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Gets tags by the Collection Type Reference. 0 = all, 1 = posts, 2 = media content, 3 = users, 4 = content",
-                            "example" => "root/public/api/v1/tags/?ctr=3"
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        // Labels
-        "/labels" => [
-            "methods" => [
-                "availableMethods" => [
-                    "GET" => "To get labels information"
-                ],
-                "GET" => [
-                    "parameters" => [
-                        "noParamsSent" => [
-                            "description" => "When no parameters are passed then all labels are returned",
-                            "example" => "root/public/api/v1/labels/"
-                        ],
-                        "id" => [
-                            "required" => false,
-                            "type" => "int / list",
-                            "description" => "Gets labels by the label id or list of label ids",
-                            "example" => [
-                                "intExample" => "root/public/api/v1/labels/?id=5",
-                                "listExample" => "root/public/api/v1/labels/?id=5,6,7,8,9"
-                            ]
-                        ],
-                        "ctr" => [
-                            "required" => false,
-                            "type" => "int",
-                            "description" => "Gets labels by the Collection Type Reference. 0 = all, 1 = posts, 2 = media content, 3 = users, 4 = content",
-                            "example" => "root/public/api/v1/labels/?ctr=3"
-                        ]
-                    ]
-                ]
-            ]
-        ]
+            "example" => PUBLIC_LINK_PATH . "/api/v1/categories/?authToken=12466486351864sd4f8164g89rt6rgfsdfunwiuf74"
+        ]       
     ]
 ];
-// Dynamic content
-// API Root dynamic content
-$apiRoot['mainPath'] = $apiRoot['root'] . $apiRoot['mainPath'];
+
+// get list of class for the api, key => value, posts => Post
+$apiClassList_array = $this->pathInterpretation_array;
+
+// * what an end point looks like
+// Categories
+// "/categories" => [
+//     "methods" => [
+//         "availableMethods" => [
+//             "GET" => "To get categories information"
+//         ],
+//         "GET" => [
+//             "parameters" => [
+//                 "noParamsSent" => [
+//                     "description" => "When no parameters are passed then all categories are returned",
+//                     "example" => "root/public/api/v1/categories/"
+//                 ],
+//                 "id" => [
+//                     "required" => false,
+//                     "type" => "int / list",
+//                     "description" => "Gets categoires by the category id or list of category ids",
+//                     "example" => [
+//                         "intExample" => "root/public/api/v1/categories/?id=5",
+//                         "listExample" => "root/public/api/v1/categories/?id=5,6,7,8,9"
+//                     ]
+//                 ],
+//                 "ctr" => [
+//                     "required" => false,
+//                     "type" => "int",
+//                     "description" => "Gets categories by the Collection Type Reference. 0 = all, 1 = posts, 2 = media content, 3 = users, 4 = content",
+//                     "intExample" => ["root/public/api/v1/categories/?ctr=3"]
+//                 ]
+//             ]
+//         ]
+//     ]
+// ]
+
+// build api, this list has been checked previously, all should be good to be used in the API
+foreach ($apiClassList_array as $key1 => $value1) {
+    // set default array for end point
+    $tempEndPoint_arry = [];
+    // default path
+    $classReference = "/" . $key1;
+
+    // check to see if we have any getApiParameters
+    if ($value1::get_get_api_parameters()) {
+        // get api info form the class
+        $classGetApiInfo_arry = $value1::get_get_api_parameters();
+        
+        // build end point array
+            // set ["methods"]["availableMethods"]["GET"]
+            $tempEndPoint_arry["methods"]["availableMethods"]["GET"] = "To get {$key1} information";
+
+            // set ["methods"]["GET"]["parameters"]["noParamsSent"]
+            $tempEndPoint_arry["methods"]["parameters"]["noParamsSent"]["description"] = "When no parameters are passed then all {$key1} are returned";
+            $tempEndPoint_arry["methods"]["parameters"]["noParamsSent"]["example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
+
+            // loop over getApiParameters
+            foreach ($classGetApiInfo_arry as $key2 => $value2) {
+                // set other ["methods"]["parameters"]
+                    // check to see if there is a required parameter
+                    $required = $value2["required"] ?? "false";
+                    $tempEndPoint_arry["methods"]["parameters"][$key2]["required"] = $required; 
+                    // set type 
+                    $tempEndPoint_arry["methods"]["parameters"][$key2]["type"] = implode(" / ", $value2["type"]); 
+                    // set description   
+                    $tempEndPoint_arry["methods"]["parameters"][$key2]["description"] = $value2["description"]; 
+                    // loop over each example, check if to see if there is only one example
+                    if (isset($value2["customExample"]) && count($value2["customExample"]) >= 1) {
+                        foreach ($value2["customExample"] as $ceKey => $customExample) {
+                            $tempEndPoint_arry["methods"]["parameters"][$key2]["example"][$ceKey] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?" . $customExample;
+                        }   
+                    } elseif (isset($value2["example"]) && count($value2["example"]) >= 1) {
+                        $exampleCount = 0;
+                        foreach ($value2["example"] as $example) {
+                            $tempEndPoint_arry["methods"]["parameters"][$key2]["example"][$value2["type"][$exampleCount] . "Example"] = PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?" . $example;    
+                            $exampleCount++; 
+                        }  
+                    } else {
+                        // get the first array item
+                        $tempEndPoint_arry["methods"]["parameters"][$key2]["example"][$value2["type"][$exampleCount] . "Example"] = "No example provided"; 
+                    }
+            }
+
+            // set default parameters 
+                // set ["methods"]["parameters"]["page"]
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["required"] = false;
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["type"] = "int";
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["description"] = "Returns the specified set of posts for the page of results requested. Default = 1";
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?page=1";
+
+                // set ["methods"]["parameters"]["perPage"]
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["required"] = false;
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["type"] = "int";
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["description"] = "Specifies the number of results to return with each page of information.";
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?perPage=10";
+
+                // set ["methods"]["parameters"]["orderBy"]
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["required"] = false;
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["type"] = "str / list";
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["description"] = "Returns data in the order you specify";
+                $tempEndPoint_arry["methods"]["parameters"]["page"]["example"] = PUBLIC_LINK_PATH . "/api/v1/posts?orderBy=postDate::DESC,title";
+              
+            // set ["methods"]["exampleResponse"], successResponse errorResponse
+                // make the call, get live example
+                $data = file_get_contents(PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/");
+                // check to see if we got anything back
+                $data = trim(strlen($data)) > 10 ? json_decode($data): "no data was found for " . PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
+                // set ["methods"]["exampleResponse"]["successResponse"]
+                $tempEndPoint_arry["methods"]["exampleResponse"]["successResponse"] = $data;
+                
+                // make the call, get live example
+                $data = file_get_contents(PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/?error=yes");
+                // check to see if we got anything back
+                $data = trim(strlen($data)) > 10 ? json_decode($data): "no data was found for " . PUBLIC_LINK_PATH . "/api/v1/" . $key1 . "/";
+                // set ["methods"]["exampleResponse"]["errorResponse"]
+                $tempEndPoint_arry["methods"]["exampleResponse"]["errorResponse"] = $data;
+    }
+            
+    // check to see if we have any postApiParameters
+    if ($value1::get_post_api_parameters()) {
+        // TODO: what do a post success message look like, successResponse errorResponse
+        // not sure what to put here
+    }
+    
+    // check to see if we need to add to the documentation
+    if ($tempEndPoint_arry) {
+        $apiRoot["routes"][$classReference] = $tempEndPoint_arry;
+    }
+}
+
 // JSON encode the data structure and return it
 $jsonData = json_encode($apiRoot);
 echo $jsonData;
