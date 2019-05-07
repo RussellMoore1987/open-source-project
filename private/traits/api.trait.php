@@ -2,7 +2,7 @@
 
 // The trait for the API
 
-// TODO: Implement API Authentication
+// TODO: Implement API Authentication, Code for having the API Keys
 // TODO: Update logic for orderBy to accept a list of lists
 // e.g. orderBy=postDate::DECS,createdDate::ASC
 // DEBUG: multiple or single order by
@@ -165,11 +165,12 @@ trait Api {
                         if(is_list($paramValue, "::")) {
                             // Get the values from the list
                             $firstList_array = split_string_by_separator($paramValue, "::");
-                            $tempCol = NULL;
-                            $tempVal = NULL;
 
                             // For each item in our list check to see if if is a comma separated list
                             foreach($firstList_array as $item) {
+                                $tempCol = NULL;
+                                $tempVal = NULL;
+                                $extra = NULL;
 
                                 if(is_list($item, ",")) {
                                     $secondList_array = split_string_by_separator($item, ",");
@@ -179,20 +180,37 @@ trait Api {
                                         if($item2 == 'ASC' || $item2 == 'DESC') {
                                             $tempVal = $item2;
                                         } else {
-                                            $tempCol = $item2;
+                                            // Only assign the column if it has not already been assigned
+                                            if($tempCol == NULL) {
+                                                $tempCol = $item2;
+                                            } else {
+                                                $extra = $item2;
+                                            }
                                         }
                                     }
 
-                                    // Validate that the column and value are correct for the column
-                                    // FIXME: Validation cannot handle the ASC or DESC as a value
-                                    $options_array['errors'][] = self::validate_api_params($tempVal, $tempCol);
-                                    
-                                    // Put the data in our options array
-                                    $options_array['data'][] = [
-                                        'operator' => static::$apiParameters[$paramKey]['operator'],
-                                        'column' => $tempCol,
-                                        'value' => $tempVal
-                                    ];
+                                    // If the the extra contains an item then send an error
+                                    if($extra != NULL) {
+                                        $options_array['errors'][] = "{$extra} is not a valid value for the parameter!";
+                                    } else {
+
+                                        // Validate that the column and value are correct for the column
+                                        $errors = self::validate_orderBy($tempVal, $tempCol);
+
+                                        // Add the errors to the options array if there are errors
+                                        if(!empty($errors)) {
+                                            foreach($errors as $err) {
+                                                $options_array['errors'][] = $err;
+                                            }
+                                        }
+                                        
+                                        // Put the data in our options array
+                                        $options_array['data'][] = [
+                                            'operator' => static::$apiParameters[$paramKey]['operator'],
+                                            'column' => $tempCol,
+                                            'value' => $tempVal
+                                        ];
+                                    }
 
                                 // Send an error if each item is not a comma separated list
                                 } else {
@@ -201,34 +219,50 @@ trait Api {
                                 }
                             }
 
-                            // TODO: Add Validation for orderBy (In Progress)
-
                         // Check to see if it is just a comma separated list
                         }  elseif (is_list($paramValue, ",")) {
                             // Get the values from the list
                             $newList_array = split_string_by_separator($paramValue, ",");
                             $tempCol = NULL;
                             $tempVal = NULL;
+                            $extra = NULL;
 
                             // Get each item from the list and add it to our array
                             foreach($newList_array as $item) {
                                 if($item == 'ASC' || $item == 'DESC') {
                                     $tempVal = $item;
                                 } else {
-                                    $tempCol = $item;
+                                    // Only assign the column if it has not already been assigned
+                                    if($tempCol == NULL) {
+                                        $tempCol = $item;
+                                    } else {
+                                        $extra = $item;
+                                    }
                                 }
                             }
 
-                            // Validate that the column and value are correct for the column
-                            // FIXME: Validation cannot handle the ASC or DESC as a value
-                            $options_array['errors'][] = self::validate_api_params($tempVal, $tempCol);
+                            // If the the extra contains an item then send an error
+                            if($extra != NULL) {
+                                $options_array['errors'][] = "{$extra} is not a valid value for the parameter!";
+                            } else {
+                                // Validate that the column and value are correct for the column
+                                $errors = self::validate_orderBy($tempVal, $tempCol);
+    
+                                // Add the errors to the options array if there are errors
+                                if(!empty($errors)) {
+                                    foreach($errors as $err) {
+                                        $options_array['errors'][] = $err;
+                                    }
+                                }
+    
+                                // Put the data in our options array
+                                $options_array['data'][] = [
+                                    'operator' => static::$apiParameters[$paramKey]['operator'],
+                                    'column' => $tempCol,
+                                    'value' => $tempVal
+                                ];
+                            }
 
-                            // Put the data in our options array
-                            $options_array['data'][] = [
-                                'operator' => static::$apiParameters[$paramKey]['operator'],
-                                'column' => $tempCol,
-                                'value' => $tempVal
-                            ];
 
                         // Send an error if the value is not a list
                         } else {
@@ -487,6 +521,23 @@ trait Api {
             // Return the error
             return $errors;
         }
+    }
+
+    static function validate_orderBy($val, $col) {
+        // array to hold the errors
+        $errors = [];
+        // Check if the column given is accepted
+        if(!isset(static::$apiParameters[$col])) {
+            $errors[] = "{$col} is not an accepted column parameter for orderBy.";
+        }
+
+        // Check if the value is ASC or DESC
+        if($val != "ASC") {
+            if($val != "DESC") {
+                $errors[] = "{$val} is not an accepted value parameter with {$col} for orderBy. Example: orderBy=id,DESC";
+            }
+        }
+        return $errors;
     }
 
     // create an associative array, key value pair from the static::$columns excluding id

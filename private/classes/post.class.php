@@ -201,7 +201,7 @@
                     'refersTo' => 'sortingOption',
                     'type' => 'list',
                     'default' => 'ASC',
-                    'operator' => 'ORDER BY'
+                    'operator' => 'ORDER BY',
                 ],
                 'page' => [
                     'refersTo' => 'sortingOption',
