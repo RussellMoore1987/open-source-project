@@ -64,9 +64,7 @@
             if ($this->path == "index") {
                 require_once PUBLIC_PATH . '/api/v1/apiIndex.php';
             } else {
-                // run class api
-                // echo $this->className::get_api_info();
-                echo "Got class:{$this->className}, From path:{$this->pathStr}";
+                require_once PUBLIC_PATH . '/api/v1/apiEndPoint.php';
             }
         }
     }

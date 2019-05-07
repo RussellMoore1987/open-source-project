@@ -215,7 +215,7 @@
                         'num_min'=> 0, // min num
                         'num_max' => 1, // max num
                     ],
-                    'description' => 'Returns all extended post data. 0 = Return basic post data, 1 = Return extended post data. Default is 0.  ',
+                    'description' => 'Returns all extended post data. 0 = Return basic post data, 1 = Return extended post data. Default is 0. extended data includes all images attached to the post ',
                     'example' => ['extendedData=1']
                 ],
             ];
@@ -224,16 +224,72 @@
             // ! not sure what it should look like
             // * post_api_parameters, located at: root/private/reference_information.php
             static protected $postApiParameters = [
+                // has to be set, and the value has to be yes to be activated
+                'postApiActions' => [
+                    'insert' => "yes",
+                    'update' => "yes",
+                    'delete' => "yes",
+                    // from field where = id::12, where = title::fun Stuff
+                    'updateWhere' => "yes",
+                    'deleteWhere' => "yes",
+                ],
                 'id' => [
-                    'refersTo' => ['id'],
                     'type' => ['int'],
-                    'connection' => [
-                        'int' => "where"
-                    ],
-                    'description' => 'If updating post data must have an id, else it will make a new post',
-                    'example' => ['id=1']
+                    'description' => 'If updating post data must have an id, else it will make a new post'
+                ], 
+                'author' => [
+                    'type' => ['int'],
+                    'description' => 'This field expects an offer id'
+                ], 
+                'authorName' => [
+                    'type' => ['int'],
+                    'description' => 'This is a place holder for the author\'s name, quick reference to the author\'s name'
+                ], 
+                'catIds' => [
+                    'type' => ['str'],
+                    'description' => 'list of category id\'s, quick reference'
+                ],
+                'content' => [
+                    'type' => ['str'],
+                    'description' => 'This field is the main content for the given post, it does accept HTML'
+                ], 
+                'createdBy' => [
+                    'type' => ['int'],
+                    'description' => 'This field expects the id of the user who created the post'
+                ], 
+                'createdDate' => [
+                    'type' => ['str'],
+                    'description' => 'This field expects a date, specifically the date it was created on'
+                ],
+                'imageName' => [
+                    'type' => ['str'],
+                    'description' => 'This is a placeholder for the featured image, quick reference'
+                ], 
+                'labelIds' => [
+                    'type' => ['str'],
+                    'description' => 'list of label id\'s, quick reference'
+                ], 
+                'mediaContentIds' => [
+                    'type' => ['str'],
+                    'description' => 'list of media content id\'s, quick reference'
+                ], 
+                'postDate' => [
+                    'type' => ['str'],
+                    'description' => 'This field expects a post date, when the post should be displayed'
+                ], 
+                'status' => [
+                    'type' => ['int'],
+                    'description' => 'This field expects a post status. 0 = draft, 1 = published'
+                ], 
+                'tagIds' => [
+                    'type' => ['str'],
+                    'description' => 'list of tag id\'s, quick reference'
+                ], 
+                'title' => [
+                    'type' => ['str'],
+                    'description' => 'This field expects a post title, what the post will be called and referenced as'
                 ]
-                ];
+            ];
 
             // page, perPage, and perhapses others should be global
             // ! temp

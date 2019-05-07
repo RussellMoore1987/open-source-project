@@ -17,30 +17,55 @@
                 // posted being edited
                 // content being edited
                 // media content being edited??? 
-
+    // TODO: find better way to do this with autoload
+    // pull in api trait
+    require_once(PRIVATE_PATH . '/traits/api.trait.php');
+    
     abstract class DatabaseObject {
+        // Use the api trait
+        use Api;
         // classes that you wish to be used in the API and in the developer tools, use get_class_list() to get info
+        // you can specified post and get keys for the API on each specific class as such
+        // ex: "Category" => [
+        //     "apiReference" => "categories",
+        //     "apiPostKey" => 'T3$$tK3y!2#4%6&',
+        //     "apiGetKey" => 'T3$$tK3y!2#4%6&'
+        // ]
+        // you can also set an over arching API key or overarching get key or an overarching post key, in the API trait. The higher the specificity the more that particular key wins over the others.
         static protected $classList = [
             "Category" => [
-                "apiReference" => "categories"
+                "apiReference" => "categories",
+                "apiPostKey" => 'T3$$tK3y!2#4%6&',
+                "apiGetKey" => 'T3$$tK3y!2#4%6&'
             ],
+            // TODO: this class dose not exist right now
             // "Content" => [
             //     "apiReference" => "content"
             // ],
             "Label" => [
-                "apiReference" => "labels"
+                "apiReference" => "labels",
+                "apiPostKey" => 'T3$$tK3y!2#4%6&',
+                "apiGetKey" => 'T3$$tK3y!2#4%6&'
             ],
             "MediaContent" => [
-                "apiReference" => "mediaContent"
+                "apiReference" => "mediaContent",
+                "apiPostKey" => 'T3$$tK3y!2#4%6&',
+                "apiGetKey" => 'T3$$tK3y!2#4%6&'
             ],
             "Post" => [
-                "apiReference" => "posts"
+                "apiReference" => "posts",
+                "apiPostKey" => 'T3$$tK3y!2#4%6&',
+                "apiGetKey" => 'T3$$tK3y!2#4%6&'
             ],
             "Tag" => [
-                "apiReference" => "tags"
+                "apiReference" => "tags",
+                "apiPostKey" => 'T3$$tK3y!2#4%6&',
+                "apiGetKey" => 'T3$$tK3y!2#4%6&'
             ],
             "User" => [
-                "apiReference" => "users"
+                "apiReference" => "users",
+                "apiPostKey" => 'T3$$tK3y!2#4%6&',
+                "apiGetKey" => 'T3$$tK3y!2#4%6&'
             ]
         ];
         // database connection

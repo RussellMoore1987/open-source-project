@@ -142,6 +142,20 @@
                     'html' => 'no' // mostly just to allow special characters like () []
                 ]
             ];
+            // * get_api_parameters, located at: root/private/reference_information.php
+            static protected $getApiParameters = [
+                // ...api/v1/label/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
+                'id'=>[
+                    'refersTo' => ['id'],
+                    'type' => ['int', 'list'],
+                    'connection' => [
+                        'int' => "=",
+                        'list' => 'in'
+                    ],
+                    'description' => 'Gets users by the user id or list of user ids',
+                    'example' => ['id=1', 'id=1,2,3,4,5']
+                ]
+            ];
         // @ class database information end
         
         // @ class specific queries start

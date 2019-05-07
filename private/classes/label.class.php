@@ -56,7 +56,7 @@
                     'description' => 'Gets labels by the label id or list of label ids',
                     'example' => ['id=1', 'id=1,2,3,4,5']
                 ]
-                ];
+            ];
 
         // @ class database information end
 
