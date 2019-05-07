@@ -3,9 +3,6 @@
 // The trait for the API
 
 // TODO: Implement API Authentication, Code for having the API Keys
-// TODO: Update logic for orderBy to accept a list of lists
-// e.g. orderBy=postDate::DECS,createdDate::ASC
-// DEBUG: multiple or single order by
 // TODO: Update error handling for invalid parameters
 // Return accepted vs rejected parameters
 trait Api {
@@ -381,10 +378,6 @@ trait Api {
 
                 // Make sure the parameter is not a sorting option option
                 if(static::$apiParameters[$paramKey]['refersTo'] !== 'sortingOption') {
-                    // If the param key is a search then add the % to the value for the SQL prep
-                    if(contains($paramKey, "search")) {
-                        $paramValue = "%" . $paramValue . "%";
-                    }
 
                     // Check if the data is a list
                     if(is_list($paramValue, ",")) {
@@ -397,52 +390,104 @@ trait Api {
                         } else {
                             // Turn the list into an array and add it to our list of whereOptions
                             $newList_array = split_string_by_separator($paramValue, ",");
-        
-                            // Prep the beginning of the string for holding our list of values
-                            $valueList = "( ";
-                            foreach($newList_array as $listItem) {
-                                // Validate the value
-                                $errors = self::validate_api_params($listItem, $paramKey);
 
-                                // If the parameter accepts a date value then format the date correctly
-                                if(static::$apiParameters[$paramKey]['type'] === 'date') {
-                                    // Get the new format for the list item
-                                    $newDate = format_date($listItem);
-
-                                    // If there was an error then add to the errors array
-                                    if($newDate === false) {
-                                        $errors[] = "The value {$listItem} for parameter {$paramKey} is not a valid date!";
+                            // Check if the parameter uses LIKE or IN
+                            if(static::$apiParameters[$paramKey]['connection']['list'] == 'LIKE') {
+                                //TODO: Repeated code, refactor to its own function
+                                // Prep the beginning of the string for holding our list of values
+                                $valueList = NULL;
+                                foreach($newList_array as $listItem) {
+                                    // Validate the value
+                                    $errors = self::validate_api_params($listItem, $paramKey);
+    
+                                    // If the parameter accepts a date value then format the date correctly
+                                    if(static::$apiParameters[$paramKey]['type'] === 'date') {
+                                        // Get the new format for the list item
+                                        $newDate = format_date($listItem);
+    
+                                        // If there was an error then add to the errors array
+                                        if($newDate === false) {
+                                            $errors[] = "The value {$listItem} for parameter {$paramKey} is not a valid date!";
+                                        }
+    
+                                        // Set the correct format for the list item
+                                        $listItem = $newDate;
                                     }
-
-                                    // Set the correct format for the list item
-                                    $listItem = $newDate;
-                                }
-        
-                                // If there are errors then add them to the errors array
-                                if(!empty($errors)) {
-                                    // Add each error from the validation error array
-                                    foreach($errors as $err) {
-                                        $options_array['errors'][] = $err;
-                                    }
-        
-                                // No errors were found add to our sql prepped list
-                                } else {
-                                    // If at not at the end of the array add the comma
-                                    if($listItem !== end($newList_array)) {
-                                        $valueList .= self::db_escape($listItem) . ", ";
-        
-                                    // If at the end of the array then add a paranetheses instead
+            
+                                    // If there are errors then add them to the errors array
+                                    if(!empty($errors)) {
+                                        // Add each error from the validation error array
+                                        foreach($errors as $err) {
+                                            $options_array['errors'][] = $err;
+                                        }
+            
+                                    // No errors were found add to our sql prepped list
                                     } else {
-                                        $valueList .= self::db_escape($listItem) . " )";
+                                        // If at not at the end of the array add the OR
+                                        // Also add the % for the search
+                                        if($listItem !== end($newList_array)) {
+                                            $valueList .= "'%" . self::db_escape($listItem) . "%' OR " . static::$apiParameters[$paramKey]['refersTo'] . " LIKE ";
+            
+                                        } else {
+                                            $valueList .= "'%" . self::db_escape($listItem) . "%'";
+                                        }
                                     }
                                 }
+                                // Add the sql prepped list to the whereOptions
+                                $options_array['data'][] = [
+                                    "column" => static::$apiParameters[$paramKey]['refersTo'],
+                                    "operator" => static::$apiParameters[$paramKey]['connection']['list'],
+                                    "value" => $valueList
+                                ];
+                            } elseif(static::$apiParameters[$paramKey]['connection']['list'] == 'IN') {
+                                //TODO: Repeated code, refactor to its own function
+                                // Prep the beginning of the string for holding our list of values
+                                $valueList = "( ";
+                                foreach($newList_array as $listItem) {
+                                    // Validate the value
+                                    $errors = self::validate_api_params($listItem, $paramKey);
+    
+                                    // If the parameter accepts a date value then format the date correctly
+                                    if(static::$apiParameters[$paramKey]['type'] === 'date') {
+                                        // Get the new format for the list item
+                                        $newDate = format_date($listItem);
+    
+                                        // If there was an error then add to the errors array
+                                        if($newDate === false) {
+                                            $errors[] = "The value {$listItem} for parameter {$paramKey} is not a valid date!";
+                                        }
+    
+                                        // Set the correct format for the list item
+                                        $listItem = $newDate;
+                                    }
+            
+                                    // If there are errors then add them to the errors array
+                                    if(!empty($errors)) {
+                                        // Add each error from the validation error array
+                                        foreach($errors as $err) {
+                                            $options_array['errors'][] = $err;
+                                        }
+            
+                                    // No errors were found add to our sql prepped list
+                                    } else {
+                                        // If at not at the end of the array add the comma
+                                        if($listItem !== end($newList_array)) {
+                                            $valueList .= self::db_escape($listItem) . ", ";
+            
+                                        // If at the end of the array then add a paranetheses instead
+                                        } else {
+                                            $valueList .= self::db_escape($listItem) . " )";
+                                        }
+                                    }
+                                }
+                                // Add the sql prepped list to the whereOptions
+                                $options_array['data'][] = [
+                                    "column" => static::$apiParameters[$paramKey]['refersTo'],
+                                    "operator" => static::$apiParameters[$paramKey]['connection']['list'],
+                                    "value" => $valueList
+                                ];
                             }
-                            // Add the sql prepped list to the whereOptions
-                            $options_array['data'][] = [
-                                "column" => static::$apiParameters[$paramKey]['refersTo'],
-                                "operator" => static::$apiParameters[$paramKey]['connection']['list'],
-                                "value" => $valueList
-                            ];
+        
                         }
 
                     // The data is not a list
@@ -473,6 +518,12 @@ trait Api {
 
                         // No errors were found add the data to the array
                         } else {
+
+                            // If the param key is a search then add the % to the value for the SQL prep
+                            if(contains($paramKey, "search")) {
+                                $paramValue = "'%" . $paramValue . "%'";
+                            }
+
                             // The parameter was found, add the info needed to our array
                             $options_array['data'][] = [
                                 "column" => static::$apiParameters[$paramKey]['refersTo'],

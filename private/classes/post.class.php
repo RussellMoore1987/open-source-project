@@ -195,8 +195,6 @@
                     ]
                 ],
                 // TODO: Refactor! Move this to parent class.
-                // ! this is possibly a global parameter and may not need to be in the individual classes, probably shouldn't
-                // ...api/v1/posts/?orderBy=postDate::DECS,createdDate::ASC // ? what is default ascending or descending
                 'orderBy' => [
                     'refersTo' => 'sortingOption',
                     'type' => 'list',
@@ -218,11 +216,6 @@
                 // TODO: Add column options
 
             ];
-
-            // page, perPage, and perhapses others should be global
-            // ! temp
-
-
 
         // @ class database information end
         

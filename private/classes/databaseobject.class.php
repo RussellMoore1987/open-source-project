@@ -245,8 +245,10 @@
                         $sql .= self::db_escape($where['operator']) . " ";
 
                         // Determine if we need to put the quotes in or not
-                        if ($where['operator'] !== 'IN') {
+                        if ($where['operator'] !== 'IN' && $where['operator'] !== 'LIKE') {
                             $sql .= "'" . self::db_escape($where['value']) . "' ";
+                        } elseif($where['operator'] == 'IN' || $where['operator'] == 'LIKE') {
+                            $sql .= $where['value'] . " ";
                         } else {
                             $sql .= self::db_escape($where['value']) . " ";
                         }

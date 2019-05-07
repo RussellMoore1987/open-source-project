@@ -97,7 +97,7 @@ $apiRoot = array(
                         "postDate" => [
                             "required" => false,
                             "type" => "date",
-                            "description" => "Gets posts by the post date", // TODO: Define what the post date is....
+                            "description" => "Gets posts by the post date", 
                             "example" => "root/public/api/v1/posts/?createdDate='2019-02-01'"
                         ],
                         "greaterThan" => [
@@ -151,7 +151,7 @@ $apiRoot = array(
                     ]
                 ],
                 "exampleResponse" => [
-                    // TODO: Make this example response dynamic based on the current CMS system
+
                     "successResponse" => [
                         "success" => true,
                         "statusCode" => 200,
