@@ -6,14 +6,27 @@
 // TODO: Update error handling for invalid parameters
 // Return accepted vs rejected parameters
 trait Api {
-
     // Method for getting api info from the DB
     static function get_api_info() {
+
         // Array for holding the finished API Data
         $apiData_array = [];
-
+        
         // Array for holding the prepped api data
         $prepApiData_array['errors'] = [];
+
+        // Checks to see if authentication is required
+        // TODO: add check for authentication
+        $tempAuth = NULL;
+
+        if($tempAuth != NULL) {
+            // Get the api parameter for the authentication
+            if(isset($_GET['authenticationToken'])) {
+                
+            } else {
+                
+            }
+        }
 
         // validate incoming parameters
         $temp_array_1 = static::validate_and_prep_api_parameters($_GET);
