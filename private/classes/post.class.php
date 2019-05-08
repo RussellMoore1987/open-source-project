@@ -119,8 +119,8 @@
             static protected $getApiParameters = [
                 // ...api/v1/posts/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
                 'id'=>[
-                    'refersTo' => 'id',
-                    'type' => 'int',
+                    'refersTo' => ['id'],
+                    'type' => ['int', 'list'],
                     'connection' => [
                         'int' => "=",
                         'list' => 'in'
@@ -142,9 +142,9 @@
                     ]
                 ], 
                 // ...api/v1/posts/?lessThen=1/37/2010
-                'lessThan' => [
-                    'refersTo' => 'postDate',
-                    'type' => 'date',
+                'lessThen' => [
+                    'refersTo' => ['postDate'],
+                    'type' => ['str'],
                     'connection' => [
                         'str' => '<'
                     ],
@@ -159,27 +159,11 @@
                     'refersTo' => ['title', 'content'],
                     'type' => ['str', 'list'],
                     'connection' => [
-                        'str' => 'LIKE',
-                        'list' => 'LIKE::or'
+                        'str' => 'like',
+                        'list' => 'like::or'
                     ],
                     'validation' => [
-                        'name'=>'searchTitle',
-                        'required' => 'yes',
-                        'type' => 'str', // type of string
-                        'min'=> 2, // string length
-                        'max' => 50, // string length
-                        'html' => 'no'
-                    ]
-                ],
-                'searchContent' => [
-                    'refersTo' => 'content',
-                    'type' => 'str',
-                    'connection' => [
-                        'str' => "LIKE",
-                        'list' => 'LIKE'
-                    ],
-                    'validation' => [
-                        'name'=>'searchContent',
+                        'name'=>'search',
                         'required' => 'yes',
                         'type' => 'str', // type of string
                         'min'=> 2, // string length
@@ -190,8 +174,8 @@
                     'example' => ['search=sale', 'search=sale,off,marked down']
                 ],
                 'postDate' => [
-                    'refersTo' => 'postDate',
-                    'type' => 'date',
+                    'refersTo' => ['postDate'],
+                    'type' => ['str'],
                     'connection' => [
                         'str' => '='
                     ],
@@ -200,8 +184,8 @@
                 ],
                 // ...api/v1/posts/?createdDate=1910
                 'createdDate' => [
-                    'refersTo' => 'createdDate',
-                    'type' => 'date',
+                    'refersTo' => ['createdDate'],
+                    'type' => ['str'],
                     'connection' => [
                         'str' => '='
                     ],
@@ -210,8 +194,8 @@
                 ],
                 // ...api/v1/posts/?status=0
                 'status' => [
-                    'refersTo' => 'status',
-                    'type' => 'int',
+                    'refersTo' => ['status'],
+                    'type' => ['int'],
                     'connection' => [
                         'int' => '='
                     ],

@@ -1,7 +1,7 @@
 {
     "require": {
-        "fzaninotto/faker": "^1.8"
     },
     "require-dev": {
+        "fzaninotto/faker": "^1.8"
     }
 }

@@ -228,6 +228,4 @@
             //     'description' => 'Returns all extended post data. 0 = Return basic post data, 1 = Return extended post data. Default is 0.  ',
             //     'example' => ['extendedData=1']
             // ]
-
-            // HTTP Status codes for the API can be found here: https://www.restapitutorial.com/httpstatuscodes.html
 ?> 

@@ -432,6 +432,7 @@ class Database {
         $sql .= "title VARCHAR(50) NOT NULL, ";
         $sql .= "subCatId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
         $sql .= "note VARCHAR(255) DEFAULT NULL )";
+        // TODO: What does the SudCatId reference?
         // $sql .= "FOREIGN KEY (sudCatId) REFERENCES ?(?) )";
 
         // Execute the query then return the result
