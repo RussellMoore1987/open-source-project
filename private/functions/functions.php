@@ -119,6 +119,61 @@ function obj_array_api_prep(array $obj_array, $type = 'basic') {
     return $apiObj_array;
 }
 
+// Checks if a string is a comma separated list of values then turns it into an array and returns it
+function split_string_by_separator($string, $separator=",") {
+
+  // Return false if there are no commas in the string
+  if (strpos($string, $separator) == false) {
+    return false;
+    
+  } else {
+
+    // Get the array of values from the comma separated string
+    $new_array = explode($separator, $string);
+
+    // Clean the whitespace from each value, put into new array and return it
+    $clean_array = [];
+    foreach($new_array as $item) {
+      $clean_array[] = trim($item);
+    }
+
+    return $clean_array;
+  }
+}
+
+// Determine the string is a comma separated list
+function is_list($data, $separator=",") {
+    // Check if it is a comma separated list inside the string
+    if(strpos($data, $separator) !== false) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Determine if the string contains a specific word or group of characters
+function contains($string, $data) {
+    // The regular expression to match against
+    $regEx = "/" . $data . "/";
+    // Use RegEx to determine if the word is contained in the string
+    if (preg_match($regEx, $string)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// function for formating the date to the Y-m-d SQL format
+function format_date($date) {
+    // Turn date to time string
+    $dateStr = strtotime($date);
+    // Format the string to an SQL format
+    $formatDate = date("Y-m-d", $dateStr);
+
+    // Return the formatted date
+    return $formatDate;
+}
+
 // make a list into an array where key and value are the same
 function list_to_array($list) {
     // make array from ids

@@ -67,6 +67,37 @@
                 require_once PUBLIC_PATH . '/api/v1/apiEndPoint.php';
             }
         }
+
+        // Function to help get what class the path is trying to access
+        private function get_class_path($url) {
+            // Split up the url to find what class to access
+            $splitPaths_array = explode('/', $url);
+            $tempClassName = NULL;
+
+            // Loop through the split up array to find what class to access and what the params are
+            foreach($splitPaths_array as $path) {
+
+                // The classname should be before the list of parameters, check when the '?' appears
+                if(strpos($path, '?')) {
+                    // explode the string into an array and get the classname
+                    $temp_array = explode('?', $path);
+
+                    // Set the classname
+                    $tempClassName = $temp_array[0];
+                    //break out of the loop
+                    break;
+                }
+            }
+
+            // If there is no '?' then just take the last part of the array
+            if($tempClassName == NULL) {
+                // Set the classname
+                $tempClassName = end($splitPaths_array);
+            }
+
+            // Return the tempClassName
+            return $tempClassName;
+        }
     }
 ?>
 

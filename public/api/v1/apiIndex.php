@@ -7,7 +7,7 @@
 //     redirect_to($redirectUrl);
 //     exit();
 // }
-// TODO: 
+// TODO: See 6 todos below
 // 1- Dynamic companyName
 // 2- Dynamic termsOfUse
 // 3- Dynamic contact

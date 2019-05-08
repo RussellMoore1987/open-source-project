@@ -43,6 +43,9 @@
     require_once('functions/functions.php');
     require_once('security/validation_functions.php');
     require_once('db/db_functions.php');
+
+    // get the traits
+    require_once('traits/api.trait.php');
     
     // db connection
     require_once('db/db_credentials.php');

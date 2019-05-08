@@ -1,5 +1,4 @@
 <?php
-
     // todo:
         // possibly store images after query
         // possibly function for extended data
@@ -208,25 +207,142 @@
             
 
             // find by sql
-            static public function find_by_sql($sql) {
+            static public function find_by_sql($sql, $createObjects = true) {
 
                 $result = self::$database->query($sql);
                 // error handling
                 $result = self::db_error_check($result);
-                // turn results into an array of objects
-                $object_array = [];
+                // array to hold the results
+                $data_array = [];
+
                 // loop through query
                 while ($record = $result->fetch_assoc()) {
-                    $object_array[] = static::instantiate($record);    
+                    // If objects were requested then instantiate objects
+                    if($createObjects == true) {
+                        $data_array[] = static::instantiate($record);
+                    } else {
+                        $data_array[] = $record;
+                    }
                 }
-                // return an array of populated objects
-                return $object_array;   
+
+                // return the array of data
+                return $data_array;   
             }
 
             // find all
             static public function find_all() {
-                $sql = "SELECT * FROM " . static::$tableName;
-                return static::find_by_sql($sql);
+                // Submit the query to the find_where with no options
+                return static::find_where($sqlOptions = []);
+            }
+
+            // find by id
+            static public function find_by_id(int $id) {
+                // Prep the SQL options
+                $sqlOptions['whereOptions'] = [
+                    "column" => 'id',
+                    'operator' => "=",
+                    "value" => $id
+                ];
+
+                return static::find_where($sqlOptions);
+            }
+
+            // find where
+            static public function find_where(array $sqlOptions) {
+                // Set the array to hold our return values
+                $returnValues_array = [];
+
+                // Begin building the SQL
+                $sql = "SELECT SQL_CALC_FOUND_ROWS ";
+
+                // The SQL for counting rows, must be executed after the query to get the total row count
+                $sql2 = "SELECT FOUND_ROWS();";
+
+                // Add all the columns to select if defined
+                if (isset($sqlOptions['columnOptions'])) {
+
+                    foreach($sqlOptions['columnOptions'] as $col) {
+                        $sql .= self::db_escape($col);
+                        // Add the comma if not at the end of the array
+                        if ($col !== end($sqlOptions['columnOptions'])) {
+                            $sql .= ", ";
+                        } else {
+                            $sql .= " ";
+                        }
+                    }
+                // If no custom columns given then add the *
+                } else {
+                    $sql .= "* ";
+                }
+
+                // Add the rest of our SQL statement
+                $sql .= "FROM " . static::$tableName . " ";
+
+                // Add the where clauses if defined
+                if (isset($sqlOptions['whereOptions']) && !empty($sqlOptions['whereOptions'])) {
+                    // Begin the WHERE SQL
+                    $sql .= "WHERE ";
+                    // Loop through all of the where clauses given
+                    foreach($sqlOptions['whereOptions'] as $where) {
+
+                        $sql .= self::db_escape($where['column']) . " ";
+                        $sql .= self::db_escape($where['operator']) . " ";
+
+                        // Determine if we need to put the quotes in or not
+                        if ($where['operator'] !== 'IN' && $where['operator'] !== 'LIKE') {
+                            $sql .= "'" . self::db_escape($where['value']) . "' ";
+                        } elseif($where['operator'] == 'IN' || $where['operator'] == 'LIKE') {
+                            $sql .= $where['value'] . " ";
+                        } else {
+                            $sql .= self::db_escape($where['value']) . " ";
+                        }
+
+                        // Add the AND if not at the end of the array
+                        if ($where !== end($sqlOptions['whereOptions'])) {
+                            $sql .= "AND ";
+                        }
+                    }
+                }
+
+                // Add the sorting options if defined
+                if (isset($sqlOptions['sortingOptions'])) {
+                    // variable to help us determine if the orderBy was already added
+                    $wasAdded = false;
+
+                    foreach($sqlOptions['sortingOptions'] as $option) {
+
+                        // If the sortingOption is orderBy
+                        if($option['operator'] == 'ORDER BY') {
+
+                            // Check if we already added the orderBy
+                            if($wasAdded) {
+                                $sql .= ", " . self::db_escape($option['column']) . " ";
+                                $sql .= self::db_escape($option['value']) . " ";
+
+                            // If the order by was not added yet
+                            } else {
+                                $sql .= self::db_escape($option['operator']) . " ";
+                                $sql .= self::db_escape($option['column']) . " ";
+                                $sql .= self::db_escape($option['value']) . " ";
+
+                                // Set the $wasAdded
+                                $wasAdded = true;
+                            }
+
+                        // Else the sortingOption is not order by
+                        } else {
+                            $sql .= self::db_escape($option['operator']) . " " . self::db_escape($option['value']) . " ";
+                        }
+                    }
+                }
+                // Submit the SQL query(s)
+                $returnValues_array['data'] = static::find_by_sql($sql);
+                // Get the total possible row count from the query
+                $result = static::find_by_sql($sql2, false);
+                $returnValues_array['count'] = $result[0]['FOUND_ROWS()'];
+
+                // return the data
+                return $returnValues_array;
             }
 
             // count all records
@@ -239,22 +355,6 @@
                 self::db_error_check($result);
                 // return count 
                 return array_shift($row);
-            }
-
-            // find by id
-            static public function find_by_id(int $id) {
-                // sql
-                $sql = "SELECT * FROM " . static::$tableName . " ";
-                $sql .= "WHERE id='" . self::db_escape($id) . "'";
-                // get object array
-                $obj_array = static::find_by_sql($sql);
-                // check to see if $obj_array is empty
-                if (!empty($obj_array)) {
-                    // send back only one object, it will only have one
-                    return array_shift($obj_array);
-                } else {
-                    return false;
-                }
             }
 
             // runs validation on all possible columns in create, null properties excluded on update
@@ -399,10 +499,10 @@
                 }
             }
 
-            // create an associative array, key value pair from the static::$columns excluding id
+            // create an associative array, key value pair from the static::$sqlOptions['columnOptions'] excluding id
             public function attributes($type = "update") {
                 $attributes = [];
-                foreach (static::$columns as $column) {
+                foreach (static::$sqlOptions['columnOptions'] as $column) {
                     // skip class column exclusions
                     if (in_array($column, static::$columnExclusions)) { continue; }
                     // if in type = update mode do not add values with NULL
@@ -430,74 +530,6 @@
             }
 
         // @ active record code end
-
-        // @ API specific queries start
-            // create an associative array, key value pair from the static::$columns excluding id
-            public function api_attributes() {
-                // empty array to be filled below
-                $attributes = [];
-                // column and API attributes merge arrays
-                $apiAttributes_array = array_merge(static::$columns, static::$apiProperties);
-                // loop over and make a key value pair array of api attributes
-                foreach ($apiAttributes_array as $attribute) {
-                    // construct attribute list with object values
-                    $attributes[$attribute] = $this->$attribute;
-                }
-                // return array of attributes
-                return $attributes;
-            }
-
-            // get api data plus extended data
-            public function get_full_api_data() {
-                // get api data
-                $data_array['properties'] = $this->api_attributes();
-                // if of the correct type get categories, tags, or labels
-                if ($this->ctr() == 1 || $this->ctr() == 2 || $this->ctr() == 3 || $this->ctr() == 4) {
-                    $data_array['categories'] = $this->get_obj_categories_tags_labels('categories');
-                    $data_array['tags'] = $this->get_obj_categories_tags_labels('tags');
-                    $data_array['labels'] = $this->get_obj_categories_tags_labels('labels');
-                }
-                // if of the correct type get all images
-                if ($this->ctr() == 1 || $this->ctr() == 3) {
-                    // set blank array, set below
-                    $image_array = [];
-                    // get image(s)
-                    if ($this->ctr() == 1) {
-                        $temp_array = $this->get_post_images();
-                    } else {                                               
-                        $temp_array = $this->get_user_image();
-                    }
-                    // loop over info to make new array
-                    $image_array = obj_array_api_prep($temp_array);
-                    // put images into the correct spot
-                    $data_array['images'] = $image_array;
-                }
-                // return data
-                return $data_array;
-            }
-        
-            // get api data
-            public function get_basic_api_data() {
-                // get api data
-                $data_array['properties'] = $this->api_attributes();
-                // return data
-                return $data_array;
-            }
-
-            // get data and turn it into json
-            public function get_api_data($type = 'basic') {
-                // check to see which api data to use
-                if ($type == 'basic') {
-                    $data_array = $this->get_basic_api_data();
-                } else {
-                    $data_array = $this->get_full_api_data();
-                }
-                // turn array into Jason
-                $jsonData_array = json_encode($data_array);
-                // return data
-                return $jsonData_array;
-            }
-        // @ API specific queries end
 
         // @ class functionality methods start
             // stands for database escape, you sanitized data, and to protect against my SQL injection
