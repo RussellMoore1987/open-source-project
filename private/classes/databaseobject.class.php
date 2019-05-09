@@ -81,6 +81,7 @@
         static protected $validation_columns = []; // use get_validation_columns()
         static protected $getApiParameters = []; // use get_get_api_parameters()
         static protected $postApiParameters = []; // use get_post_api_parameters()
+        static protected $fakerDataParameters = []; // use get_faker_data_parameters()
         public $message = [];
         public $errors = [];
 
@@ -564,6 +565,10 @@
                 return static::$postApiParameters;
             }
             
+            // get faker data parameters()
+            static public function get_faker_data_parameters() {
+                return static::$fakerDataParameters;
+            }
 
         // @ class functionality methods end
     }
