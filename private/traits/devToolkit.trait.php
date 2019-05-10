@@ -1,7 +1,7 @@
 <?php
 // This trait contains all of the functions for the Developer Toolkit. Functions in this trait leverage properties in the DataBaseObjectClass
 
-// ? Prepend methods and properties with DTK for devToolKit 
+// ? Prepend methods and properties with DTK for devToolKit?
 trait DevToolKit {
 
     // @ Begin protected properties
