@@ -4,6 +4,11 @@
 // ? Prepend methods and properties with DTK for devToolKit 
 trait DevToolKit {
 
+    // @ Begin protected properties
+    static protected $devToolKit_CreateTableCode;
+    static protected $fakerDataParameters = [];
+    // @ End protected properties
+
     // @ Begin public methods
     static public function add_and_drop_table() {
         // TODO: Add code for add_and_drop_table

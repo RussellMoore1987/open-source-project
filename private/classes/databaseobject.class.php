@@ -18,12 +18,14 @@
                 // content being edited
                 // media content being edited??? 
     // TODO: find better way to do this with autoload
-    // pull in api trait
+    // pull in traits
     require_once(PRIVATE_PATH . '/traits/api.trait.php');
+    require_once(PRIVATE_PATH . '/traits/devToolKit.trait.php');
     
     abstract class DatabaseObject {
-        // Use the api trait
+        // traits used
         use Api;
+        use DevToolKit;
         // classes that you wish to be used in the API and in the developer tools, use get_class_list() to get info
         // you can specified post and get keys for the API on each specific class as such
         // ex: "Category" => [
@@ -81,7 +83,6 @@
         static protected $validation_columns = []; // use get_validation_columns()
         static protected $getApiParameters = []; // use get_get_api_parameters()
         static protected $postApiParameters = []; // use get_post_api_parameters()
-        static protected $fakerDataParameters = []; // use get_faker_data_parameters()
         public $message = [];
         public $errors = [];
 
@@ -563,11 +564,6 @@
             // get post api parameters()
             static public function get_post_api_parameters() {
                 return static::$postApiParameters;
-            }
-            
-            // get faker data parameters()
-            static public function get_faker_data_parameters() {
-                return static::$fakerDataParameters;
             }
 
         // @ class functionality methods end

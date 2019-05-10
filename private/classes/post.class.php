@@ -293,6 +293,48 @@
 
             // page, perPage, and perhapses others should be global
             // ! temp
+
+            // TODO: Complete code for Faker Data
+            // A guide for how the faker data should be populating
+            static protected $fakerDataParameters = [
+                'id' => [
+
+                ],
+                'author', 
+                'authorName', 
+                'catIds', 
+                'comments', 
+                'content', 
+                'createdBy', 
+                'createdDate', 
+                'imageName', 
+                'labelIds', 
+                'mediaContentIds', 
+                'postDate', 
+                'status', 
+                'tagIds', 
+                'title'
+            ];
+
+            // The SQL code used for creating the table for this class
+            static protected $devToolKit_CreateTableCode = "CREATE TABLE IF NOT EXISTS posts ( 
+            id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+            author INT(10) UNSIGNED NOT NULL DEFAULT 0, 
+            authorName VARCHAR(50) NOT NULL, 
+            comments INT(10) UNSIGNED NOT NULL DEFAULT 0, 
+            content TEXT NOT NULL, 
+            createdBy INT(10) UNSIGNED NOT NULL, 
+            createdDate DATE NOT NULL DEFAULT '0001-01-01 00:00:00', 
+            postDate DATE NOT NULL DEFAULT '0001-01-01 00:00:00', 
+            status TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, 
+            title VARCHAR(50) NOT NULL, 
+            catIds VARCHAR(255) DEFAULT NULL, 
+            tagIds VARCHAR(255) DEFAULT NULL, 
+            labelIds VARCHAR(255) DEFAULT NULL, 
+            imageName VARCHAR(150) DEFAULT NULL, 
+            mediaContentIds VARCHAR(255) DEFAULT NULL, 
+            FOREIGN KEY (author) REFERENCES users(id), 
+            FOREIGN KEY (createdBy) REFERENCES users(id) ) ENGINE=InnoDB";
         // @ class database information end
         
         // @ class specific queries start
