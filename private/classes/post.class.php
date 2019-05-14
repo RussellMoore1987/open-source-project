@@ -664,6 +664,12 @@
                 // global path to layouts
                 include PRIVATE_PATH . "/layouts/postPage.php";
             }
+
+            // DevToolKit add drop tables
+            public function layout_devToolKit_addDropTables() {
+                // global path to layouts
+                include PRIVATE_PATH . "/layouts/devToolKit_addDropTable.layout.php";
+            }
         // @ layouts end
     }
 ?>

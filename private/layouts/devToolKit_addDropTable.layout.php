@@ -1,11 +1,6 @@
 <?php
-
-// TODO: Logic for accepting GET / POST requests
-// Check if it is a get request
-if(is_get_request()) {
-    
-}
 // TODO: Logic for creating, dropping, and inserting Faker Data
+
 
 ?>
 
