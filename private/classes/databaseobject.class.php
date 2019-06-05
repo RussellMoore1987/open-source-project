@@ -75,6 +75,8 @@
         // database information
         static protected $tableName;
         static protected $columns = [];
+        // A template for how to build the table
+        static protected $tableTemplate = [];
         static protected $columnExclusions = [];
         static protected $apiProperties = [];
         // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/reference_information.php

@@ -3,6 +3,124 @@
         // @ class database information start
             // table name
             static protected $tableName = "posts";
+            // A template for how to build the table
+            static protected $tableTemplate = [
+                'columns' => [
+                    'id' => [
+                        'type' => 'INT(10)',
+                        'attributes' => [
+                            'UNSIGNED',
+                            'NOT NULL',
+                            'AUTO_INCREMENT',
+                            'PRIMARY KEY'
+                        ]
+                    ],
+                    'author' => [
+                        'type' => 'INT(10)',
+                        'attributes' => [
+                            'UNSIGNED',
+                            'NOT NULL',
+                            'DEFAULT 0'
+                        ]
+                    ],
+                    'authorName' => [
+                        'type' => 'VARCHAR(50)',
+                        'attributes' => [
+                            'NOT NULL'
+                        ]
+                    ],
+                    'comments' => [
+                        'type' => 'INT(10)',
+                        'attributes' => [
+                            'UNSIGNED',
+                            'NOT NULL',
+                            'DEFAULT 0'
+                        ]
+                    ],
+                    'content' => [
+                        'type' => 'TEXT',
+                        'attributes' => [
+                            'NOT NULL'
+                        ]
+                    ],
+                    'createdBy' => [
+                        'type' => 'INT(10)',
+                        'attributes' => [
+                            'UNSIGNED',
+                            'NOT NULL'
+                        ]
+                    ],
+                    'createdDate' => [
+                        'type' => 'DATE',
+                        'attributes' => [
+                            'NOT NULL',
+                            "DEFAULT '0001-01-01 00:00:00'",
+                        ]
+                    ],
+                    'postDate' => [
+                        'type' => 'DATE',
+                        'attributes' => [
+                            'NOT NULL',
+                            "DEFAULT '0001-01-01 00:00:00'",
+                        ]
+                    ],
+                    'status' => [
+                        'type' => 'TINYINT(1)',
+                        'attributes' => [
+                            'UNSIGNED',
+                            'NOT NULL',
+                            "DEFAULT 0",
+                        ]
+                    ],
+                    'title' => [
+                        'type' => 'VARCHAR(50)',
+                        'attributes' => [
+                            'NOT NULL',
+                        ]
+                    ],
+                    'catIds' => [
+                        'type' => 'VARCHAR(255)',
+                        'attributes' => [
+                            "DEFAULT NULL",
+                        ]
+                    ],
+                    'tagIds' => [
+                        'type' => 'VARCHAR(255)',
+                        'attributes' => [
+                            "DEFAULT NULL",
+                        ]
+                    ],
+                    'labelIds' => [
+                        'type' => 'VARCHAR(255)',
+                        'attributes' => [
+                            "DEFAULT NULL",
+                        ]
+                    ],
+                    'imageName' => [
+                        'type' => 'VARCHAR(150)',
+                        'attributes' => [
+                            "DEFAULT NULL",
+                        ]
+                    ],
+                    'mediaContentIds' => [
+                        'type' => 'VARCHAR(255)',
+                        'attributes' => [
+                            "DEFAULT NULL",
+                        ]
+                    ]
+                ],
+                'foreignkeys' => [
+                    [
+                        'key' => 'author',
+                        'references' => 'users(id)'
+                    ],
+                    [
+                        'key' => 'createdBy',
+                        'references' => 'users(id)'
+                    ]
+                ],
+                'engine' => 'InnoDB'
+            ];
             // db columns, if need to exclude particular column excluded in the database object attributes()
             static protected $columns = ['id', 'author', 'authorName', 'catIds', 'comments', 'content', 'createdBy', 'createdDate', 'imageName', 'labelIds', 'mediaContentIds', 'postDate', 'status', 'tagIds', 'title'];
             // values to exclude on normal updates, should always include id
