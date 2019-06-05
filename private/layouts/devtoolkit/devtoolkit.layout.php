@@ -31,6 +31,10 @@
             <input class="search" type="text" placeholder="Search...">
         </div>
         <div class="card-container">
+            <div class="card">
+                <div class="card-title">Table Name</div>
+                <div class="buttons"></div>
+            </div>
         </div>
         <div class="main-card-container">
         </div>
