@@ -1,5 +1,95 @@
-/*
+/* TODO: Styles for the devtoolkit and devtoolkitform goes here..... */
 
-TODO: Styles for the devtoolkit and devtoolkitform goes here.....
+/* 
+
+-- HEX COLOR CODES --
+
+Dark Green Wording: #2A5F2B
+Light Green Fill: #BCDAB0
+Light Blue Fill: #61CDFE
+Lightest Grey Fill: #E1E1E1
+Lighter Grey Fill: #C4C4C4
+Light Grey Wording: #7F7F7F
+Medium grey Wording: #A2A2A2
+Medium Grey Scroll Bar: #7E7E7E
 
 */
+
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    outline: none;
+    font-family: 'Raleway', sans-serif;
+}
+
+body {
+    margin: 2%;
+}
+
+/* Messages Styles */
+.messages {
+    padding-bottom: 2%;
+}
+
+.message {
+    width: 65%;
+    background-color: #BCDAB0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.message-text {
+    padding: 1%;
+    padding-left: 2%;
+    color: #2A5F2B;
+    font-size: 100%;
+    width: 80%;
+}
+
+.close-icon-container {
+    width: 4.5%;
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-icon-container img {
+    width: 100%;
+}
+
+/* List Forms Styles */
+.list-forms {
+    width: 30%;
+}
+
+.search-container {
+    width: 100%;
+    min-height: 80px;
+    box-shadow: 0 8px 4px -4px #E1E1E1;
+    padding: 0 2%;
+}
+
+.search {
+    width: 100%;
+    padding: 2%;
+    padding-left: 3%;
+    border-style: solid;
+    border-radius: 8px;
+    border-width: 1.5px;
+    border-color: #E1E1E1;
+    color: #A2A2A2;
+}
+
+.search::placeholder {
+    color: #C4C4C4;
+}
+
+.card-container {
+    background-color: #A2A2A2;
+}
+
+/* Table Forms Styles */

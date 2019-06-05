@@ -112,11 +112,11 @@
                 'foreignkeys' => [
                     [
                         'key' => 'author',
-                        'references' => 'users(id)'
+                        'reference' => 'users(id)'
                     ],
                     [
                         'key' => 'createdBy',
-                        'references' => 'users(id)'
+                        'reference' => 'users(id)'
                     ]
                 ],
                 'engine' => 'InnoDB'
@@ -434,6 +434,7 @@
                 'title'
             ];
 
+            // TODO: Should we go this route or use the tableTemplate property?
             // The SQL code used for creating the table for this class
             static protected $devToolKit_CreateTableCode = "CREATE TABLE IF NOT EXISTS posts ( 
             id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
