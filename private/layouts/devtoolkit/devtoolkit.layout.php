@@ -77,10 +77,10 @@
         </section>
 
         <section class="table-section">
+            <div class="table-title">Table Name Sample Data</div>
             <div class="table-container">
-                <div class="table-title">Table Name</div>
                 <table>
-                    <tr>
+                    <tr class="table-header">
                         <th>Somthing</th>
                         <th>Somthing</th>
                         <th>Somthing</th>
@@ -102,14 +102,14 @@
                         <td>Data</td>
                         <td>Data</td>
                         <td>Data</td>
+                        <!-- <td>Data</td>
                         <td>Data</td>
                         <td>Data</td>
                         <td>Data</td>
                         <td>Data</td>
                         <td>Data</td>
                         <td>Data</td>
-                        <td>Data</td>
-                        <td>Data</td>
+                        <td>Data</td> -->
                     </tr>
                 </table>
             </div>

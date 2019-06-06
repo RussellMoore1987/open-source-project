@@ -100,7 +100,6 @@ body {
     background-color: #E1E1E1;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
     overflow-y: scroll;
     z-index: -1;
@@ -143,8 +142,8 @@ body {
 
 .buttons-container {
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 20% 20% 20% 20% 20%;
+    grid-template-columns: 49% 49%;
+    grid-template-rows: auto auto auto auto auto;
     grid-row-gap: 2%;
     grid-column-gap: 2%;
     justify-content: center;
@@ -163,7 +162,6 @@ body {
     border: none;
     padding: 4% 10%;
     text-align: center;
-    vertical-align: middle;
 }
 
 .create-button {
@@ -180,14 +178,11 @@ body {
 
 .edit-button {
     grid-area: edit;
-    justify-self: auto;
-    align-self: auto;
+    height: 100%;
 }
 
 .insert-button {
     grid-area: insert;
-    justify-self: auto;
-    align-self: auto;
 }
 
 .number-records {
@@ -198,6 +193,7 @@ body {
     border-width: 1.5px;
     border-color: #E1E1E1;
     color: #A2A2A2;
+    padding: 2% 0;
 }
 
 .all-button {
@@ -208,21 +204,55 @@ body {
 /* ---- Table Forms Styles ---- */
 .table-section {
     width: 100%;
+    border: 1px solid #E1E1E1;
+    border-radius: 8px;
+    min-height: 500px;
 }
 
 .table-container {
-    border: 1px solid #BAB8B8;
-    border-radius: 8px;
     overflow: scroll;
+    min-height: 450px;
+    padding: 2%;
 }
 
 .table-title {
     width: 100%;
     text-align: center;
-    padding: 2%;
+    padding: 1%;
     color: #7F7F7F;
 }
 
-.table-container table {
-    margin: 2%;
+tr {
+    text-align: center;
+    padding: 2%;
+}
+
+.table-header {
+    text-align: center;
+    background-color: #61CDFE;
+}
+
+tr:nth-child(even) {
+    background-color: white;
+}
+
+tr:nth-child(odd) {
+    background-color: #F1F1F1;
+}
+
+.table-container:hover::-webkit-scrollbar-thumb {
+    background: #7E7E7E;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #C4C4C4;
+    border-radius: 60px;
+}
+
+.table-container::-webkit-scrollbar {
+    display: hidden;
+}
+
+.table-container::-webkit-scrollbar-button {
+    display: hidden;
 }
