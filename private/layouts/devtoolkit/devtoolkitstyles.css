@@ -12,6 +12,7 @@ Lighter Grey Fill: #C4C4C4
 Light Grey Wording: #7F7F7F
 Medium grey Wording: #A2A2A2
 Medium Grey Scroll Bar: #7E7E7E
+Light Shadow: #383838
 
 */
 
@@ -68,7 +69,7 @@ body {
 
 .search-container {
     width: 100%;
-    min-height: 80px;
+    min-height: 55px;
     box-shadow: 0 8px 4px -4px #E1E1E1;
     padding: 0 2%;
 }
@@ -96,12 +97,98 @@ body {
     justify-content: space-around;
     align-items: center;
     min-height: 400px;
+    max-height: 400px;
+    overflow-y: scroll;
     z-index: -1;
+    margin-bottom: 6%;
+}
+
+/* TODO: Move scrollbar rules to global styles */
+.card-container::-webkit-scrollbar {
+    background: #C4C4C4;
+    border-radius: 60px;
+}
+
+.card-container::-webkit-scrollbar-button {
+    display: hidden;
+}
+
+.card-container::-webkit-scrollbar-track {
+    display: hidden;
+}
+
+.card-container::-webkit-scrollbar:hover {
+    background: #7E7E7E;
 }
 
 .card {
-    width: 80%;
+    width: 90%;
     background-color: white;
+    text-align: center;
+    padding: 4%;
+    padding-bottom: 8%;
+    margin-bottom: 6%;
+    color: #7F7F7F;
+    box-shadow: 0 4px 4px lightgray;
+}
+
+.buttons-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 20% 20% 20% 20% 20%;
+    grid-row-gap: 3%;
+    grid-column-gap: 3%;
+    grid-template-areas: 
+    "create sample"
+    "drop edit"
+    "insert edit"
+    "input input"
+    "all all";
+    padding: 2%;
+}
+
+.buttons-container button {
+    border-radius: 4px;
+    background-color: #C4C4C4;
+    border: none;
+    padding: 4% 10%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.create-button {
+    grid-area: create;
+}
+
+.sample-button {
+    grid-area: sample;
+}
+
+.drop-button {
+    grid-area: drop;
+}
+
+.edit-button {
+    grid-area: edit;
+}
+
+.insert-button {
+    grid-area: insert;
+}
+
+.number-records {
+    grid-area: input;
+    text-align: center;
+    border-style: solid;
+    border-radius: 4px;
+    border-width: 1.5px;
+    border-color: #E1E1E1;
+    color: #A2A2A2;
+}
+
+.all-button {
+    grid-area: all;
+    padding: 2% 2%;
 }
 
 /* Table Forms Styles */

@@ -33,7 +33,39 @@
         <div class="card-container">
             <div class="card">
                 <div class="card-title">Table Name</div>
-                <div class="buttons"></div>
+                <form class="buttons-container">
+                    <button class="create-button" type="button">Create</button>
+                    <button class="sample-button" type="button">Sample Data</button>
+                    <button class="drop-button" type="button">Drop</button>
+                    <button class="edit-button" type="button">Add/Edit Records</button>
+                    <button class="insert-button" type="button">Insert</button>
+                    <input class="number-records" type="number" placeholder="# of Records">
+                    <button class="all-button" type="button">Drop/Create/Insert</button>
+                </form>
+            </div>
+            <div class="card">
+                <div class="card-title">Table Name</div>
+                <form class="buttons-container">
+                    <button class="create-button" type="button">Create</button>
+                    <button class="sample-button" type="button">Sample Data</button>
+                    <button class="drop-button" type="button">Drop</button>
+                    <button class="edit-button" type="button">Add/Edit Records</button>
+                    <button class="insert-button" type="button">Insert</button>
+                    <input class="number-records" type="number" placeholder="# of Records">
+                    <button class="all-button" type="button">Drop/Create/Insert</button>
+                </form>
+            </div>
+            <div class="card">
+                <div class="card-title">Table Name</div>
+                <form class="buttons-container">
+                    <button class="create-button" type="button">Create</button>
+                    <button class="sample-button" type="button">Sample Data</button>
+                    <button class="drop-button" type="button">Drop</button>
+                    <button class="edit-button" type="button">Add/Edit Records</button>
+                    <button class="insert-button" type="button">Insert</button>
+                    <input class="number-records" type="number" placeholder="# of Records">
+                    <button class="all-button" type="button">Drop/Create/Insert</button>
+                </form>
             </div>
         </div>
         <div class="main-card-container">

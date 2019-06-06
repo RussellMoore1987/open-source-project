@@ -111,7 +111,7 @@ trait DevToolKit {
         }
 
         // Add the database engine for the table
-        $sql .= ") ENGINE={static::$tableTemplate['engine']}";
+        $sql .= ") ENGINE= " . static::$tableTemplate['engine'];
 
         // Execute the query
         $result = self::$database->query($sql);
