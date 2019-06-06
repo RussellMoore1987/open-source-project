@@ -7,6 +7,7 @@
 Dark Green Wording: #2A5F2B
 Light Green Fill: #BCDAB0
 Light Blue Fill: #61CDFE
+Light Grey Border: #BAB8B8
 Lightest Grey Fill: #E1E1E1
 Lighter Grey Fill: #C4C4C4
 Light Grey Wording: #7F7F7F
@@ -16,7 +17,7 @@ Light Shadow: #383838
 
 */
 
-/* Global Styles */
+/* ---- Global Styles ---- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -28,9 +29,9 @@ body {
     margin: 2%;
 }
 
-/* Messages Styles */
-.messages {
-    padding-bottom: 2%;
+/* ---- Messages Styles ---- */
+.messages-section {
+    padding-bottom: 1%;
 }
 
 .message {
@@ -62,22 +63,27 @@ body {
     width: 100%;
 }
 
-/* List Forms Styles */
-.list-forms {
-    width: 30%;
+/* ---- Main body styles ---- */
+.main {
+    display: grid;
+    grid-template-columns: 30% 69%;
+    grid-column-gap: 1%;
+}
+
+/* ---- List Forms Styles ---- */
+.list-forms-section {
+    width: 100%;
 }
 
 .search-container {
     width: 100%;
     min-height: 55px;
     box-shadow: 0 8px 4px -4px #E1E1E1;
-    padding: 0 2%;
 }
 
 .search {
     width: 100%;
     padding: 2%;
-    padding-left: 3%;
     border-style: solid;
     border-radius: 8px;
     border-width: 1.5px;
@@ -96,29 +102,28 @@ body {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    min-height: 400px;
-    max-height: 400px;
     overflow-y: scroll;
     z-index: -1;
-    margin-bottom: 6%;
+    /* Temp height, replace with min and max */
+    height: 300px;
 }
 
-/* TODO: Move scrollbar rules to global styles */
-.card-container::-webkit-scrollbar {
+/* Scroll for card container */
+.card-container:hover::-webkit-scrollbar-thumb {
+    background: #7E7E7E;
+}
+
+.card-container::-webkit-scrollbar-thumb {
     background: #C4C4C4;
     border-radius: 60px;
 }
 
+.card-container::-webkit-scrollbar {
+    display: hidden;
+}
+
 .card-container::-webkit-scrollbar-button {
     display: hidden;
-}
-
-.card-container::-webkit-scrollbar-track {
-    display: hidden;
-}
-
-.card-container::-webkit-scrollbar:hover {
-    background: #7E7E7E;
 }
 
 .card {
@@ -126,25 +131,30 @@ body {
     background-color: white;
     text-align: center;
     padding: 4%;
-    padding-bottom: 8%;
+    padding-bottom: 12%;
     margin-bottom: 6%;
     color: #7F7F7F;
     box-shadow: 0 4px 4px lightgray;
+}
+
+.card:nth-child(1) {
+    margin-top: 6%;
 }
 
 .buttons-container {
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 20% 20% 20% 20% 20%;
-    grid-row-gap: 3%;
-    grid-column-gap: 3%;
+    grid-row-gap: 2%;
+    grid-column-gap: 2%;
+    justify-content: center;
+    align-items: center;
     grid-template-areas: 
     "create sample"
     "drop edit"
     "insert edit"
     "input input"
     "all all";
-    padding: 2%;
 }
 
 .buttons-container button {
@@ -170,10 +180,14 @@ body {
 
 .edit-button {
     grid-area: edit;
+    justify-self: auto;
+    align-self: auto;
 }
 
 .insert-button {
     grid-area: insert;
+    justify-self: auto;
+    align-self: auto;
 }
 
 .number-records {
@@ -191,4 +205,24 @@ body {
     padding: 2% 2%;
 }
 
-/* Table Forms Styles */
+/* ---- Table Forms Styles ---- */
+.table-section {
+    width: 100%;
+}
+
+.table-container {
+    border: 1px solid #BAB8B8;
+    border-radius: 8px;
+    overflow: scroll;
+}
+
+.table-title {
+    width: 100%;
+    text-align: center;
+    padding: 2%;
+    color: #7F7F7F;
+}
+
+.table-container table {
+    margin: 2%;
+}

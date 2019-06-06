@@ -17,7 +17,7 @@
 
 <body>
 
-    <section class="messages">
+    <section class="messages-section">
         <div class="message">
             <div class="message-text"><b>Success!</b> Some success message.</div>
             <div class="close-icon-container">
@@ -26,54 +26,96 @@
         </div>
     </section>
 
-    <section class="list-forms">
-        <div class="search-container">
-            <input class="search" type="text" placeholder="Search...">
-        </div>
-        <div class="card-container">
-            <div class="card">
-                <div class="card-title">Table Name</div>
-                <form class="buttons-container">
-                    <button class="create-button" type="button">Create</button>
-                    <button class="sample-button" type="button">Sample Data</button>
-                    <button class="drop-button" type="button">Drop</button>
-                    <button class="edit-button" type="button">Add/Edit Records</button>
-                    <button class="insert-button" type="button">Insert</button>
-                    <input class="number-records" type="number" placeholder="# of Records">
-                    <button class="all-button" type="button">Drop/Create/Insert</button>
-                </form>
+    <div class="main">
+        <section class="list-forms-section">
+            <div class="search-container">
+                <input class="search" type="text" placeholder="Search...">
             </div>
-            <div class="card">
-                <div class="card-title">Table Name</div>
-                <form class="buttons-container">
-                    <button class="create-button" type="button">Create</button>
-                    <button class="sample-button" type="button">Sample Data</button>
-                    <button class="drop-button" type="button">Drop</button>
-                    <button class="edit-button" type="button">Add/Edit Records</button>
-                    <button class="insert-button" type="button">Insert</button>
-                    <input class="number-records" type="number" placeholder="# of Records">
-                    <button class="all-button" type="button">Drop/Create/Insert</button>
-                </form>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-title">Table Name</div>
+                    <form class="buttons-container">
+                        <button class="create-button" type="button">Create</button>
+                        <button class="sample-button" type="button">Sample Data</button>
+                        <button class="drop-button" type="button">Drop</button>
+                        <button class="edit-button" type="button">Add/Edit Records</button>
+                        <button class="insert-button" type="button">Insert</button>
+                        <input class="number-records" type="number" placeholder="# of Records">
+                        <button class="all-button" type="button">Drop/Create/Insert</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-title">Table Name</div>
+                    <form class="buttons-container">
+                        <button class="create-button" type="button">Create</button>
+                        <button class="sample-button" type="button">Sample Data</button>
+                        <button class="drop-button" type="button">Drop</button>
+                        <button class="edit-button" type="button">Add/Edit Records</button>
+                        <button class="insert-button" type="button">Insert</button>
+                        <input class="number-records" type="number" placeholder="# of Records">
+                        <button class="all-button" type="button">Drop/Create/Insert</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-title">Table Name</div>
+                    <form class="buttons-container">
+                        <button class="create-button" type="button">Create</button>
+                        <button class="sample-button" type="button">Sample Data</button>
+                        <button class="drop-button" type="button">Drop</button>
+                        <button class="edit-button" type="button">Add/Edit Records</button>
+                        <button class="insert-button" type="button">Insert</button>
+                        <input class="number-records" type="number" placeholder="# of Records">
+                        <button class="all-button" type="button">Drop/Create/Insert</button>
+                    </form>
+                </div>
             </div>
-            <div class="card">
-                <div class="card-title">Table Name</div>
-                <form class="buttons-container">
-                    <button class="create-button" type="button">Create</button>
-                    <button class="sample-button" type="button">Sample Data</button>
-                    <button class="drop-button" type="button">Drop</button>
-                    <button class="edit-button" type="button">Add/Edit Records</button>
-                    <button class="insert-button" type="button">Insert</button>
-                    <input class="number-records" type="number" placeholder="# of Records">
-                    <button class="all-button" type="button">Drop/Create/Insert</button>
-                </form>
-            </div>
-        </div>
-        <div class="main-card-container">
-        </div>
-    </section>
+            <div class="main-card-container">
+                <div class="main-card">
 
-    <section class="table">
-    </section>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="table-container">
+                <div class="table-title">Table Name</div>
+                <table>
+                    <tr>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                        <th>Somthing</th>
+                    </tr>
+                    <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="pagination-container"></div>
+        </section>
+    </div>
 
   <script src="devtoolkitjavascript.js"></script>
 </body>
