@@ -26,7 +26,8 @@ Light Shadow: #383838
 }
 
 body {
-    margin: 2%;
+    padding: 2%;
+    height: 100vh;
 }
 
 /* ---- Messages Styles ---- */
@@ -83,7 +84,7 @@ body {
 
 .search {
     width: 100%;
-    padding: 2%;
+    padding: 2.5%;
     border-style: solid;
     border-radius: 8px;
     border-width: 1.5px;
@@ -136,6 +137,10 @@ body {
     box-shadow: 0 4px 4px lightgray;
 }
 
+.card-title {
+    padding-bottom: 1.5%;
+}
+
 .card:nth-child(1) {
     margin-top: 6%;
 }
@@ -163,6 +168,16 @@ body {
     padding: 4% 10%;
     text-align: center;
     color: #7F7F7F;
+}
+
+.buttons-container button:hover {
+    color: white;
+    background-color: #61CDFE;
+    cursor: pointer;
+}
+
+.buttons-container button:active {
+    background-color: #24BAFD;
 }
 
 .create-button {

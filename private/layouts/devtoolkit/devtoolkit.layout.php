@@ -71,7 +71,7 @@
             </div>
             <div class="main-card-container">
                 <div class="main-card">
-
+                    
                 </div>
             </div>
         </section>
@@ -357,7 +357,6 @@
             <div class="pagination-container"></div>
         </section>
     </div>
-
   <script src="devtoolkitjavascript.js"></script>
 </body>
 </html>
