@@ -71,7 +71,16 @@
             </div>
             <div class="main-card-container">
                 <div class="main-card">
-                    
+                    <div class="card-title">All Table Actions</div>
+                    <div class="main-buttons-container">
+                        <button class="drop-all-button" type="button">Drop All</button>
+                        <button class="create-all-button" type="button">Create All</button>
+                        <form class="sub-buttons-container">
+                            <input class="item" type="number" placeholder="# of Records">
+                            <button class="insert-all-button item" type="button">Insert All</button>
+                            <button class="all-actions-button item" type="button">Drop/Create/Insert All</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
@@ -95,6 +104,70 @@
                         <th>Somthing</th>
                         <th>Somthing</th>
                         <th>Somthing</th>
+                    </tr>
+                    <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                    </tr>
+                    <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                    </tr>
+                    <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                    </tr>
+                    <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
                     </tr>
                     <tr>
                         <td>Data</td>
