@@ -34,8 +34,13 @@ input::placeholder {
     color: #7F7F7F;
 }
 
+/* For use by the javascript */
+.hidden {
+    display: none !important;
+}
+
 /* ---- Messages Styles ---- */
-.messages-section {
+#messages-section {
     padding-bottom: 1%;
 }
 
@@ -68,6 +73,10 @@ input::placeholder {
     width: 100%;
 }
 
+#close-icon:hover {
+    cursor: pointer;
+}
+
 /* ---- Main body styles ---- */
 .main {
     display: grid;
@@ -85,7 +94,7 @@ input::placeholder {
     box-shadow: 0 8px 4px -4px #E1E1E1;
 }
 
-.search {
+#search {
     width: 100%;
     padding: 2.5%;
     margin-bottom: 3%;
@@ -96,7 +105,7 @@ input::placeholder {
     color: #7F7F7F;
 }
 
-.search::placeholder {
+#search::placeholder {
     color: #7F7F7F;
 }
 
@@ -137,7 +146,7 @@ input::placeholder {
     text-align: center;
     padding: 4%;
     padding-bottom: 12%;
-    margin-bottom: 6%;
+    margin: 6% 0;
     color: #7F7F7F;
     box-shadow: 0 4px 4px lightgray;
 }
@@ -145,10 +154,6 @@ input::placeholder {
 .card-title {
     padding-bottom: 1.5%;
     color: #A2A2A2;
-}
-
-.card:nth-child(1) {
-    margin-top: 6%;
 }
 
 .buttons-container {
@@ -270,7 +275,7 @@ input::placeholder {
     text-align: center;
 }
 
-/* TODO: Fix the buttons to have a border on hover without moving everything */
+/* TODO: Fix the buttons to have a border on hover without moving everything   */
 .main-buttons-container button:hover, .sub-buttons-container button:hover {
     color: #61CDFE;
     background-color: white;
@@ -360,19 +365,19 @@ tr:nth-child(odd) {
     background-color: #F1F1F1;
 }
 
-.table-container:hover::-webkit-scrollbar-thumb {
+.table-section:hover::-webkit-scrollbar-thumb {
     background: #7E7E7E;
 }
 
-.table-container::-webkit-scrollbar-thumb {
+.table-section::-webkit-scrollbar-thumb {
     background: #C4C4C4;
     border-radius: 60px;
 }
 
-.table-container::-webkit-scrollbar {
+.table-section::-webkit-scrollbar {
     display: hidden;
 }
 
-.table-container::-webkit-scrollbar-button {
+.table-section::-webkit-scrollbar-button {
     display: hidden;
 }

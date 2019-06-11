@@ -17,11 +17,11 @@
 
 <body>
 
-    <section class="messages-section">
+    <section id="messages-section">
         <div class="message">
             <div class="message-text"><b>Success!</b> Some success message.</div>
             <div class="close-icon-container">
-                <img class="close-icon" src="img/close_icon_green.png">
+                <img id="close-icon" src="img/close_icon_green.png">
             </div>
         </div>
     </section>
@@ -29,11 +29,11 @@
     <div class="main">
         <section class="list-forms-section">
             <div class="search-container">
-                <input class="search" type="text" placeholder="Search...">
+                <input id="search" type="text" placeholder="Search...">
             </div>
             <div class="card-container">
                 <div class="card">
-                    <div class="card-title">Table Name</div>
+                    <div class="card-title">Posts</div>
                     <form class="buttons-container">
                         <button class="create-button" type="button">Create</button>
                         <button class="sample-button" type="button">Sample Data</button>
@@ -45,7 +45,7 @@
                     </form>
                 </div>
                 <div class="card">
-                    <div class="card-title">Table Name</div>
+                    <div class="card-title">Comments</div>
                     <form class="buttons-container">
                         <button class="create-button" type="button">Create</button>
                         <button class="sample-button" type="button">Sample Data</button>
@@ -57,7 +57,7 @@
                     </form>
                 </div>
                 <div class="card">
-                    <div class="card-title">Table Name</div>
+                    <div class="card-title">Users</div>
                     <form class="buttons-container">
                         <button class="create-button" type="button">Create</button>
                         <button class="sample-button" type="button">Sample Data</button>
