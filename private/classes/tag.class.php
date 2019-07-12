@@ -4,7 +4,7 @@
             // Class specific properties. Overwritten from DatabaseObject Class
             // Name of the table
             static protected $tableName = "tags";
-            // db columns, if need to exclude particular column excluded in the database object attributes()
+            // db columns
             static protected $columns = ['id', 'note', 'title', 'useTag'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id'];
@@ -16,7 +16,7 @@
             static protected $validation_columns = [
                 'id' => [
                     'name' => 'Tag id',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min' => 1, // number min value
                     'max' => 10 // string length
@@ -29,7 +29,7 @@
                 ],
                 'title' => [
                     'name' => 'Tag Title',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'min' => 2, // string length
                     'max' => 50, // string length
@@ -37,7 +37,7 @@
                 ],
                 'useTag' => [
                     'name'=>'Tag useTag',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'num_max'=> 4, // number max value

@@ -3,7 +3,7 @@
         // @ class database information start
             // table name
             static protected $tableName = "posts";
-            // db columns, if need to exclude particular column excluded in the database object attributes()
+            // db columns
             static protected $columns = ['id', 'author', 'authorName', 'catIds', 'comments', 'content', 'createdBy', 'createdDate', 'imageName', 'labelIds', 'mediaContentIds', 'postDate', 'status', 'tagIds', 'title'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id', 'comments'];
@@ -15,21 +15,21 @@
             static protected $validation_columns = [
                 'id'=>[
                     'name'=>'Post id',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'max' => 10 // string length
                 ], 
                 'author' => [
                     'name'=>'Post Author',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'max' => 10 // string length
                 ], 
                 'authorName' => [
                     'name'=>'Post AuthorName Stamp',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'min'=> 4, // string length, 2 first name, 2 last name
                     'max' => 50, // string length
@@ -41,14 +41,14 @@
                     'max' => 255 // string length
                 ], 
                 'comments' => [
-                    'required' => 'yes',
+                    'required' => true,
                     'name'=>'Post Comment Count',
                     'type' => 'int', // type of int
                     'max' => 10 // string length
                 ], 
                 'content' => [
                     'name'=>'Post Content',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'min'=> 10, // string length
                     'max' => 65000, // string length
@@ -56,17 +56,17 @@
                 ], 
                 'createdBy' => [
                     'name'=>'Post createdBy',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'max' => 10 // string length
                 ], 
                 'createdDate' => [
                     'name'=>'Post createdDate',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'exact' => 10, // string length
-                    'date' => 'yes'
+                    'date' => true
                 ],
                 'imageName' => [
                     'name'=>'Post imageName',
@@ -86,14 +86,14 @@
                 ], 
                 'postDate' => [
                     'name'=>'Post Date',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'exact' => 10, // string length
-                    'date' => 'yes'
+                    'date' => true
                 ], 
                 'status' => [
                     'name'=>'Post status',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 0, // number min value
                     'num_max'=> 1, // number max value
@@ -105,19 +105,56 @@
                 ], 
                 'title' => [
                     'name'=>'Post Title',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'min'=> 2, // string length
                     'max' => 50, // string length
                     'html' => 'yes' // mostly just to allow special characters like () []
                 ]
             ];
+        // @ class database information end
 
-
-            // ! temp
+        // @ class api start
+            // * api_documentation, located at: root/private/reference_information.php
+            static protected $apiInfo = [
+                'routs' => [
+                    'posts' => [
+                        'httpMethods' => [
+                            'get' => [
+                                'arrayInfo' => 'getApiParameters',
+                                'whereConditions' => 'status = 1',
+                                // show or not to show that is the question
+                                'methodDocumentation' => 'method specific documentation, this is the main post public access'
+                            ]
+                        ]
+                    ],
+                    'posts/dev' => [
+                        'routKey' => 'T3$$tK3y!2456',
+                        'httpMethods' => [
+                            'get' => [
+                                'arrayInfo' => 'getApiParameters',
+                                // show or not to show that is the question
+                                'methodDocumentation' => 'method specific documentation, this is the main post dev access'
+                            ],
+                            'post' => [
+                                'arrayInfo' => 'postApiParameters',
+                            ],
+                            'put' => [
+                                'arrayInfo' => 'postApiParameters',
+                                'putWhere' => true,
+                            ], 
+                            'patch' => [
+                                'arrayInfo' => 'postApiParameters',
+                            ], 
+                            'delete' => [
+                                'deleteWhere' => true,
+                            ] 
+                        ]
+                    ]
+                ]
+            ];
             // * get_api_parameters, located at: root/private/reference_information.php
-            static protected $getApiParameters = [
-                // ...api/v1/posts/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
+            static public $getApiParameters = [
                 'id'=>[
                     'refersTo' => ['id'],
                     'type' => ['int', 'list'],
@@ -128,43 +165,40 @@
                     'description' => 'Gets posts by the post id or list of post ids',
                     'example' => ['id=1', 'id=1,2,3,4,5']
                 ],
-                // ...api/v1/posts/?greaterThen=1/37/2010
                 'greaterThen' => [
                     'refersTo' => ['postDate'],
-                    'type' => ['str'],
+                    'type' => ['date'],
                     'connection' => [
-                        'str' => '>'
+                        'date' => '>'
                     ],
-                    'description' => 'Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan paramter to get dates in posts with createdDates between the two values, see examples',
+                    'description' => 'Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan parameter to get dates in posts with createdDates between the two values, see examples',
                     'customExample' => [ 
                         'greaterThan' => 'greaterThan=2018-02-01',
                         'between' => 'greaterThan=2018-02-01&lessThan=2019-03-01'
                     ]
                 ], 
-                // ...api/v1/posts/?lessThen=1/37/2010
                 'lessThen' => [
                     'refersTo' => ['postDate'],
-                    'type' => ['str'],
+                    'type' => ['date'],
                     'connection' => [
-                        'str' => '<'
+                        'date' => '<'
                     ],
-                    'description' => 'Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan paramter to get dates in posts with createdDates between the two values, see examples',
+                    'description' => 'Gets posts that have a createdDate >= the date given with the greaterThan parameter. May be used with the lessThan parameter to get dates in posts with createdDates between the two values, see examples',
                     'customExample' => [ 
                         'lessThan' => 'lessThan=2019-03-01',
                         'between' => 'greaterThan=2018-02-01&lessThan=2019-03-01'
                     ]
                 ],
-                // ...api/v1/posts/?search=sale // ? ...api/v1/posts/?search=sale,off,marked down     more then one value!???
                 'search' => [
                     'refersTo' => ['title', 'content'],
                     'type' => ['str', 'list'],
                     'connection' => [
                         'str' => 'like',
-                        'list' => 'like::or'
+                        'list' => 'like'
                     ],
                     'validation' => [
                         'name'=>'search',
-                        'required' => 'yes',
+                        'required' => true,
                         'type' => 'str', // type of string
                         'min'=> 2, // string length
                         'max' => 50, // string length
@@ -175,24 +209,22 @@
                 ],
                 'postDate' => [
                     'refersTo' => ['postDate'],
-                    'type' => ['str'],
+                    'type' => ['date'],
                     'connection' => [
-                        'str' => '='
+                        'date' => '='
                     ],
                     'description' => 'Gets posts by the post date',
                     'example' => ['postDate=2019-02-01']
                 ],
-                // ...api/v1/posts/?createdDate=1910
                 'createdDate' => [
                     'refersTo' => ['createdDate'],
-                    'type' => ['str'],
+                    'type' => ['date'],
                     'connection' => [
-                        'str' => '='
+                        'date' => '='
                     ],
                     'description' => 'Gets posts by the date they were created',
                     'example' => ['createdDate=2019-02-01']
                 ],
-                // ...api/v1/posts/?status=0
                 'status' => [
                     'refersTo' => ['status'],
                     'type' => ['int'],
@@ -202,44 +234,58 @@
                     'description' => 'Gets posts by the current post status. 0 = draft, 1 = published',
                     'example' => ['status=1']
                 ],
-                // ...api/v1/posts/?status=0
-                // TODO: 
-                // ! need to add ??? how to make custom yet standerd
-                'extendedData' => [
+                'columns' => [
                     'refersTo' => ['extraOptions'],
-                    'type' => ['int'],
+                    'type' => ['str','list'],
+                    'useFor' => 'columns',
                     'validation' => [
                         'name'=>'extendedData',
-                        'required' => 'yes',
-                        'type' => 'int', // type of int
-                        'num_min'=> 0, // min num
-                        'num_max' => 1, // max num
+                        'required' => true,
+                        'type' => 'str',
+                        'min'=> 1,
+                        'max' => 150,
+                        'html' => 'no'
+                    ],
+                    'description' => 'What database columns you want to use',
+                    'example' => ['columns=firstName', 'columns=firstName,lastName']
+                ],
+                'extendedData' => [
+                    'refersTo' => ['extraOptions'],
+                    'type' => ['str'],
+                    'useFor' => 'code::get_full_api_data',
+                    'validation' => [
+                        'name'=>'extendedData',
+                        'required' => true,
+                        'type' => 'str',
+                        'min'=> 1,
+                        'max' => 50,
+                        'html' => 'no'
                     ],
                     'description' => 'Returns all extended post data. 0 = Return basic post data, 1 = Return extended post data. Default is 0. extended data includes all images attached to the post ',
                     'example' => ['extendedData=1']
                 ],
+                'propertyExclusions' => [
+                    'refersTo' => ['extraOptions'],
+                    'type' => ['str', 'list'],
+                    'useFor' => 'propertyExclusions',
+                    'validation' => [
+                        'name'=>'extendedData',
+                        'required' => true,
+                        'type' => 'str',
+                        'min'=> 1,
+                        'max' => 150,
+                        'html' => 'no'
+                    ],
+                    'description' => 'What properties do you want to exclude',
+                    'example' => ['propertyExclusions=firstName', 'propertyExclusions=firstName,lastName']
+                ]
             ];
 
-            // TODO: 
-            // ! not sure what it should look like
             // * post_api_parameters, located at: root/private/reference_information.php
-            static protected $postApiParameters = [
-                // has to be set, and the value has to be yes to be activated
-                'postApiActions' => [
-                    'insert' => "yes",
-                    'update' => "yes",
-                    'delete' => "yes",
-                    // from field where = id::12, where = title::fun Stuff
-                    'updateWhere' => "yes",
-                    'deleteWhere' => "yes",
-                ],
-                'id' => [
-                    'type' => ['int'],
-                    'description' => 'If updating post data must have an id, else it will make a new post'
-                ], 
+            static public $postApiParameters = [
                 'author' => [
                     'type' => ['int'],
-                    'description' => 'This field expects an offer id'
+                    'description' => 'This field expects an author/user id'
                 ], 
                 'authorName' => [
                     'type' => ['int'],
@@ -290,10 +336,8 @@
                     'description' => 'This field expects a post title, what the post will be called and referenced as'
                 ]
             ];
-
-            // page, perPage, and perhapses others should be global
-            // ! temp
-        // @ class database information end
+        // @ class api end
+        
         
         // @ class specific queries start
             // latest posts feed

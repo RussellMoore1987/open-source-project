@@ -11,7 +11,7 @@
             // unset $_GET path, So that it doesn't show up as an option
             unset($_GET[$parameters_array[0]]);
 
-            // set path // todo: is it going to be confusing to not include the .php ex, add_edit_post?postId=33
+            // set path
             $this->path = $parameters_array[0] . ".php";
             $this->pathJs = $parameters_array[0] . ".js";
         }

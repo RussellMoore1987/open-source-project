@@ -53,7 +53,7 @@
                 // set id
                 $postId = $Post_obj->get_id();
 
-                // check to see if we have in ID
+                // check to see if we have an ID
                 if (!($postId === 0 || $postId === NULL) && !$Post_obj->errors) {
                     // get full post object
                     $Post_obj = Post::find_by_id($postId);

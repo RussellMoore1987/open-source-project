@@ -1,13 +1,12 @@
 <?php
-    // TODO: put this stuff into an include
-    // var_dump($_POST);
-    // echo "Got class:{$this->className}, From path:{$this->pathStr}";
     // check to see if it is a post or get request
-    if (is_post_request()) {
-        echo json_encode($_POST);
+    $request = $_SERVER['REQUEST_METHOD'];
+
+    // check directions PUT/PATCH/DELETE/POST or GET
+    if (is_post_request() || $request == "PUT" || $request == "PATCH" || $request == "DELETE") {
+        echo $this->className::get_post_api_info($this->className, $this->pathStr);
     } else {
-        echo json_encode($_GET);
         // run class api
-        // echo $this->className::get_api_info();
+        echo $this->className::get_api_info($this->className, $this->pathStr);
     }
 ?>

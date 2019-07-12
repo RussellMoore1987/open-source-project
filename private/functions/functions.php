@@ -50,16 +50,18 @@ function is_get_request() {
 }
 
 // send post request
-function post($url, $postVars = []){
+function post($url, $postVars = [], $postType = "POST"){
     //Transform our POST array into a URL-encoded query string.
     $postStr = http_build_query($postVars);
     //Create an $options array that can be passed into stream_context_create.
     $options = array(
         'http' =>
             array(
-                'method'  => 'POST',
+                'method'  => $postType,
                 'header'  => 'Content-type: application/x-www-form-urlencoded',
-                'content' => $postStr
+                'content' => $postStr,
+                // added to get content back even if error
+                'ignore_errors' => true
             )
     );
     //Pass our $options array into stream_context_create.
@@ -75,6 +77,34 @@ function post($url, $postVars = []){
     // return the response.
     return $result;
 }
+
+// Checks if a string is a comma separated list of values then turns it into an array and returns it
+function split_string_by_separator($string, $separator=",") {
+    // Return false if there are no commas in the string
+    if (strpos($string, $separator) == false) {
+      return false;
+      
+    } else {
+      // Get the array of values from the comma separated string
+      $new_array = explode($separator, $string);
+      // Clean the whitespace from each value, put into new array and return it
+      $clean_array = [];
+      foreach($new_array as $item) {
+        $clean_array[] = trim($item);
+      }
+      return $clean_array;
+    }
+  }
+
+  // function for formating the date to the Y-m-d SQL format
+  function format_date($date) {
+      // Turn date to time string, never fails
+      $dateStr = strtotime($date);
+      // Format the string to an SQL format
+      $formatDate = date("Y-m-d", $dateStr);
+      // Return the formatted date
+      return $formatDate;
+  }  
 
 // creates an array of key value pairs, relating to possible tags, categories, and labels. mostly used in classes
 function get_key_value_array($obj_array) {
@@ -106,15 +136,13 @@ function get_image_path($type = 'small') {
 }
 
 // give it an array of objects and it will give you back an array of Json on objects ready for the API
-function obj_array_api_prep(array $obj_array, $type = 'basic') {
+function obj_array_api_prep(array $obj_array) {
     // set blank array, set below
     $apiObj_array = [];
     // loop over array to make new array of api ready info
     foreach ($obj_array as $odj) {
-        $apiObj_array[] = $odj->get_api_data($type);
+        $apiObj_array[] = $odj->get_api_data();
     }   
-    // turn array into Jason
-    $apiObj_array = json_encode($apiObj_array);
     // return data
     return $apiObj_array;
 }

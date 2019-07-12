@@ -13,7 +13,9 @@
         }
 
         // view specific logic, page title set here
-        require_once(PUBLIC_PATH . "/admin/view_logic/{$Router->path}");
+        if (file_exists(PUBLIC_PATH . "/admin/view_logic/{$Router->path}")) {
+            require_once(PUBLIC_PATH . "/admin/view_logic/{$Router->path}");
+        }
 
         // include top
         require_once(PUBLIC_PATH . '/admin/includes/top.php');

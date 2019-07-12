@@ -102,8 +102,30 @@
         // Need to re-write for OOP
     }
 
+    // Determine the string is a comma separated list
+    function is_list($data, $separator=",") {
+        // Check if it is a comma separated list inside the string
+        if(strpos($data, $separator) !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Determine if the string contains a specific word or group of characters
+    function contains($string, $contains) {
+        // The regular expression to match against
+        $regEx = "/" . $contains . "/";
+        // Use RegEx to determine if the word is contained in the string
+        if (preg_match($regEx, $string)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // db validation, // * validation_options located at: root/private/reference_information.php
-    function val_validation($value, $options = []) {
+    function val_validation($value, $options = [], $valueName = "value") {
 
         // Set defaults
         $val_length = strlen(Trim($value));
@@ -123,7 +145,7 @@
         if(isset($options['min']) && $val_length < Trim($options['min'])) {
             $option_min = Trim($options['min']);
             // error message
-            $errors[] = "The value \"{$name}\" needs to be at least {$option_min} characters long.";
+            $errors[] = "The {$valueName} \"{$name}\" needs to be at least {$option_min} characters long.";
         }
 
         // Validate length max
@@ -131,7 +153,7 @@
             $option_max = Trim($options['max']);
             $length_over = $val_length - $option_max;
             // error message 
-            $errors[] = "The value \"{$name}\" has a max length of {$option_max} characters. You are {$length_over} character(s) too long.";
+            $errors[] = "The {$valueName} \"{$name}\" has a max length of {$option_max} characters. You are {$length_over} character(s) too long.";
         } 
 
         // Validate length exact
@@ -139,26 +161,63 @@
             $option_exact = Trim($options['exact']);
             // echo $val_length;
             // echo $option_exact;
-            // main error message
-            $errors[] = "The value \"{$name}\" requires an exact length of {$option_exact} characters. You have only {$val_length} of the characters.";
+            // error message
+            $errors[] = "The {$valueName} \"{$name}\" requires an exact length of {$option_exact} characters. You have only {$val_length} of the characters.";
+        }
+        
+        // TODO: need to test, contains and matchOptions
+        // Validating contains, send in spaces if you are looking for an exact word
+        if(isset($options['contains'])) {
+            $contains = $options['contains'];
+            $string = $value;
+            $regEx = "/{$contains}/";
+            // Use RegEx to determine if the word is contained in the string
+            if (!preg_match($regEx, $string)) {
+                // error message
+                $errors[] = "The {$valueName} \"{$name}\" requires that the value passed in contains the text \"{$contains}\".";
+            }
+        }
+
+        // Validating matchOptions
+        if(isset($options['matchOptions'])) {
+            $options_array = $options['matchOptions'];
+             // check to see if it is an array, if not make
+            if (!is_array($options_array)) {
+                $options_array = explode(",", $options_array);
+            }
+            // check to see if the word is in the array of options
+            if (!in_array($value, $options_array)) {
+                // error message
+                echo "The {$valueName} \"{$name}\" requires that the value passed in contains one of the text values found in this list, '" . implode(",", $options_array) . "'. This validation is case sensitive.";
+            }
         }
 
         // Validating required
-        if (isset($options['required']) && $options['required'] == "yes") {
+        if (isset($options['required']) && $options['required'] == true) {
             if (!isset($value) || trim($value) === '') {
                 // error message
-                $errors[] = "The value \"{$name}\" is a required value. This value was either not submitted or is blank.";
+                $errors[] = "The {$valueName} \"{$name}\" is a required {$valueName}. This {$valueName} was either not submitted or is blank.";
             }
         }
 
         // Validating is date
-        if (isset($options['date']) && $options['date'] == "yes") {
+        if (isset($options['date']) && $options['date'] == true) {
             try {
                 new \DateTime($value);
                 // Passed validation message
             } catch (\Exception $e) {
                 // return error message
-                $errors[] =  "The value of \"{$name}\" must be a valid date. For example 1/6/18 or 2017-01-06.";
+                $errors[] =  "The {$valueName} of \"{$name}\" must be a valid date. For example 1/6/18 or 2017-01-06.";
+            }
+        }
+
+        // Validating is email
+        if (isset($options['email']) && $options['email'] == true) {
+            $email_regex = '/\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\Z/i';
+            // check to see if it passes
+            if (preg_match($email_regex, $value) === 0) {
+                // return error message
+                $errors[] =  "The value of \"{$name}\" must be a valid email. For example name@gmail.com.";
             }
         }
 
@@ -166,25 +225,24 @@
         if (isset($options['type']) && $options['type'] == "num") {
             if (!is_numeric($value)) {
                 // error message
-                $errors[] = "The value \"{$name}\" must be a number.";
+                $errors[] = "The {$valueName} \"{$name}\" must be a number.";
             }
         } elseif (isset($options['type']) && $options['type'] == "int") {
             // Convert string to number
             if (is_numeric($value)) {
                 $value = strpos($value, '.') === false ? intval($value) : floatval($value);
-                // var_dump(is_int($value));
                 if (!is_int($value)) {
                     // error message
-                    $errors[] = "The value \"{$name}\" must be a number and have no decimals.";
+                    $errors[] = "The {$valueName} \"{$name}\" must be a number and have no decimals.";
                 }
             } else {
                 // error message
-                $errors[] = "The value \"{$name}\" must be a number and have no decimals.";
+                $errors[] = "The {$valueName} \"{$name}\" must be a number and have no decimals.";
             }
         } elseif (isset($options['type']) && $options['type'] == "str") {
             if (!is_string($value)) {
                 // error message
-                $errors[] = "The value \"{$name}\" must be a string/text.";
+                $errors[] = "The {$valueName} \"{$name}\" must be a string/text.";
             }
         }
 
@@ -192,14 +250,14 @@
         if (isset($options['num_max']) && $value > $options['num_max']) {
                 $num_max = $options['num_max'];
                 // error message
-                $errors[] = "The value of \"{$name}\" can not be larger than {$num_max}.";
+                $errors[] = "The {$valueName} of \"{$name}\" can not be larger than {$num_max}.";
         } 
 
         // Validating number value min
         if (isset($options['num_min']) && $value < $options['num_min']) {
             $num_min = $options['num_min'];
             // error message
-            $errors[] = "The value of \"{$name}\" can not be less than {$num_min}.";
+            $errors[] = "The {$valueName} of \"{$name}\" can not be less than {$num_min}.";
         }
         
         // Validating HTML I don't need to check it if it's blank
@@ -208,47 +266,33 @@
             if (isset($options['html']) && $options['html'] == "yes" ) {
                 // Checking for restricted characters
                 // uses !== to prevent position 0 from being considered false
-                if (strpos($value, '<script') !== false) { $errors[] = no_html_message($name, "<script> tag");}
-                if (strpos($value, ';') !== false) { $errors[] = no_html_message($name, ";");}
-                if (strpos($value, '\\') !== false) { $errors[] = no_html_message($name, "\\");}
-                // switch ($value) {
-                //     case strpos($value, '<script') !== false : $errors[] = no_html_message($name, "<script> tag");
-                //     case strpos($value, ';') !== false : $errors[] = no_html_message($name, ";");
-                //     case strpos($value, '\\') !== false : $errors[] = no_html_message($name, "\\");
-                // }
+                if (strpos($value, '<script') !== false) { $errors[] = no_html_message($name, "<script> tag", $valueName);}
+                if (strpos($value, ';') !== false) { $errors[] = no_html_message($name, ";", $valueName);}
+                if (strpos($value, '\\') !== false) { $errors[] = no_html_message($name, "\\", $valueName);}
             } elseif (isset($options['html']) && $options['html'] == "no") {
                 // Checking for HTML characters
                 // uses !== to prevent position 0 from being considered false
                 if (strpos($value, '>') !== false || strpos($value, '<') !== false) { 
-                    $errors[] = no_html_message($name, "<");
+                    $errors[] = no_html_message($name, "<", $valueName);
                 }
                 if (strpos($value, ')') !== false || strpos($value, '(') !== false) { 
-                    $errors[] = no_html_message($name, "(");
+                    $errors[] = no_html_message($name, "(", $valueName);
                 }
                 if (strpos($value, '[') !== false || strpos($value, ']') !== false) { 
-                    $errors[] = no_html_message($name, "[");
+                    $errors[] = no_html_message($name, "[", $valueName);
                 }
                 if (strpos($value, '{') !== false || strpos($value, '}') !== false) { 
-                    $errors[] = no_html_message($name, "{");
+                    $errors[] = no_html_message($name, "{", $valueName);
                 }
                 if (strpos($value, '/') !== false) { 
-                    $errors[] = no_html_message($name, "/");
+                    $errors[] = no_html_message($name, "/", $valueName);
                 }
                 if (strpos($value, '\\') !== false) { 
-                    $errors[] = no_html_message($name, "\\");
+                    $errors[] = no_html_message($name, "\\", $valueName);
                 }
                 if (strpos($value, ';') !== false) { 
-                    $errors[] = no_html_message($name, ";");
+                    $errors[] = no_html_message($name, ";", $valueName);
                 }
-                // switch ($value) {
-                    // case strpos($value, '>') !== false || strpos($value, '<') !== false : $errors[] = no_html_message($name, "<");
-                    // case strpos($value, ')') !== false || strpos($value, '(') !== false : $errors[] = no_html_message($name, "(");
-                    // case strpos($value, '[') !== false || strpos($value, ']') !== false : $errors[] = no_html_message($name, "[");
-                    // case strpos($value, '{') !== false || strpos($value, '}') !== false : $errors[] = no_html_message($name, "{");
-                    // case strpos($value, '/') !== false : $errors[] = no_html_message($name, "/");
-                    // case strpos($value, '\\') !== false : $errors[] = no_html_message($name, "\\");
-                    // case strpos($value, ';') !== false : $errors[] = no_html_message($name, ";");
-                // }
             }
         }
       
@@ -257,9 +301,9 @@
     }
 
     // Quick message for no html
-    function no_html_message($name, $val_in_question) {
+    function no_html_message($name, $val_in_question, $valueName = "value") {
         // return error message
-        return "The value \"{$name}\" excludes certain types of html. The text in question is \" {$val_in_question} \".";
+        return "The {$valueName} \"{$name}\" excludes certain types of html. The text in question is \" {$val_in_question} \".";
     }
 
     // Checking to see if it is a date
@@ -270,7 +314,7 @@
             return NULL; 
         } catch (\Exception $e) {
             // return error message
-            return "The value of \"{$name}\" must be a valid date. For example 1/6/18 or 2017-01-06.";
+            return "The {$valueName} of \"{$name}\" must be a valid date. For example 1/6/18 or 2017-01-06.";
         }
     }
 ?>

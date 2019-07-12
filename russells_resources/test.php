@@ -5,8 +5,10 @@
         //Create an $options array that can be passed into stream_context_create.
         $options = array(
             'http' =>
+                // PUT, POST, DELETE
                 array(
                     'method'  => 'POST', //We are using the POST HTTP method.
+                    // application/x-www-form-urlencoded form-data
                     'header'  => 'Content-type: application/x-www-form-urlencoded',
                     'content' => $postStr //Our URL-encoded query string.
                 )
@@ -28,11 +30,11 @@
         return $result;
     }
 
-    // $result = post("http://localhost/open_source_project/russells_resources/test2.php", $postVars = [
+    // $result = post("http://localhost/open_source_project/russells_resources/test2.php?id=22", $postVars = [
     //     "name" => "fred",
     //     "age" => "22"
     // ]);
-    $result = post("http://localhost/open_source_project/public/api/v1/posts", $postVars = [
+    $result = post("http://localhost/open_source_project/public/api/v1/posts?success=yes", $postVars = [
         "name" => "fred",
         "age" => "22"
     ]);
@@ -47,4 +49,17 @@
 //     'name' => 'Wayne'
 // ));
 // echo $result;
+?>
+
+
+<?php
+    $array1 = [1,2,3,4,5,6,7,8,9,10];
+    $array2 = [1,2,3,4,5];
+    $array3 = [5,6,7,8,9,10];
+
+    print_r($test1 = array_diff($array1, $array2));
+    print_r($test2 = array_diff($array3, $test1));
+    // $test2 = array_diff($test, $propertyExclusions);
+    // $test3 = array_diff($test, $propertyExclusions);
+    // $test4 = array_diff($test, $propertyExclusions);
 ?>

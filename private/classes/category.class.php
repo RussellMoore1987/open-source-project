@@ -4,7 +4,7 @@
             // Class specific properties. Overwritten from DatabaseObject Class
             // table name
             static protected $tableName = "categories";
-            // db columns, if need to exclude particular column excluded in the database object attributes()
+            // db columns
             static protected $columns = ['id', 'note', 'subCatId', 'title', 'useCat'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id'];

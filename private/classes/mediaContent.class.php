@@ -3,7 +3,7 @@
         // @ class database information start
             // table name
             static protected $tableName = "media_content";
-            // db columns, if need to exclude particular column excluded in the database object attributes()
+            // db columns
             static protected $columns = ['id', 'alt', 'createdBy', 'createdDate', 'name', 'note', 'type'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id'];
@@ -15,28 +15,28 @@
             static protected $validation_columns = [
                 'id'=>[
                     'name'=>'Media Content id',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'max' => 10 // string length
                 ], 
                 'createdBy' => [
                     'name'=>'Media Content createdBy',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'max' => 10 // string length
                 ], 
                 'createdDate' => [
                     'name'=>'Media Content createdDate',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'exact' => 10, // string length
-                    'date' => 'yes'
+                    'date' => true
                 ],
                 'name' => [
                     'name'=>'Media Content File Name',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'min' => 5, // string length, example: 1.png
                     'max' => 150 // string length
@@ -48,7 +48,7 @@
                 ], 
                 'type' => [
                     'name'=>'Media Content Type',
-                    'required' => 'yes',
+                    'required' => true,
                     'type' => 'str', // type of string
                     'max' => 25 // string length
                 ]

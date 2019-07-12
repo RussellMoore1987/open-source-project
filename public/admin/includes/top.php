@@ -1,8 +1,6 @@
 <?php
     // check to see if page title was sent
-    if (is_blank($pageTitle)) {
-        $pageTitle = "Default Page";
-    }
+    $pageTitle = $pageTitle ?? "Default Page";
 
 ?>
 

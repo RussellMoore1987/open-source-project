@@ -54,3 +54,31 @@ SELECT *
 FROM table_name
 INNER JOIN table_name
     ON column_name = column_name;
+
+
+SELECT * FROM labels WHERE title LIKE '%GoGo%'  LIMIT 10 OFFSET 10;
+SELECT * FROM labels WHERE title LIKE '%GoGo%'  LIMIT 10 OFFSET 0;
+SELECT COUNT(*) FROM `labels` WHERE title LIKE '%GoGo%'; 
+
+
+
+SELECT * FROM labels  LIMIT 10 OFFSET 20;
+SELECT COUNT(*) FROM `labels`; 
+
+
+
+SELECT * FROM users WHERE firstName IN ( 'sammy', 'ma', 'ca' ) LIMIT 10 OFFSET 0;
+
+SELECT * FROM users WHERE tagIds LIKE '%18%'  AND catIds LIKE '%20%'  AND id IN ( '30', '22', '1', '2', '3', '4', '5' ) AND firstName LIKE '%sa%' OR firstName LIKE '%Mo%' OR firstName LIKE '%Na%' OR firstName LIKE '%ma%' OR firstName LIKE '%ca%'  AND lastName LIKE '%Mu%'  AND note LIKE '%Praesent%'  AND createdDate >= '2000-06-18'  ORDER BY createdDate DESC, firstName DESC, lastName LIMIT 3 OFFSET 0; 
+
+SELECT * FROM users WHERE tagIds LIKE '%18%'  AND catIds LIKE '%20%'  AND id IN ( '30', '22', '1', '2', '3', '4', '5' ) AND (firstName LIKE '%sa%' OR firstName LIKE '%Mo%' OR firstName LIKE '%Na%' OR firstName LIKE '%ma%' OR firstName LIKE '%ca%')  AND (lastName LIKE '%Mu%'  AND note LIKE '%Praesent%')  AND createdDate >= '2000-06-18'  ORDER BY createdDate DESC, firstName DESC, lastName LIMIT 3 OFFSET 0; 
+
+SELECT * FROM users WHERE (tagIds LIKE '%18%' ) AND (catIds LIKE '%20%' ) AND id IN ( '30', '22', '1', '2', '3', '4', '5' ) AND (firstName LIKE '%sa%' OR firstName LIKE '%Mo%' OR firstName LIKE '%Na%' OR firstName LIKE '%ma%' OR firstName LIKE '%ca%' ) AND (lastName LIKE '%Mu%' ) AND (note LIKE '%Praesent%' ) AND (createdDate >= '2000-06-18' ) ORDER BY createdDate DESC, firstName DESC, lastName LIMIT 3 OFFSET 0
+
+
+
+
+
+
+
+SELECT * FROM users WHERE address LIKE '%1%' AND emailAddress LIKE '%jakubowski.ena@yahoo.com%' AND id = '12' AND (firstName LIKE '%sa%' OR firstName LIKE '%Mo%' OR firstName LIKE '%Na%' OR firstName LIKE '%ma%' OR firstName LIKE '%ca%' OR firstName LIKE '%er%' OR firstName LIKE '%my%' ) AND lastName LIKE '%er%' AND mediaContentId = '3' AND note LIKE '%ne%' AND phoneNumber LIKE '%844%' AND title LIKE '%Glazier%' AND createdDate >= '2000-06-18' AND createdDate <= '2019-06-03' AND (title LIKE '%Myrtis%' OR note LIKE '%Myrtis%' OR firstName LIKE '%Myrtis%' OR lastName LIKE '%Myrtis%' OR phoneNumber LIKE '%Myrtis%' ) ORDER BY createdDate DESC, firstName DESC, lastName LIMIT 3 OFFSET 0 

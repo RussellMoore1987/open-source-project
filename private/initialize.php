@@ -31,11 +31,20 @@
     // version for CSS and JavaScript, increment this number upwards to reset CSS and JavaScript caches
     $assetVersion = 12372;
 
-    // Autoload class definitions
+    // Autoload class and trait definitions
     function my_autoload($class) {
         if(preg_match('/\A\w+\Z/', $class)) {
-            include('classes/' . $class . '.class.php');
-        }
+            // creating class and trait path
+            $classPath = PRIVATE_PATH . '//classes/' . strtolower($class) . '.class.php';
+            $traitPath =  PRIVATE_PATH . '//traits/' . strtolower($class) . '.trait.php';
+            
+            // see if we can find the trait or class
+            if (file_exists($classPath)) {
+                include('classes/' . $class . '.class.php');
+            } else if (is_file($traitPath)) {
+                include('traits/' . $class . '.trait.php');
+            }
+        }   
     }
     spl_autoload_register('my_autoload');
 
@@ -43,6 +52,8 @@
     require_once('functions/functions.php');
     require_once('security/validation_functions.php');
     require_once('db/db_functions.php');
+    // for api documentation
+    require_once('reference_information.php');
     
     // db connection
     require_once('db/db_credentials.php');
