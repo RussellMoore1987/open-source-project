@@ -164,7 +164,7 @@
                         ]
                     ],
                     'users/dev' => [
-                        // 'routKey' => 'T3$$tK3y!2456',
+                        'routKey' => 'T3$$tK3y!2456',
                         'httpMethods' => [
                             'get' => [
                                 'methodKey' => 'T3$$tK3y!2456',
