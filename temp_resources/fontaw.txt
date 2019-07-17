@@ -1,0 +1,65 @@
+user and users
+<i class="fas fa-user"></i>
+<i class="fas fa-user-friends"></i>
+
+posts
+<i class="fas fa-file-alt"></i>
+<i class="fas fa-scroll"></i>
+
+content
+<i class="fas fa-file-invoice"></i>
+
+comments
+<i class="fas fa-comment-dots"></i>
+
+bookmarks
+<i class="fas fa-bookmark"></i>
+<i class="far fa-bookmark"></i>
+
+tags
+<i class="fas fa-tags"></i>
+
+categories
+<i class="fas fa-boxes"></i>
+<i class="fas fa-folder"></i>
+
+labels
+<i class="fas fa-list-alt"></i>
+
+media content
+<i class="fas fa-images"></i>
+
+other
+close
+<i class="fas fa-times"></i>
+log out
+<i class="fas fa-power-off"></i>
+search
+<i class="fas fa-search"></i>
+side bar menu open 
+<i class="fas fa-align-left"></i>
+lightbulb
+<i class="fas fa-lightbulb"></i>
+<i class="far fa-lightbulb"></i>
+dashboard expand
+<i class="fas fa-compress-arrows-alt"></i>
+<i class="fas fa-expand-arrows-alt"></i> 
+drag and drop holder
+<i class="fas fa-grip-vertical"></i>
+edit
+<i class="fas fa-pencil-alt"></i>
+<i class="fas fa-pen"></i>
+trash
+<i class="fas fa-trash"></i>
+<i class="fas fa-trash-alt"></i>
+
+to do
+<i class="far fa-check-circle"></i>
+
+dashboard
+<i class="fas fa-th-large"></i>
+
+
+
+
+

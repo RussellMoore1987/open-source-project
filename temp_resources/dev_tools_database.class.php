@@ -30,7 +30,7 @@ class Database {
         protected $numRecords_labels = 22; 
         // only add what we have for fake data
         protected $numRecords_permissions = 6; 
-        protected $numRecords_posts = 294; 
+        protected $numRecords_posts = 1000; 
         protected $numRecords_tags = 294; 
         protected $numRecords_todos = 116; 
         protected $numRecords_users = 25; 

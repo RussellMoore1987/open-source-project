@@ -714,12 +714,10 @@
 
                         // Submit the query to get the data
                         $Obj_array = static::find_where($prepApiData_array['sqlOptions']);
-                        // unset if no whereOptions helps with some error handling
-                        if (!isset($prepApiData_array['sqlOptions']['whereOptions'])) {
-                            unset($prepApiData_array['sqlOptions']['sortingOptions']);
-                        }
+                        // check for whereOptions, helps with some error handling, the count_all function only accepts the ['whereOptions']
+                        $queryCount_array = $prepApiData_array['sqlOptions']['whereOptions'] ?? [];
                         // get count
-                        $queryCount = static::count_all($prepApiData_array['sqlOptions']);
+                        $queryCount = static::count_all($queryCount_array);
 
                         // Set the totalPages by getting a count
                         $totalPages = ceil(($queryCount / $prepApiData_array['extra']['perPage']));

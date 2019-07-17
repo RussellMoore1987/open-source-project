@@ -320,6 +320,7 @@
                 if (!is_array($whereOptions_array)) { $whereOptions_array = explode(",", $whereOptions_array); }
 
                 $sql = "SELECT COUNT(*) FROM " . static::$tableName . " ";
+                
                 // build WHERE, make sure to check whether it is an AND or an OR statement, AND by default OR has to be specified
                 for ($i=0; $i < count($whereOptions_array); $i++) { 
                     // add WHERE
