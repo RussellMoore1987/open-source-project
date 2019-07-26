@@ -55,6 +55,7 @@
 
             </div>
         </div>
+        <!-- table view container start -->
         <div class="table-view-container">
             <h1 class="text-center"><a href="">[Table Name]</a></h1>
             <div class="button-options">
@@ -66,10 +67,8 @@
             <!-- style bars -->
             <div class="side-border-bar"></div>
             <div class="bottom-border-bar"></div>
-            <!-- table code -->
-            <!-- https://www.youtube.com/watch?v=bZIfSZqpV_c -->
-            <!-- https://www.youtube.com/watch?v=_nRViIYg320 -->
-            <!-- https://www.google.com/search?safe=strict&rlz=1C1CHBF_enUS807US807&ei=W8w5XfDOFLuT0PEPqP-YyAQ&q=how+to+make+freeze+row+on+html+table&oq=how+to+make+freeze+row+on+html+table&gs_l=psy-ab.3..0i71l8.0.0..23532...0.0..0.0.0.......0......gws-wiz.........12%3A0j13%3A0.kFHnXbTElcY&ved=0ahUKEwiw6PLzstDjAhW7CTQIHag_BkkQ4dUDCAo&uact=5 -->
+            <!-- table view code start-->
+            <!-- Floating-header start -->
             <div class="table-view">
                 <div class="floating-header">
                     <table>
@@ -90,6 +89,8 @@
                         </thead>
                     </table>
                 </div>
+                <!-- Floating-header end -->
+                <!-- Floating options start -->
                 <div class="floating-options moveable">
                     <table>
                         <thead>
@@ -211,7 +212,7 @@
                     </table>
                 </div>
                 <!-- Floating options end -->
-
+                <!-- table start -->
                 <table>
                     <thead>
                         <tr>
@@ -374,9 +375,12 @@
                         </tr>
                     </tbody>
                 </table>
+                <!-- table end -->
             </div>
+            <!-- table view code end-->
             <div class="pagination"></div>
         </div>
+        <!-- table view container start -->
     </div>
     <!-- dev-tool end-->
 
