@@ -1,0 +1,451 @@
+/* developer tools CSS */
+
+
+/*
+-------------------------------------------------------------- 
+general
+-------------------------------------------------------------- 
+*/
+
+html, body {
+    padding: 0;
+    margin: 0;
+    height: 100vh; 
+    overflow: hidden;
+    font-family: 'Raleway', sans-serif;
+    color: rgb(163, 163, 163);
+    font-size: 16px;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+::selection {
+    color: #ffffff;
+    background: #73E6F2;
+}
+
+a {
+    color: #BBBBBB;
+    text-decoration: none;
+    transition: all 300ms ease-in-out;
+}
+
+a:hover {
+    color: #61CDFE;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+/* scrollbar pieces ============================================== */
+/* https://css-tricks.com/custom-scrollbars-in-webkit/ */
+::-webkit-scrollbar { 
+    width: 7px;
+    height: 7px;
+    background-color: transparent;
+ }
+::-webkit-scrollbar-button { 
+    display: none;
+ }
+::-webkit-scrollbar-thumb { 
+    border-radius: 10px;
+    background-color: rgb(230, 230, 230);    
+}
+.table-view:hover::-webkit-scrollbar-thumb { 
+    background-color: rgb(218, 218, 218);  
+}
+
+.fade-out {
+    -webkit-animation-name: fade-out; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    animation-name: fade-out;
+    animation-duration: 1s;
+}
+
+/* login-form-container animation code */
+@keyframes fade-out {
+    0%   {opacity: inherit;}
+    100% {opacity: 0;}
+}
+
+.fade-in {
+    -webkit-animation-name: fade-in; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1s; /* Safari 4.0 - 8.0 */
+    animation-name: fade-in;
+    animation-duration: 1s;
+}
+
+/* login-form-container animation code */
+@keyframes fade-in {
+    0%   {opacity: inherit;}
+    100% {opacity: 1;}
+}
+
+/*
+-------------------------------------------------------------- 
+Login
+-------------------------------------------------------------- 
+*/
+.login-container {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    animation-fill-mode: forwards; 
+}
+
+.login {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    width: 100%;
+    animation-fill-mode: forwards;
+}
+
+.login-bg {
+    position: relative;
+    min-height: 100vh;
+    animation-fill-mode: forwards;
+}
+
+.login-bg img {
+    width: 85%;
+    max-width: 1000px;
+}
+
+.login-form-container {
+    position: absolute;
+    left: 0;
+    bottom: -400px;
+    width: 100%;
+    animation-fill-mode: forwards;
+}
+
+.login-form-container-hold {
+    bottom: calc(50% - 100px);
+}
+
+.login-form-container.login-enter {
+    -webkit-animation-name: login-enter; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 1.2s; /* Safari 4.0 - 8.0 */
+    animation-name: login-enter;
+    animation-duration: 1.2s;
+    animation-timing-function: cubic-bezier(0.42, 0, 0.05, 1.1);
+    animation-delay: .5s;
+}
+
+/* login-form-container animation code */
+@keyframes login-enter {
+    0%   {bottom: -400px;}
+    75%  {bottom: calc(50% - 60px)}
+    100% {bottom: calc(50% - 100px);}
+}
+
+.login-form-container.login-error {
+    animation-name: login-error-container;
+    animation-duration: 1.2s;   
+}
+
+/* login-error-container animation code */
+@keyframes login-error-container {
+    0% {bottom: calc(50% - 100px);}
+    25%  {bottom: calc(50% - 40px)}
+    75%  {bottom: calc(50% - 40px)}
+    100% {bottom: calc(50% - 100px);}
+}
+
+.login-form.login-error {
+    animation-name: login-error-form;
+    animation-duration: 1.2s;
+}
+
+/* login-error-container animation code */
+@keyframes login-error-form {
+    0% {margin: 0;}
+    25%  {margin: 0;}
+    35%  {margin: 0 0 0 25px;}
+    45%  {margin: 0 25px 0 0;}
+    55%  {margin: 0 0 0 25px;}
+    65%  {margin: 0 25px 0 0;}
+    75%  {margin: 0;}
+    100% {margin: 0;}
+}
+
+.login-leave {
+    bottom: calc(50% - 100px);
+    animation-name: login-leave;
+    -webkit-animation-name: login-leave; /* Safari 4.0 - 8.0 */
+    animation-duration: 1.2s;
+    animation-timing-function: cubic-bezier(0.42, 0, 0.05, 1.1);
+    animation-delay: .5s;
+}
+
+/* login-leave animation code */
+@keyframes login-leave {
+    0% {bottom: calc(50% - 100px);}
+    25%  {bottom: calc(50% - 60px)}
+    100%   {bottom: -400px;}
+}
+
+.login-form {
+    padding: 25px;
+    background-image: linear-gradient(to bottom right, #ffffff, #EFEFEF);  
+    border-radius: 16px;
+    box-shadow: 0px 3px 16px rgba(0, 0, 0, 0.3);
+}
+
+.login-form > div {
+    background: url("images/login-form-bg.png") no-repeat center;
+    background-size: cover; 
+    border-radius: 16px;
+    box-sizing: border-box;
+    padding: 25px 0px;
+}
+
+.login-form form {
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-form-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.login-form-grid > div {
+    padding: 10px 25px;
+    position: relative;
+}
+
+.login-form-icon {
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 20px;
+    left: 35px;
+}
+
+.login-show-password {
+    color: rgba(255, 255, 255, 0.3);
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    cursor: pointer;
+}
+
+.login-form input[type=text],
+.login-form input[type=password] {
+    display: block;
+    padding: 10px 5px;
+    padding-left: 35px;
+    border: 0px solid transparent;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.5);
+    outline-color: rgba(0, 0, 0, 0.3);
+    transition: all 400ms ease-in-out;
+}
+
+.login-form input[type=text]:focus,
+.login-form input[type=password]:focus {
+    outline-color: rgba(0, 0, 0, 0.5); 
+}
+
+.login-error .login-form input[type=text],
+.login-error .login-form input[type=password] {
+    background-color: rgba(255, 0, 0, 0.5);
+    outline-color: rgba(255, 0, 0, 0.5);
+}
+
+.login-success .login-form input[type=text],
+.login-success .login-form input[type=password] {
+    background-color: rgba(7, 177, 1, 0.5);
+    outline-color: rgba(7, 177, 1, 0.5);
+}
+
+.login-form ::-webkit-input-placeholder { /* Edge */
+    color: rgba(255, 255, 255, 0.3);
+}
+  
+.login-form :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.login-form ::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.login-form input[type=submit] {
+    border: unset;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+    padding: 10px 5px;
+    cursor: pointer;
+    outline:none;
+    transition: all 400ms ease-in-out;
+}
+
+.login-form input[type=submit]:hover {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.65);
+}
+
+/*
+-------------------------------------------------------------- 
+DevTool Home/Edit
+-------------------------------------------------------------- 
+*/
+
+.dev-tool-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 30px 15px 30px 0;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    justify-content: center;
+    box-sizing: border-box;
+    animation-fill-mode: forwards;  
+}
+
+.tables-container {
+    position: relative;
+    min-width: 350px;
+    height: calc(100vh - 60px);
+}
+
+.tables-search-options {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    padding: 0 15px 30px 15px;
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.tables {
+    height: 100%;
+    background-color: #F1F1F1;
+}
+
+.table-view-container {
+    z-index: 3;
+    position: relative;
+    border: 1px solid #BAB8B8;
+    border-radius: 9px;
+    min-width: 350px;
+    height: calc(100vh - 60px);
+    padding: 10px 30px;
+    margin-right: 30px;
+    background-color: #ffffff;
+}
+
+.side-border-bar {
+    position: absolute;
+    top: 51px;
+    right: 37px;
+    width: 10px;
+    height: calc(100vh - 136px);
+    background-color: #ffffff;
+}
+
+.bottom-border-bar {
+    position: absolute;
+    bottom: 23px;
+    right: 47px;
+    height: 10px;
+    width: calc(100% - 70px);
+    background-color: #ffffff;
+}
+
+.table-view-container h1 {
+    margin: 5px 0 15px 0;
+    font-size: 20px;
+}
+
+.button-options{ 
+    position: absolute;
+    top: 20px;
+    right: -23px;
+}
+
+.button-options .btn {
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    margin-bottom: 11px;
+    background-color: #61CDFE;
+    color: #ffffff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 400ms ease-in-out;
+}
+
+.button-options .btn:hover {
+    background-color: rgb(88, 188, 235);
+}
+
+.table-view {
+    height: calc(100vh - 132px);
+    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+table {
+    border-collapse: collapse;
+    min-width: calc(100vw - 30%);
+}
+
+thead {
+    background-color: #C4C4C4;
+    color: #696969;
+}
+
+th, td {
+    text-align: center;
+    padding: 8px;
+    max-width: 500px;
+    white-space: nowrap;
+}
+
+.wrap {
+    white-space: normal;
+    width: 700px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/*
+-------------------------------------------------------------- 
+general override
+-------------------------------------------------------------- 
+*/
+
+.non-active-container {
+    top: 100%;
+    left: 0; 
+}
