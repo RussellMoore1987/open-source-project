@@ -93,7 +93,12 @@ setTimeout(function(){ document.querySelector('.form-start').focus(); }, 1000);
 
 // get scroll effect
 const tableView = document.querySelector('.table-view');
-tableView.addEventListener("scroll", function(tableView){
+tableView.addEventListener("scroll", function(){
     console.log(document.querySelector('.table-view').scrollTop);
     console.log(document.querySelector('.table-view').scrollLeft);
+    // console.log(document.querySelector('.table-view').scrollTop);
+    const top = document.querySelector('.table-view').scrollTop;
+    const left = document.querySelector('.table-view').scrollLeft;
+    document.querySelector('.floating-header').scrollLeft = left;
+    document.querySelector('.floating-options.moveable').scrollTop = top;
 });

@@ -362,6 +362,7 @@ DevTool Home/Edit
 }
 
 .side-border-bar {
+    z-index: 20;
     position: absolute;
     top: 51px;
     right: 37px;
@@ -371,6 +372,7 @@ DevTool Home/Edit
 }
 
 .bottom-border-bar {
+    z-index: 20;
     position: absolute;
     bottom: 23px;
     right: 47px;
@@ -399,11 +401,12 @@ DevTool Home/Edit
     color: #ffffff;
     font-size: 17px;
     cursor: pointer;
-    transition: all 400ms ease-in-out;
+    transition: all 300ms ease-in-out;
 }
 
-.button-options .btn:hover {
-    background-color: rgb(88, 188, 235);
+.button-options .btn:hover,
+.floating-options .btn:hover {
+    background-color: rgb(80, 175, 219);
 }
 
 .table-view {
@@ -413,30 +416,158 @@ DevTool Home/Edit
     overflow-y: scroll;
 }
 
+.floating-header {
+    position: absolute;
+    top: 54px;
+    width: calc(100% - 75px);
+    overflow: hidden;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.floating-options {
+    position: absolute;
+    top: 54px;
+    right: 45px;
+    width: 100px;
+    overflow: hidden;
+}
+
+.floating-options.moveable {
+    height: calc(100vh - 149px);
+    box-shadow: -6px 0px 6px rgba(0, 0, 0, 0.15);
+}
+
+.floating-options .btn-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 17px;
+    display: flex;
+    align-items: center;
+}
+
+.floating-options .btn {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    margin: 5px 5px 5px 0;
+    font-size: 14px;
+    background-color: #61CDFE;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 400ms ease-in-out;
+}
+
+.floating-options thead {
+    color: #696969;
+    text-align: left;
+}
+
+.floating-options th, 
+.floating-options td {
+    position: relative;
+    text-align: left;
+}
+
+.floating-options th {
+    color: #696969;
+}
+
+.place-holder-text {
+    visibility: hidden;
+}
+
+.floating-header span {
+    background-color: #C4C4C4;
+    color: #696969;
+    text-align: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
 table {
     border-collapse: collapse;
     min-width: calc(100vw - 30%);
 }
 
-thead {
+.floating-options table {
+    border-collapse: collapse;
+    min-width: unset;
+}
+
+th {
     background-color: #C4C4C4;
     color: #696969;
+    white-space: nowrap;
+    height: 35px;
 }
 
 th, td {
     text-align: center;
     padding: 8px;
-    max-width: 500px;
-    white-space: nowrap;
 }
 
-.wrap {
-    white-space: normal;
-    width: 700px;
+.view-lg {
+    padding-left: 350px; 
+    padding-right: 350px; 
+}
+
+.view-md {
+    padding-left: 200px; 
+    padding-right: 200px; 
+}
+
+.view-sm {
+    padding-left: 100px; 
+    padding-right: 100px; 
+}
+
+.view-xs {
+    padding-left: 50px; 
+    padding-right: 50px; 
+}
+
+.view-xxs {
+    padding-left: 25px; 
+    padding-right: 25px; 
+}
+
+.view-lg-right {
+    padding-left: 18px;
+    padding-right: calc(700px - 10px); 
+}
+
+.view-md-right {
+    padding-left: 18px;
+    padding-right: calc(400px - 10px); 
+}
+
+.view-sm-right {
+    padding-left: 18px;
+    padding-right: calc(200px - 10px); 
+}
+
+.view-xs-right {
+    padding-left: 18px;
+    padding-right: calc(100px - 10px); 
+}
+
+.view-xxs-right {
+    padding-left: 18px;
+    padding-right: calc(50px - 10px); 
+}
+
+.view-end {
+    padding-left: 100px; 
 }
 
 tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff;
 }
 
 /*
