@@ -250,9 +250,9 @@
                 // static protected $mainApiKey = 'T3$$tK3y!2456'; // use get_main_api_key()
                 // static protected $mainGetApiKey = 'T3$$tK3y!24561234'; // use get_main_get_api_key()
                 // static protected $mainPostApiKey = 'T3$$tK3y!2456@#5^&'; // use get_main_post_api_key()
-            // set up classList in the DatabaseObject, specify the routs that are available for each class
-            // class then available routs // "class" => ["available", "routs"]
-                // make sure rout names match the routs specified in the class apiInfo array
+            // set up classList in the DatabaseObject, specify the routes that are available for each class
+            // class then available routes // "class" => ["available", "routes"]
+                // make sure rout names match the routes specified in the class apiInfo array
                 // "Label" => ["labels","labels/mid","labels/full"], 
                 // example bellow
                     // static protected $classList = [
@@ -268,9 +268,9 @@
             $apiInfo = [
                 // class specific validation, used for all HTTP methods if specific methodKey is not available, otherwise will refer to // * password/key specificity
                 'classKey' => 'T3$$tK3y!2456',
-                // routs allow you to specify routs and the options available to those routs // * required
-                'routs' => [
-                    // first rout, you can name a rout what ever you would like, but it is best to be descriptive about your routs
+                // routes allow you to specify routes and the options available to those routes // * required
+                'routes' => [
+                    // first rout, you can name a rout what ever you would like, but it is best to be descriptive about your routes
                     // this rout shows all available properties/options
                     "users/full" => [
                         // rout specific documentation, optional

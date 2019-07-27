@@ -28,7 +28,7 @@
             // you can specify individual class API keys in the databaseObject class for post and get
             static protected $mainGetApiKey = ''; // use get_main_get_api_key()
             static protected $mainPostApiKey = ''; // use get_main_post_api_key()
-            // class list, specify routs
+            // class list, specify routes
             static protected $classList = [
                 "Category" => ['categories', 'categories/dev'],
                 // TODO: this class dose not exist right now

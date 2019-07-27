@@ -24,7 +24,7 @@
             $apiInfo = [
                 // class specific validation, used for all HTTP methods if specific key is not available, otherwise will refer to main get and main post or main API key
                 'classKey' => 'T3$$tK3y!24%6',
-                'routs' => [
+                'routes' => [
                     'labels' => [
                         // name specific properties you wish to exclude in the API
                         'apiPropertyExclusions' => ['password', 'adminNote'],
@@ -220,7 +220,7 @@ foreach ($apiClassList_array as $routName => $className) {
     // get api info for class
     $apiInfo_array = $className::get_api_info();
     // rout info
-    $routInfo_array = $apiInfo_array['routs'][$routName];
+    $routInfo_array = $apiInfo_array['routes'][$routName];
 
     // check to see if we have a get http method
     if (isset($routInfo_array['httpMethods']['get']) && isset($routInfo_array['httpMethods']['get']['arrayInfo'])) {

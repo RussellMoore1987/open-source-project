@@ -149,7 +149,7 @@
         // @ class api start
             // * api_documentation, located at: root/private/reference_information.php
             static protected $apiInfo = [
-                'routs' => [
+                'routes' => [
                     'users' => [
                         'httpMethods' => [
                             'get' => [

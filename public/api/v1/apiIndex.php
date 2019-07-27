@@ -36,8 +36,8 @@ $apiRoot = [
             "validationDocumentation" => val_validation_documentation()
         ]   
     ],
-    // routs
-    "routs" => []
+    // routes
+    "routes" => []
 ];
 
 // get list of class for the api, key => value, posts => Post
@@ -60,7 +60,7 @@ foreach ($apiClassList_array as $routName => $className) {
     // get api info for class
     $apiInfo_array = $className::get_api_class_info();
     // rout info
-    $routInfo_array = $apiInfo_array['routs'][$routName];
+    $routInfo_array = $apiInfo_array['routes'][$routName];
     // make class info array
     $dbKeyInfo_array['mainApiKey'] = DatabaseObject::get_main_api_key();
     $dbKeyInfo_array['mainGetApiKey'] = DatabaseObject::get_main_get_api_key();
@@ -449,9 +449,9 @@ foreach ($apiClassList_array as $routName => $className) {
             }
 
         // set up quick view documentation element
-        $apiRoot["routs"]['quickViewOFRoutesAvailable'][$rout] = $quickViewOFRoutesAvailable;
+        $apiRoot["routes"]['quickViewOFRoutesAvailable'][$rout] = $quickViewOFRoutesAvailable;
         // add class reference/endpoint documentation
-        $apiRoot["routs"][$rout] = $tempEndPoint_arry;
+        $apiRoot["routes"][$rout] = $tempEndPoint_arry;
     }
 }
 

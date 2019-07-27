@@ -50,8 +50,8 @@
             static protected $apiInfo = [
                 // class key
                 'classKey' => 'T3$$tK3y!2456',
-                // routs available
-                'routs' => [
+                // routes available
+                'routes' => [
                     'labels' => [
                         // rout specific documentation, optional
                         'routDocumentation' => 'This is for public access only.',

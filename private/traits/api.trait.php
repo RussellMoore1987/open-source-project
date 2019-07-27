@@ -15,7 +15,7 @@
                 // get api info for class
                 $apiInfo_array = $className::get_api_class_info();
                 // rout info
-                $routInfo_array = $apiInfo_array['routs'][$routName];
+                $routInfo_array = $apiInfo_array['routes'][$routName];
                 // set static::$getApiParameters/arrayInfo parameters, check to make sure we actually have I get HTTP method
                 if (isset($routInfo_array['httpMethods']['get'])) {
                     $arrayName = $routInfo_array['httpMethods']['get']['arrayInfo'];
@@ -68,7 +68,7 @@
 
                 // get api info for class
                 $apiInfo_array = $className::get_api_class_info();
-                $routInfo_array = $apiInfo_array['routs'][$routName];
+                $routInfo_array = $apiInfo_array['routes'][$routName];
                 // This should get all post like requests POST, PUT, PATCH, DELETE
                 if (count($_POST) >= 1) {
                     $postVars_array = $_POST;
