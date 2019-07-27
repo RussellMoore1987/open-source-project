@@ -94,11 +94,21 @@ setTimeout(function(){ document.querySelector('.form-start').focus(); }, 1000);
 // get scroll effect
 const tableView = document.querySelector('.table-view');
 tableView.addEventListener("scroll", function(){
-    console.log(document.querySelector('.table-view').scrollTop);
-    console.log(document.querySelector('.table-view').scrollLeft);
     // console.log(document.querySelector('.table-view').scrollTop);
+    // console.log(document.querySelector('.table-view').scrollLeft);
     const top = document.querySelector('.table-view').scrollTop;
     const left = document.querySelector('.table-view').scrollLeft;
     document.querySelector('.floating-header').scrollLeft = left;
     document.querySelector('.floating-options.moveable').scrollTop = top;
+});
+const floatingOptions = document.querySelector('.floating-options.moveable');
+floatingOptions.addEventListener("scroll", function(){
+    const top = document.querySelector('.floating-options.moveable').scrollTop;
+    document.querySelector('.table-view').scrollTop = top;
+    // check to see if over top > tableViewTop, This helps the table floating options not to go down further than the table does
+    const tableViewTop = document.querySelector('.table-view').scrollTop
+    if (top > tableViewTop) {
+        document.querySelector('.floating-options.moveable').scrollTop = tableViewTop;  
+    }
+    document.querySelector('.floating-options.moveable').scrollLeft = 0;
 });

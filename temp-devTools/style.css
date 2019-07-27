@@ -29,7 +29,7 @@ html, body {
 
 ::selection {
     color: #ffffff;
-    background: #73E6F2;
+    background: #61CDFE;
 }
 
 a {
@@ -63,6 +63,21 @@ div {
 .table-view:hover::-webkit-scrollbar-thumb { 
     background-color: rgb(218, 218, 218);  
 }
+
+/* floating-options scroll bar, to help hide scroll */
+.floating-options.moveable::-webkit-scrollbar { 
+    width: 0px;
+    height: 0px;
+    background-color: transparent;
+ }
+ .floating-options.moveable::-webkit-scrollbar-button { 
+    display: none;
+ }
+ .floating-options.moveable::-webkit-scrollbar-thumb { 
+    border-radius: 10px;
+    background-color: rgba(230, 230, 230, 0);    
+}
+/* scrollbar pieces end ============================================== */
 
 .fade-out {
     -webkit-animation-name: fade-out; /* Safari 4.0 - 8.0 */
@@ -365,7 +380,7 @@ DevTool Home/Edit
     z-index: 20;
     position: absolute;
     top: 51px;
-    right: 37px;
+    right: 36px;
     width: 10px;
     height: calc(100vh - 136px);
     background-color: #ffffff;
@@ -375,9 +390,9 @@ DevTool Home/Edit
     z-index: 20;
     position: absolute;
     bottom: 23px;
-    right: 47px;
+    right: 46px;
     height: 10px;
-    width: calc(100% - 70px);
+    width: calc(100% - 76px);
     background-color: #ffffff;
 }
 
@@ -434,6 +449,7 @@ DevTool Home/Edit
 
 .floating-options.moveable {
     height: calc(100vh - 149px);
+    overflow-y: scroll;
     box-shadow: -6px 0px 6px rgba(0, 0, 0, 0.15);
 }
 
@@ -568,6 +584,15 @@ tr:nth-child(even) {
 
 tr:nth-child(odd) {
     background-color: #ffffff;
+}
+
+tr:nth-child(even) td {
+    /* border-left: 1px solid #e7e7e7; */
+    border-right: 1px solid #e7e7e7;
+}
+
+tr:nth-child(odd) td {
+    border-right: 1px solid #f3f3f3;
 }
 
 /*
