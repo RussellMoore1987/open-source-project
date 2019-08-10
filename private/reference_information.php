@@ -129,7 +129,7 @@
     // @ validation_options
         // # examples of parameters
             // val_validation(
-            //     'the coolest post ever', 
+            //     'value to be validated', 
             //     [
             //         'name' => 'Post Title', 
             //         'type' => 'num'/'str'/'int', 

@@ -13,8 +13,9 @@ html, body {
     height: 100vh; 
     overflow: hidden;
     font-family: 'Raleway', sans-serif;
-    color: rgb(163, 163, 163);
+    color: #a3a3a3;
     font-size: 16px;
+    scroll-behavior: smooth;
 }
 
 .flex-center {
@@ -58,9 +59,11 @@ div {
  }
 ::-webkit-scrollbar-thumb { 
     border-radius: 10px;
-    background-color: rgb(230, 230, 230);    
+    background-color: rgb(230, 230, 230);  
 }
-.table-view:hover::-webkit-scrollbar-thumb { 
+
+.table-view:hover::-webkit-scrollbar-thumb,
+.tables:hover::-webkit-scrollbar-thumb { 
     background-color: rgb(218, 218, 218);  
 }
 
@@ -78,6 +81,48 @@ div {
     background-color: rgba(230, 230, 230, 0);    
 }
 /* scrollbar pieces end ============================================== */
+
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    border-radius: 4px;
+    color: #a3a3a3;
+    box-sizing: border-box;
+    transition: border 400ms ease-in-out;
+}
+
+input[type=text]:focus, select:focus {
+    border: 1px solid #cfcfcf;
+}
+
+input[type=text]::-webkit-input-placeholder {
+    color: #c4c4c4;
+}
+
+input[type=text]:-ms-input-placeholder {
+    color: #c4c4c4;
+}
+
+input[type=text]::placeholder {
+    color: #c4c4c4;
+}
+    
+input[type=submit] {
+    background-color: #61CDFE;
+    color: #ffffff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+}
+    
+input[type=submit]:hover {
+    background-color: #50afdb;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.15);
+}
 
 .fade-out {
     -webkit-animation-name: fade-out; /* Safari 4.0 - 8.0 */
@@ -101,8 +146,79 @@ div {
 
 /* login-form-container animation code */
 @keyframes fade-in {
-    0%   {opacity: inherit;}
+    0%   {opacity: 0;}
     100% {opacity: 1;}
+}
+
+[data-toolTip]::before {
+    position: absolute;
+    top: 41px;
+    left: calc(50% - 5px);
+    z-index: 300;
+    width: 7px;
+    height: 7px;
+    background-color: var(--userCard-tooltip-color, rgba(0, 0, 0, 0.87));
+    content: " ";
+    transform: scale(0) rotate(45deg);
+    transition: transform 100ms ease-in-out;
+}
+
+[data-toolTip] {
+    position: relative;
+}
+
+[data-toolTip]:hover::before {
+    transform: scale(1) rotate(45deg);
+    transition-delay: 1.2s;
+}
+
+[data-toolTip]::after {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    z-index: 300;
+    width: fit-content;
+    height: fit-content;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: var(--userCard-tooltip-color, rgba(0, 0, 0, 0.87));
+    color: var(--userCard-tooltip-text-color, #ffffff);
+    font-size: 11px;
+    text-align: center;
+    word-wrap: none;
+    content: attr(data-toolTip);
+    transform: scale(0);
+    white-space: nowrap;
+    transition: transform 100ms ease-in-out;
+}
+
+[data-toolTip]:hover::after {
+    transform: scale(1);
+    transition-delay: 1.2s;
+}
+
+.btn {
+    border-radius: 7px;
+    padding: 10px 15px;
+    background-color: #61CDFE;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+    transition: all 300ms ease-in-out;
+}
+.btn:hover{
+    color: #ffffff;
+    background-color: #50afdb;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.15);
+}
+
+.spacer-m30 {
+    margin: 15px auto;
+}
+
+.spacer-p30 {
+    padding: 15px 0px;
 }
 
 /*
@@ -271,6 +387,8 @@ Login
     padding: 10px 5px;
     padding-left: 35px;
     border: 0px solid transparent;
+    border-radius: unset;
+    margin: 0;
     background-color: rgba(0, 0, 0, 0.5);
     color: rgba(255, 255, 255, 0.5);
     outline-color: rgba(0, 0, 0, 0.3);
@@ -294,20 +412,20 @@ Login
     outline-color: rgba(7, 177, 1, 0.5);
 }
 
-.login-form ::-webkit-input-placeholder { /* Edge */
+.login-form input::placeholder {
     color: rgba(255, 255, 255, 0.3);
 }
-  
-.login-form :-ms-input-placeholder { /* Internet Explorer 10-11 */
+.login-form input::-webkit-input-placeholder {
     color: rgba(255, 255, 255, 0.3);
 }
-
-.login-form ::placeholder {
+.login-form input:-ms-input-placeholder {
     color: rgba(255, 255, 255, 0.3);
 }
 
 .login-form input[type=submit] {
     border: unset;
+    border-radius: unset;
+    margin: 0;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.5);
     color: #ffffff;
@@ -336,7 +454,7 @@ DevTool Home/Edit
     height: 100vh;
     padding: 30px 15px 30px 0;
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: minmax(300px, 350px) minmax(350px, auto);
     justify-content: center;
     box-sizing: border-box;
     animation-fill-mode: forwards;  
@@ -350,27 +468,167 @@ DevTool Home/Edit
 
 .tables-search-options {
     position: absolute;
-    top: 0;
+    top: 0px;
     left: 0;
-    width: 100%;
+    width: calc(100% + 20px);
     background-color: #ffffff;
-    box-sizing: border-box;
-    padding: 0 15px 30px 15px;
+    padding: 0 35px 30px 15px;
     box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
+}
+.tables-search-options input{
+    margin: unset;
+}
+
+.tables-search-options::after {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    width: calc(100% + 20px);
+    height: 40px;
+    box-sizing: border-box;
+    content: ' ';
+    background-color: #ffffff;
 }
 
 .tables {
-    height: 100%;
+    height: calc(100% - 387px);
+    margin: 72px 0 0 0;
+    overflow: hidden;
+    overflow-y: scroll;
     background-color: #F1F1F1;
+}
+
+.table-card {
+    margin: 0px auto 30px auto;
+    width: 80%;
+    height: 300px;
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    justify-content: center;
+    grid-gap: 10px;
+    background-color: #ffffff;
+    overflow: hidden;
+    box-shadow: 0px 9px 16px rgba(0, 0, 0, 0.3);
+    transition: all 500ms, height 300ms;
+    transform-origin: center;
+    transition-timing-function: ease-in-out;
+}
+
+.table-card-hide {
+    transform: scale(0);
+    padding: 0;
+    height: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
+    transition:all 300ms, height 1000ms;
+}
+
+.table-card:hover {
+    box-shadow: 0px 9px 16px rgba(0, 0, 0, .1);
+}
+
+.table-card input,
+.table-card h3 {
+    margin: unset;
+}
+
+.table-card input,
+.table-card input::placeholder {
+    text-align: center;      
+}
+
+.table-card .btn {
+    background-color: #EBEBEB;
+    color: #a3a3a3;
+}
+
+.table-card .btn:hover {
+    background-color: #dddddd;
+    color: #ffffff;
+}
+
+.tables-footer-options {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    width: calc(100% + 20px);
+    height: 314px;
+    background-color: #ffffff;
+    padding: 25px 45px 0px 25px;
+    box-shadow: 0px -6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.tables-footer-options::after {
+    position: absolute;
+    top: 0px;
+    right: -20px;
+    width: 20px;
+    height: 100%;
+    content: '';
+    background-color: #ffffff;
+}
+
+.tables-footer-options::before {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    width: calc(100% + 20px);
+    height: 20px;
+    content: '';
+    background-color: #ffffff;
+}
+
+.tables-footer-options > div {
+    border: 1px solid #e6e6e6;
+    border-radius: 9px; 
+    padding: 15px 25px 20px 25px;     
+}
+
+.all-tables-card {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    justify-content: center;
+    grid-gap: 10px;       
+}
+
+.all-tables-card h2 {
+    margin: 0;
+    font-size: 18px;      
+}
+
+.all-tables-card input,
+.all-tables-card input::placeholder {
+    margin: unset;
+    text-align: center;      
+}
+
+.all-tables-card > div {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    justify-content: center;
+    grid-gap: 10px; 
+    background-color: #F1F1F1; 
+    border: 1px solid #d5d5d5;
+    border-radius: 9px; 
+    padding: 15px 20px;      
+}
+
+.span2 {
+    grid-column: span 2;
+}
+
+.span2-row {
+    grid-row: span 2;
 }
 
 .table-view-container {
     z-index: 3;
     position: relative;
-    border: 1px solid #BAB8B8;
+    border: 1px solid #e6e6e6;
     border-radius: 9px;
     min-width: 350px;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 110px);
     padding: 10px 30px;
     margin-right: 30px;
     background-color: #ffffff;
@@ -379,17 +637,17 @@ DevTool Home/Edit
 .side-border-bar {
     z-index: 20;
     position: absolute;
-    top: 51px;
+    top: 52px;
     right: 36px;
     width: 10px;
-    height: calc(100vh - 136px);
+    height: calc(100vh - 186px);
     background-color: #ffffff;
 }
 
 .bottom-border-bar {
     z-index: 20;
     position: absolute;
-    bottom: 23px;
+    bottom: 22px;
     right: 46px;
     height: 10px;
     width: calc(100% - 76px);
@@ -411,6 +669,7 @@ DevTool Home/Edit
     border-radius: 50%;
     height: 45px;
     width: 45px;
+    padding: unset;
     margin-bottom: 11px;
     background-color: #61CDFE;
     color: #ffffff;
@@ -419,13 +678,24 @@ DevTool Home/Edit
     transition: all 300ms ease-in-out;
 }
 
+.button-options .btn.delete,
+.floating-options .btn.delete {
+    background-color: #d60000;
+}
+
+.button-options .btn.delete:hover,
+.floating-options .btn.delete:hover {
+    background-color: #c00000;
+}
+
 .button-options .btn:hover,
 .floating-options .btn:hover {
-    background-color: rgb(80, 175, 219);
+    background-color: #50afdb;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.15);
 }
 
 .table-view {
-    height: calc(100vh - 132px);
+    height: calc(100vh - 182px);
     overflow: hidden;
     overflow-x: scroll;
     overflow-y: scroll;
@@ -448,8 +718,7 @@ DevTool Home/Edit
 }
 
 .floating-options.moveable {
-    height: calc(100vh - 149px);
-    overflow-y: scroll;
+    height: calc(100vh - 197px);
     box-shadow: -6px 0px 6px rgba(0, 0, 0, 0.15);
 }
 
@@ -593,6 +862,40 @@ tr:nth-child(even) td {
 
 tr:nth-child(odd) td {
     border-right: 1px solid #f3f3f3;
+}
+
+.pagination {
+    padding-top: 15px;
+}
+
+.pagination span {
+    padding-bottom: 3px;
+}
+
+.pagination .btn {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    padding: unset;
+    margin: 5px 5px 5px 0;
+    font-size: 14px;
+    background-color: #C4C4C4;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 400ms ease-in-out;
+}
+
+.pagination .btn.active,
+.pagination .btn.active:hover {
+    background-color: #61CDFE;
+}
+
+.pagination .btn:hover {
+    background-color: #b1b1b1;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.15);
 }
 
 /*
