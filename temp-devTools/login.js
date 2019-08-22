@@ -72,7 +72,7 @@ function login_check() {
     // console.log(loginUsername.value.trim());
     // console.log(loginPassword.value.trim());
     // loginUsername.value.trim() == "Ram" && loginPassword.value.trim() == "Gogo1234"
-    if (loginUsername.value.trim() == "test" && loginPassword.value.trim() == "test") {
+    if (loginUsername.value.trim() == "" && loginPassword.value.trim() == "") {
         login_pass()
     } else {
         login_failed();
@@ -175,4 +175,11 @@ searchTables.addEventListener("input", function(){
             element.classList.add("table-card-hide");
         }
     }
+});
+
+// edit view
+const editTablesView = document.querySelector(".edit-table-btn"); 
+editTablesView.addEventListener("click", function() {
+    const devToolContainer = document.querySelector(".dev-tool-container");
+    devToolContainer.classList.toggle("edit-tables-view");
 });

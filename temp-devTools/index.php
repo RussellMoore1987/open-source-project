@@ -31,7 +31,7 @@
                                     <i class="fas fa-eye login-show-password"></i>
                                 </div>
                                 <div>
-                                    <input type="submit">
+                                    <input type="submit" value="Submit">
                                 </div>
                             </div>
                         </form>
@@ -126,12 +126,12 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div class="table-view-main-container">
             <!-- table view container start -->
             <div class="table-view-container">
                 <h1 class="text-center"><a href="">&#91;Table Name&#93;</a></h1>
                 <div class="button-options">
-                    <div class="btn flex-center" data-toolTip="Edit Table Info"><i class="fas fa-pencil-alt"></i></div>
+                    <div class="btn flex-center edit-table-btn" data-toolTip="Edit Table Info"><i class="fas fa-pencil-alt"></i></div>
                     <div class="btn flex-center" data-toolTip="View Errors"><i class="far fa-comment"></i></div>
                     <div class="btn delete flex-center" data-toolTip="Delete All Records"><i class="fas fa-trash-alt"></i></div>
                     <div class="btn flex-center logout-btn" data-toolTip="log Out"><i class="fas fa-power-off"></i></div>
@@ -453,15 +453,15 @@
             </div>
             <!-- table view container start -->
             <div class="pagination flex-center">
-                <a class="btn" href=""><i class="fas fa-angle-double-left"></i></a>
-                <a class="btn" href=""><i class="fas fa-angle-left"></i></a>
+                <a class="btn" href="" data-toolTip="Skip to Start"><i class="fas fa-angle-double-left"></i></a>
+                <a class="btn" href="" data-toolTip="Previous"><i class="fas fa-angle-left"></i></a>
                 <a class="btn" href=""><span>1</span></a>
                 <a class="btn" href=""><span>2</span></a>
                 <a class="btn active" href=""><span>3</span></a>
                 <a class="btn" href=""><span>4</span></a>
                 <a class="btn" href=""><span>5</span></a>
-                <a class="btn" href=""><i class="fas fa-angle-right"></i></a>
-                <a class="btn" href=""><i class="fas fa-angle-double-right"></i></a>
+                <a class="btn" href="" data-toolTip="Next"><i class="fas fa-angle-right"></i></a>
+                <a class="btn" href="" data-toolTip="Skip to End"><i class="fas fa-angle-double-right"></i></a>
             </div>
         </div>
     </div>

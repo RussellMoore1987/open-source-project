@@ -153,7 +153,7 @@ input[type=submit]:hover {
 [data-toolTip]::before {
     position: absolute;
     top: 41px;
-    left: calc(50% - 5px);
+    left: calc(50% - 4px);
     z-index: 300;
     width: 7px;
     height: 7px;
@@ -196,6 +196,16 @@ input[type=submit]:hover {
 [data-toolTip]:hover::after {
     transform: scale(1);
     transition-delay: 1.2s;
+}
+
+.pagination [data-toolTip]::after {
+    top: 30px;
+    right: unset;
+}
+
+.pagination [data-toolTip]::before {
+    top: 28px;
+    left: calc(50% - 3px);
 }
 
 .btn {
@@ -457,13 +467,35 @@ DevTool Home/Edit
     grid-template-columns: minmax(300px, 350px) minmax(350px, auto);
     justify-content: center;
     box-sizing: border-box;
-    animation-fill-mode: forwards;  
+    transition: all 400ms ease-in-out;
+}
+
+.dev-tool-container.edit-tables-view {
+    grid-template-columns: minmax(300px, 450px) minmax(350px, auto); 
+}
+
+.edit-tables-view .tables-container{
+    left: 400px;
+}
+
+.edit-tables-view .tables-footer-options {
+    bottom: 70px;
+    transition: bottom 400ms ease-in-out;
+}
+
+.edit-tables-view .tables-search-options {
+    padding: 62px 35px 30px 15px;
+    transition: padding 400ms ease-in-out;
 }
 
 .tables-container {
     position: relative;
+    left: 0px;
     min-width: 350px;
     height: calc(100vh - 60px);
+    animation-fill-mode: forwards; 
+    transition: left 600ms ease-in-out 400ms;
+    overflow: hidden;
 }
 
 .tables-search-options {
@@ -474,7 +506,9 @@ DevTool Home/Edit
     background-color: #ffffff;
     padding: 0 35px 30px 15px;
     box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
+    transition: padding 400ms ease-in-out 900ms;
 }
+
 .tables-search-options input{
     margin: unset;
 }
@@ -510,7 +544,7 @@ DevTool Home/Edit
     background-color: #ffffff;
     overflow: hidden;
     box-shadow: 0px 9px 16px rgba(0, 0, 0, 0.3);
-    transition: all 500ms, height 300ms;
+    transition: all 500ms, height 200ms;
     transform-origin: center;
     transition-timing-function: ease-in-out;
 }
@@ -557,6 +591,7 @@ DevTool Home/Edit
     background-color: #ffffff;
     padding: 25px 45px 0px 25px;
     box-shadow: 0px -6px 16px rgba(0, 0, 0, 0.3);
+    transition: bottom 400ms ease-in-out 900ms;
 }
 
 .tables-footer-options::after {
