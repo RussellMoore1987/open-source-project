@@ -8,7 +8,7 @@ trait Authenticate {
     //logs in user
     public static function log_in(array $log_in_array = []) {
         //verify user email and password
-        $user = self::authenticate_password($log_in_array);
+        $user = static::authenticate_password($log_in_array);
 
         if ($user) {
             
@@ -97,5 +97,6 @@ trait Authenticate {
         }
     } 
 }
+
 
 ?>
