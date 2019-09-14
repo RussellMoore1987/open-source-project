@@ -44,7 +44,7 @@ trait Authenticate {
         //make sure that an email and password were both supplied
         if (!empty($email) && !empty($password)) {
             //find user information for the given email address
-            $user_array = User::find_where("email='{$email}'"); 
+            $user_array = static::find_where("email='{$email}'"); 
             
             if(count($user_array)) { //if there is a user found
                 

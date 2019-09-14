@@ -594,6 +594,14 @@
                 $sql = "SELECT id, firstName, lastName FROM users ";
                 return static::find_by_sql($sql);
             }
+
+            // Get a list of all users that match the criteria
+            static public function get_users_by_username($username) {
+                $sql = "SELECT id, username, password, emailAddress, firstName, lastName ";
+                $sql .= "FROM users WHERE username = '" . self::db_escape($username) . "'";
+
+                return static::find_by_sql($sql);
+            }
             
             // # for a *single user* query's start
                 // get all extended info

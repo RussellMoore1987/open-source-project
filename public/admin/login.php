@@ -6,7 +6,7 @@
     $pageTitle = "Login";
 ?>
 
-    <!-- Login Form -->
+    <!-- TEST: Login Form -->
     <div style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh;">
         <form style="border: 1px solid black; display: flex; flex-direction: column; justify-content: space-around; align-items: center; width: 30vw; height: 30vh;">
             <h3 style="display: block;">Login Form</h3>
