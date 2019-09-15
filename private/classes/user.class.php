@@ -596,9 +596,9 @@
             }
 
             // Get a list of all users that match the criteria
-            static public function get_users_by_username($username) {
+            static public function get_users_by_email($email) {
                 $sql = "SELECT id, username, password, emailAddress, firstName, lastName ";
-                $sql .= "FROM users WHERE username = '" . self::db_escape($username) . "'";
+                $sql .= "FROM users WHERE emailAddress = '" . self::db_escape($email) . "'";
 
                 return static::find_by_sql($sql);
             }
