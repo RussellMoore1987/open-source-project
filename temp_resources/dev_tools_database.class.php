@@ -169,7 +169,7 @@ class Database {
             $sql .= "title VARCHAR(50) NOT NULL, ";
             $sql .= "subCatId INT(10) UNSIGNED NOT NULL DEFAULT 0, ";
             $sql .= "note VARCHAR(255) DEFAULT NULL, ";
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             $sql .= "useCat TINYINT(1) UNSIGNED NOT NULL, ";
             $sql .= "KEY subCatId (subCatId) ) ENGINE=InnoDB";
 
@@ -201,7 +201,7 @@ class Database {
                 // need more 1 then not, make sure the first 5 are 1 
                 if ($counter > 5) {
                     if ($i % 2) {
-                        // * collection_type_reference, located at: root/private/reference_information.php
+                        // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
                         $useCat = $this->Faker->numberBetween(1, 4);
                     } else {
                         $useCat = 1;
@@ -531,7 +531,7 @@ class Database {
             $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
             $sql .= "title VARCHAR(50) NOT NULL, ";
             $sql .= "note VARCHAR(255) DEFAULT NULL, ";
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             $sql .= "useLabel TINYINT(1) UNSIGNED DEFAULT 1) ENGINE=InnoDB";
 
             // Execute the query then return the result
@@ -550,7 +550,7 @@ class Database {
 
                 $title = ucfirst($this->escape(str_replace(".","",$this->Faker->sentence(rand(1, 2)))));
                 $note = $this->escape($this->Faker->paragraph($nbSentences = 2));
-                // * collection_type_reference, located at: root/private/reference_information.php
+                // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
                 $useLabel = $this->Faker->numberBetween(1, 4);
 
                 // finish sql
@@ -786,7 +786,7 @@ class Database {
             $sql .= "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
             $sql .= "title VARCHAR(50) NOT NULL, ";
             $sql .= "note VARCHAR(255) DEFAULT NULL, ";
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             $sql .= "useTag TINYINT(1) UNSIGNED NOT NULL DEFAULT 1 ) ENGINE=InnoDB";
 
             // Execute the query then return the result
@@ -805,7 +805,7 @@ class Database {
 
                 $title = ucfirst($this->escape(str_replace(".","",$this->Faker->sentence(rand(1, 2)))));
                 $note = $this->escape($this->Faker->paragraph(rand(1, 2)));
-                // * collection_type_reference, located at: root/private/reference_information.php
+                // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
                 $useTag = $this->Faker->numberBetween(1, 4);
 
                 // end sql

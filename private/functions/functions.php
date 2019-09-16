@@ -122,7 +122,7 @@ function get_key_value_array($obj_array) {
     return $array;
 }
 
-// get image path // * image_paths located at: root/private/reference_information.php
+// get image path // * image_paths located at: root/private/rules_docs/reference_information.php
 function get_image_path($type = 'small') {
     // just in case somebody spelled something wrong coming in make them go through the switch statement
     switch ($type) {

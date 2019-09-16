@@ -183,3 +183,12 @@ editTablesView.addEventListener("click", function() {
     const devToolContainer = document.querySelector(".dev-tool-container");
     devToolContainer.classList.toggle("edit-tables-view");
 });
+
+// window resize
+function reportWindowSize() {
+    // if width is grater then 900 put body scroll top to 0
+    if (window.innerWidth == 900) {
+        document.querySelector('html').scrollTop = 0;
+    }
+}
+window.onresize = reportWindowSize;

@@ -9,9 +9,9 @@
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
             static protected $apiProperties = ['imagePath_array', 'fullName'];
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             static protected $collectionTypeReference = 3;
-            // db validation, // * validation_options located at: root/private/reference_information.php
+            // db validation, // * validation_options located at: root/private/rules_docs/reference_information.php
             static protected $validation_columns = [
                 'id'=>[
                     'name'=>'User id',
@@ -147,7 +147,7 @@
         // @ class database information end
 
         // @ class api start
-            // * api_documentation, located at: root/private/reference_information.php
+            // * api_documentation, located at: root/private/rules_docs/reference_information.php
             static protected $apiInfo = [
                 'routes' => [
                     'users' => [
@@ -192,7 +192,7 @@
                     ]
                 ]
             ];
-            // * get_api_parameters, located at: root/private/reference_information.php
+            // * get_api_parameters, located at: root/private/rules_docs/reference_information.php
             static public $publicApiParameters = [
                 // ...api/v1/label/?id=22,33,5674,1,2,43,27,90,786 // ...api/v1/posts/?id=22
                 'id'=> [
@@ -455,7 +455,7 @@
                 return $arrayInfo;
             }
             
-            // * post_api_parameters, located at: root/private/reference_information.php
+            // * post_api_parameters, located at: root/private/rules_docs/reference_information.php
             static public $devPostParameters = [
                 'address' => [
                     'type' => ['str'],
@@ -754,7 +754,7 @@
 
             // get image path with recorded reference image name
             public function get_image_path($type = 'small') {
-                // get path // * image_paths located at: root/private/reference_information.php
+                // get path // * image_paths located at: root/private/rules_docs/reference_information.php
                 $path = get_image_path($type);
                 // return image path with name
                 return "{$path}/{$this->imageName}";

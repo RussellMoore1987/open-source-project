@@ -831,7 +831,7 @@
                             // Check to see if we have custom validation for the post requests
                             $validation = $value['validation'];
                             // validate parameter
-                            // * validation_options located at: root/private/reference_information.php
+                            // * validation_options located at: root/private/rules_docs/reference_information.php
                             $validationError_array = val_validation("", $validation, 'parameter');
                             // loop over errors and put them in the right spot
                             foreach ($validationError_array as $error) {
@@ -861,7 +861,7 @@
                             // Check to see if we have custom validation for the post requests
                             $validation = $postApiParameters[$key]['validation'] ?? $validation_columns[$key];
                             // validate parameter
-                            // * validation_options located at: root/private/reference_information.php
+                            // * validation_options located at: root/private/rules_docs/reference_information.php
                             $validationError_array = val_validation($value, $validation, 'parameter');
                             // loop over errors and put them in the right spot
                             foreach ($validationError_array as $error) {
@@ -1007,7 +1007,7 @@
                             } 
                             // set putWhere var
                             $putWhere = $postVars_array['putWhere'];
-                            // * validation_options located at: root/private/reference_information.php
+                            // * validation_options located at: root/private/rules_docs/reference_information.php
                             // Validate putWhere
                             $validation = [
                                 'name' => "putWhere",
@@ -1080,7 +1080,7 @@
                             // validation array
                             $validationError_array = [];
                             // Validate the id
-                            // * validation_options located at: root/private/reference_information.php
+                            // * validation_options located at: root/private/rules_docs/reference_information.php
                             $validationError_array = val_validation($id, static::$validation_columns['id'], 'parameter');
                             // loop over errors and put them in the right spot
                             foreach ($validationError_array as $value) {
@@ -1134,7 +1134,7 @@
                         // validation array
                         $validationError_array = [];
                         // Validate the id
-                        // * validation_options located at: root/private/reference_information.php
+                        // * validation_options located at: root/private/rules_docs/reference_information.php
                         $validationError_array = val_validation($id, static::$validation_columns['id'], 'parameter');
                         // loop over errors and put them in the right spot
                         foreach ($validationError_array as $value) {
@@ -1212,7 +1212,7 @@
                             } 
                             // set deleteWhere var
                             $deleteWhere = $postVars_array['deleteWhere'];
-                            // * validation_options located at: root/private/reference_information.php
+                            // * validation_options located at: root/private/rules_docs/reference_information.php
                             // Validate deleteWhere
                             $validation = [
                                 'name' => "deleteWhere",
@@ -1274,7 +1274,7 @@
                             // validation array
                             $validationError_array = [];
                             // Validate the id
-                            // * validation_options located at: root/private/reference_information.php
+                            // * validation_options located at: root/private/rules_docs/reference_information.php
                             $validationError_array = val_validation($id, static::$validation_columns['id'], 'parameter');
                             // loop over errors and put them in the right spot
                             foreach ($validationError_array as $value) {
@@ -1407,7 +1407,7 @@
             }
 
             // TODO: probably can merge a couple of these functions together, especially for authentication validation
-            // * password/key specificity located at root/private/reference_information.php: // @ api_documentation // # password/key specificity general to specific, the order that keys matter
+            // * password/key specificity located at root/private/rules_docs/reference_information.php: // @ api_documentation // # password/key specificity general to specific, the order that keys matter
             // # api get authentication
             static public function apiGetAuthentication(array $dbKeyInfo_array, array $dbClassList, $className, array $apiInfo_array, array $routInfo_array) {
                 // check for authentication, API key, specific to general

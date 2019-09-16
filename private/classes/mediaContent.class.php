@@ -9,9 +9,9 @@
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
             static protected $apiProperties = ['imagePath_array'];
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             static protected $collectionTypeReference = 2;
-            // db validation, // * validation_options located at: root/private/reference_information.php
+            // db validation, // * validation_options located at: root/private/rules_docs/reference_information.php
             static protected $validation_columns = [
                 'id'=>[
                     'name'=>'Media Content id',
@@ -200,7 +200,7 @@
 
             // get image path with recorded reference image name
             public function get_image_path($type = 'small') {
-                // get path // * image_paths located at: root/private/reference_information.php
+                // get path // * image_paths located at: root/private/rules_docs/reference_information.php
                 $path = get_image_path($type);
                 // return image path with name
                 return "{$path}/{$this->name}";

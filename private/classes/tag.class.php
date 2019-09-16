@@ -10,9 +10,9 @@
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
             static protected $apiProperties = [];
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             static protected $collectionTypeReference = 0;
-            // db validation, // * validation_options located at: root/private/reference_information.php
+            // db validation, // * validation_options located at: root/private/rules_docs/reference_information.php
             static protected $validation_columns = [
                 'id' => [
                     'name' => 'Tag id',
@@ -50,7 +50,7 @@
             // Find all the tags associated with the collection type parameter
             static public function find_all_tags(int $type = 0) {
                 $sql = "SELECT id, note, title, useTag FROM tags ";
-                // we expect a number between one and four // * collection_type_reference, located at: root/private/reference_information.php
+                // we expect a number between one and four // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
                 if ($type <= 4 && $type <= 1) {
                     $sql .= "WHERE useTag = '{$type}'";
                 }  

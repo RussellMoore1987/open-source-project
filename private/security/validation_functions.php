@@ -124,7 +124,7 @@
         }
     }
 
-    // db validation, // * validation_options located at: root/private/reference_information.php
+    // db validation, // * validation_options located at: root/private/rules_docs/reference_information.php
     function val_validation($value, $options = [], $valueName = "value") {
 
         // Set defaults

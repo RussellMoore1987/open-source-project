@@ -19,27 +19,12 @@
                 // media content being edited??? 
     
     abstract class DatabaseObject {
-        // Use the api trait
+        // use the api trait
         use Api;
-        // @ set up section start
-            // * api_documentation located at: root/private/reference_information.php
-            // set over arching API keys, use function to get the key
-            static protected $mainApiKey = ''; // use get_main_api_key()
-            // you can specify individual class API keys in the databaseObject class for post and get
-            static protected $mainGetApiKey = ''; // use get_main_get_api_key()
-            static protected $mainPostApiKey = ''; // use get_main_post_api_key()
-            // class list, specify routes
-            static protected $classList = [
-                "Category" => ['categories', 'categories/dev'],
-                // TODO: this class dose not exist right now
-                // "Content" => ['content', 'content/dev'],
-                "Label" => ['labels', 'labels/dev'],
-                "MediaContent" => ['mediaContent', 'mediaContent/dev'],
-                "Post" => ['posts', 'posts/dev'],
-                "Tag" => ['tags', 'tags/dev'],
-                "User" => ['users', 'users/dev']
-            ]; // use get_class_list()
-        // @ set up section end    
+        // use main settings
+        use MainSettings;
+        // use custom code trait
+        use CustomDbObjCode;
         // database connection
         static protected $database;
         // database information
@@ -51,11 +36,10 @@
         static protected $columnExclusions = ['id'];
         // name specific properties you wish to included in the API
         static protected $apiProperties = [];
-        // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/reference_information.php
+        // default collection type reference 0 equals all possible // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
         static protected $collectionTypeReference = 0;
-        // db validation, // * validation_options located at: root/private/reference_information.php
+        // db validation, // * validation_options located at: root/private/rules_docs/reference_information.php
         static protected $validation_columns = []; // use get_validation_columns()
-        static protected $apiInfo = []; // use get_api_class_info()
         public $message = [];
         public $errors = [];
         
@@ -65,114 +49,6 @@
                 self::$database = $database;
             }
             
-            // # possible extended info start
-                // get all possible tags, // * collection_type_reference, located at: root/private/reference_information.php
-                    static public function get_possible_tags() {
-                        // if not set get info
-                        if (!isset(static::$possibleTags)) {
-                            // get all possible tags 
-                            $result = Tag::find_all_tags(static::$collectionTypeReference);
-                            // create an id indexed array, this is a global function, store array in static property
-                            static::$possibleTags = get_key_value_array($result);
-                        }
-                        // return possibilities
-                        return static::$possibleTags;
-                    }
-                    // possible tags
-                    static protected $possibleTags;
-                // get all possible labels, // * collection_type_reference, located at: root/private/reference_information.php 
-                    static public function get_possible_labels() {
-                        // if not set get info
-                        if (!isset(static::$possibleLabels)) {
-                            // get all possible Labels 
-                            $result = Label::find_all_labels(static::$collectionTypeReference);
-                            // create an id indexed array, this is a global function, store array in static property
-                            static::$possibleLabels = get_key_value_array($result);
-                        }
-                        // return possibilities
-                        return static::$possibleLabels;
-                    }
-                    // possible labels
-                    static protected $possibleLabels;
-                // get all possible categories, // * collection_type_reference, located at: root/private/reference_information.php
-                    static public function get_possible_categories() {
-                        // if not set get info
-                        if (!isset(static::$possibleCategories)) {
-                            // get all possible categories
-                            $result = Category::find_all_categories(static::$collectionTypeReference);
-                            // create an id indexed array, this is a global function, store array in static property
-                            static::$possibleCategories = get_key_value_array($result);
-                        }
-                        // return possibilities
-                        return static::$possibleCategories;
-                    }
-                    // possible categories
-                    static protected $possibleCategories;
-            // # possible extended info end
-
-            // #things only in reference to collection_type_reference start
-                // get object categories, tags, or labels
-                public function get_obj_categories_tags_labels($type = NULL) {
-                    // blank array, set below
-                    $data_array = [];
-                    // find if there are any ids attached to the object
-                    if (($type == 'categories' && !is_blank($this->catIds)) || ($type == 'tags' && !is_blank($this->tagIds)) || ($type == 'labels' && !is_blank($this->labelIds))) {
-                        // take object list of ids and create an array
-                        switch ($type) {
-                            case 'categories': $id_array = explode(',',$this->catIds); break;
-                            case 'tags': $id_array = explode(',',$this->tagIds); break;
-                            case 'labels': $id_array = explode(',',$this->labelIds); break;
-                        }
-                        // get possibilities for the object
-                        switch ($type) {
-                            case 'categories': $possibilities_array = $this->get_possible_categories(); break;
-                            case 'tags': $possibilities_array = $this->get_possible_tags(); break;
-                            case 'labels': $possibilities_array = $this->get_possible_labels(); break;
-                        }
-                        // loop over $id_array
-                        foreach ($id_array as $id) {
-                            // see if the category exists
-                            if (isset($possibilities_array[$id])) {
-                                $data_array[$id] = $possibilities_array[$id];
-                            }
-                        }
-                    }
-                    // return all tags connected to the object in a key value array
-                    return $data_array;
-                }
-
-                // delete connecting record
-                public function delete_connection_records($tableName, $NameOfId, $id) {
-                    $sql = "DELETE FROM {$tableName} ";
-                    $sql .= "WHERE {$NameOfId}='{$id}' ";
-                    // perform query
-                    $result = self::$database->query($sql);
-                    // error handling
-                    $result = self::db_error_check($result);
-                    // return result
-                    return $result;
-                }
-
-                // make connecting record
-                public function insert_connection_record($tableName, array $NameOfColumns_array, array $values_array) {
-                    // set variables
-                    $column1 = $NameOfColumns_array[0];
-                    $column2 = $NameOfColumns_array[1];
-                    $columnValue1 = $values_array[0];
-                    $columnValue2 = $values_array[1];
-
-                    // make sql
-                    $sql = "INSERT INTO {$tableName} ({$column1}, {$column2}) ";
-                    $sql .= "VALUES ({$columnValue1}, {$columnValue2}) ";
-                    // perform query
-                    $result = self::$database->query($sql);
-                    // error handling
-                    $result = self::db_error_check($result);
-                    // return result
-                    return $result;
-                }
-            // #things only in reference to collection_type_reference start
-            
             // Helper function, object creator
             static protected function instantiate(array $record) {
                 // load the object
@@ -181,7 +57,7 @@
                 return $object;
             }
 
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // run sql
             static public function run_sql($sql) {
                 // make a query
@@ -192,7 +68,7 @@
                 return  $result;   
             }
             
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // find by sql
             static public function find_by_sql($sql) {
                 // make a query
@@ -209,14 +85,14 @@
                 return $object_array;   
             }
 
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // find all
             static public function find_all(array $sqlOptions = []) {
                 // Submit the query to the find_where with no options
                 return static::find_where($sqlOptions);
             }
 
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // find by id
             static public function find_by_id(int $id, $sqlOptions = []) {
                 // get options
@@ -246,7 +122,7 @@
                 return $result;
             }
     
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // find where
             static public function find_where($sqlOptions = []) {
                 // get options
@@ -304,7 +180,7 @@
                 return $result;
             }
 
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // count all records
             static public function count_all($sqlOptions = []) {
                 // check to see if the array is empty
@@ -384,7 +260,7 @@
                 return  $this->errors;
             }
               
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // Create a new instance/record
             protected function create() {
                 // perform class specific pre-custom code if desired, pre queries and checks are possible including validation.
@@ -418,7 +294,7 @@
                 return $result;
             }
 
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // update existing record
             protected function update() {
                 // perform class specific pre-custom code if desired, pre queries and checks are possible including validation.
@@ -475,7 +351,7 @@
                 // write code in specific class if needed. pre-custom code if desired, pre queries and checks are possible including validation.
             }
 
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // this allows you to add or update a record
             public function save(){
                 
@@ -486,7 +362,7 @@
                 }  
             }
 
-            // * sql_queries located at: root/private/reference_information.php
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
             // delete record
             public function delete() {
                 $sql = "DELETE FROM " . static::$tableName . " ";
@@ -547,7 +423,7 @@
             }
 
             // # ctr()
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             public function ctr() {
                 return static::$collectionTypeReference;
             }
@@ -599,7 +475,7 @@
 
             // # get post api parameters
             static public function get_api_class_info() {
-                return static::$apiInfo;
+                return static::$apiInfo ?? [];
             }
             
             // # get class db columns

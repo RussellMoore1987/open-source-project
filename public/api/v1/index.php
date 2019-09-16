@@ -5,6 +5,10 @@
     // set content return type
     header('Content-Type: application/json');
 
+    // Setting up some server access controls to allow people to get information
+    header("Access-Control-Allow-Origin: *");
+    header('Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE');
+
     // set up the router 
     $Router = new ApiRouter($_SERVER['QUERY_STRING']);
 

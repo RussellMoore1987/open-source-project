@@ -10,9 +10,9 @@
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
             static protected $apiProperties = [];
-            // * collection_type_reference, located at: root/private/reference_information.php
+            // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             static protected $collectionTypeReference = 0;
-            // db validation, // * validation_options located at: root/private/reference_information.php
+            // db validation, // * validation_options located at: root/private/rules_docs/reference_information.php
             static protected $validation_columns = [
                 'id'=>[
                     'name'=>'Category id',
@@ -56,7 +56,7 @@
             // Find all the categories associated with the collection type parameter
             static public function find_all_categories(int $type = 0) {
                 $sql = "SELECT id, note, subCatId, title, useCat FROM categories ";
-                // we expect a number between one and four // * collection_type_reference, located at: root/private/reference_information.php
+                // we expect a number between one and four // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
                 if ($type <= 4 && $type <= 1) {
                     $sql .= "WHERE useCat = '{$type}'";
                 }
@@ -176,7 +176,7 @@
 
 
                 // todo: working here, clean up records, clean up list of IDs.
-                // // run cleanup, for corresponding ctr's 1, 3, 4 // * collection_type_reference, located at: root/private/reference_information.php
+                // // run cleanup, for corresponding ctr's 1, 3, 4 // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
                 // if ($check == "yes" && ($this->useCat == 1 || $this->useCat == 3 || $this->useCat == 4)) {
                 //     // find its collection type reference
                 //     switch ($this->useCat) {
@@ -414,7 +414,7 @@
         // @ layouts start
             // add/edit structure for categories layout
                 // ? it expects $array, retrieved from get_all_categories_sorted() or Category::filter_all_categories(); and a ctr, ctr = collection_type_reference
-                // * collection_type_reference, located at: root/private/reference_information.php
+                // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             static public function layout_categoryStructure($Categories_array = [], $ctr = 1) {
                 // global path to layouts
                 include PRIVATE_PATH . "/layouts/categoryStructure.php";

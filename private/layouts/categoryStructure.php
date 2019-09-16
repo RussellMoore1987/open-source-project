@@ -1,6 +1,6 @@
 <?php
     // set default variables
-    // * collection_type_reference, located at: root/private/reference_information.php
+    // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
     switch ($ctr) {
         case 1: $parent = "postParentCategories_array"; $sub = "postSubCategories_array"; break;
         case 2: $parent = "mediaContentParentCategories_array"; $sub = "mediaContentSubCategories_array"; break;

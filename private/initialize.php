@@ -33,17 +33,28 @@
 
     // Autoload class and trait definitions
     function my_autoload($class) {
+        // Make sure it's okay to come in
         if(preg_match('/\A\w+\Z/', $class)) {
-            // creating class and trait path
-            $classPath = PRIVATE_PATH . '//classes/' . strtolower($class) . '.class.php';
-            $traitPath =  PRIVATE_PATH . '//traits/' . strtolower($class) . '.trait.php';
+            // creating class and trait path and class trait path
+            $class = strtolower($class);
+
+            // class path
+            $classPath = PRIVATE_PATH . "//classes/{$class}.class.php";
+
+            // class folder path
+            $classFolderPath = PRIVATE_PATH . "//classes/{$class}/{$class}.class.php";
+
+            // trait path
+            $traitPath =  PRIVATE_PATH . "//traits/{$class}.trait.php";
             
-            // see if we can find the trait or class
+            // see if we can find the trait or class, In order of use case
             if (file_exists($classPath)) {
                 include('classes/' . $class . '.class.php');
             } else if (is_file($traitPath)) {
                 include('traits/' . $class . '.trait.php');
-            }
+            } elseif (file_exists($classFolderPath)) {
+                include("classes/{$class}/{$class}.class.php");
+            } 
         }   
     }
     spl_autoload_register('my_autoload');
@@ -53,7 +64,7 @@
     require_once('security/validation_functions.php');
     require_once('db/db_functions.php');
     // for api documentation
-    require_once('reference_information.php');
+    require_once('rules_docs/reference_information.php');
     
     // db connection
     require_once('db/db_credentials.php');

@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     // on change reset sub selection options
     $('select[name="category[useCat]"]').on('change', function() {
-        // get ctr // * collection_type_reference, located at: root/private/reference_information.php
+        // get ctr // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
         const ctr = $(this).val();
         // set element for changing options
         const $el = $('select[name="category[subCatId]"]');

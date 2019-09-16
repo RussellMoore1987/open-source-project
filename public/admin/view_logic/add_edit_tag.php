@@ -11,7 +11,7 @@
             $tagId = (int) $tagId;
         }
         // ctr, make number
-        // * collection_type_reference, located at: root/private/reference_information.php
+        // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
         $ctr = get_url_ctr();
         
 

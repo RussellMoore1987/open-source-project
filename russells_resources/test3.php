@@ -378,7 +378,7 @@ foreach ($apiClassList_array as $routName => $className) {
                 // loop over and create corresponding messages for the different HTTP methods
                 foreach ($postLike_array as $httpMethod => $values) {
                     // if postApiActions show options then continue
-                    // * post_api_parameters, located at: root/private/reference_information.php
+                    // * post_api_parameters, located at: root/private/rules_docs/reference_information.php
                     // var_dump($postParameterName);
                     if ($postParameterName == "postApiActions") {
                         // loop through options
