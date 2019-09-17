@@ -1,6 +1,9 @@
 <?php
 
+    // FIXME: Adjust these pages to be autoloaded
     require_once('../../private/classes/session.class.php');
+    require_once('../../private/security/validation_functions.php');
+    require_once('../../private/classes/user.class.php');
 
     // TODO: Test the login functionality by creating a user and checking password
 
@@ -21,9 +24,9 @@
         $log_in_array = $_POST['login'];
 
         //set email for use in form 
-        $email = $log_in_array['email'];
+        $username = $log_in_array['username'];
         //FIXME how to validate correctly
-        $validate_email = val_validation($email, [
+        $validate_email = val_validation($username, [
             'name' => 'Email', 'email' => 'yes', 'required' => 'yes'
         ]);
         $validate_password = val_validation($log_in_array['password'], [
