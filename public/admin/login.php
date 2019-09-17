@@ -61,22 +61,21 @@
             //set error message for failed login 
             Session::add_var('message', 'Log in failed. Try again.');
             // Add to the errors array
-            array_push($errors_array, "The Username and/or password you entered is not correct!")
+            array_push($errors_array, "The Username and/or password you entered is not correct!");
         }
     }
 
 ?>
 
-    <div style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh;">
+    <div style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; width: 100vw; height: 100vh;">
     <!-- TEST: Messages -->
-        <div style="display: flex; justify-content: center; align-items: center; border: 1px solid black;">
+        <div style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; border: 1px solid black;">
         <?php
 
             // Display the errors if there are any
             if(!empty($errors_array)){
                 foreach($errors_array as $error) {
                     echo "<h4>" . $error . "</h4>";
-                    echo "<br>"
                 }
             }
         
