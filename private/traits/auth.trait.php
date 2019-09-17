@@ -1,7 +1,7 @@
 <?php
 # Trait for User Authentication
 
-trait Authenticate {
+trait Auth {
     //variables to be set as session variables upon successful log in
     public static $session_var_array = ['id', 'fullName', 'userType'];
 
@@ -38,7 +38,7 @@ trait Authenticate {
 
     // check email and password against database entry
     private static function authenticate_password($log_in_array) {
-        $email = $log_in_array['email'];
+        $email = $log_in_array['username'];
         $password = $log_in_array['password'];
         
         //make sure that an email and password were both supplied

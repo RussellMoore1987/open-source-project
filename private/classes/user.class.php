@@ -1,11 +1,9 @@
 <?php
-    # Require the authentication trait
-    require_one('../traits/auth.trait.php');
-    
+
     class User extends DatabaseObject {
 
         # Include the authentication trait
-        use Authenticate;
+        use Auth;
 
         // @ class database information start
             // table name
