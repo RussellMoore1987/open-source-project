@@ -25,9 +25,9 @@
         $log_in_array = $_POST['login'];
 
         //set username 
-        $username = $log_in_array['username'];
+        $email = $log_in_array['email'];
 
-        $valTest = val_validation($username, [
+        $valTest = val_validation($email, [
             'name' => 'Email', 'email' => 'yes', 'required' => 'yes'
         ]);
 
@@ -60,7 +60,7 @@
             //set error message for failed login 
             Session::add_var('error', 'Log in failed. Try again.');
             // Add to the errors array
-            array_push($errors_array, "The Username and/or password you entered is not correct!");
+            array_push($errors_array, "The Email and/or password you entered is not correct!");
         }
     }
 
@@ -122,7 +122,7 @@
         <!-- TEST: Login Form -->
         <form style="border: 1px solid black; display: flex; flex-direction: column; justify-content: space-around; align-items: center; width: 30vw; height: 30vh;" action="login.php" method="post">
             <h3 style="display: block;">Login Form</h3>
-            <input style="display: block; padding: 10px;" type="email" placeholder="Username" name="login[username]" required>
+            <input style="display: block; padding: 10px;" type="email" placeholder="Email" name="login[email]" required>
             <input style="display: block; padding: 10px;" type="password" placeholder="Password" name="login[password]" required>
             <button style="padding: 10px;" type="submit">Login</button>
         </form>

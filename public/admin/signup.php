@@ -8,7 +8,7 @@
     if(isset($_POST['signup'])) {
         // Get the form data
         $signup_array = $_POST['signup'];
-        $username = $signup_array['username'];
+        $email = $signup_array['email'];
         $password = $signup_array['password'];
         $verifyPass = $signup_array['verify'];
 
@@ -20,19 +20,19 @@
 
         // Check the data that we got in the form
         // Username
-        if(!empty($username)) {
+        if(!empty($email)) {
             // TODO: Verify that the username has not been taken already
-            $checkExists = User::get_users_by_email($username);
+            $checkExists = User::get_users_by_email($email);
 
             // If the user exists then add to the errors array
             if(!empty($checkExists)) {
                 $errors_array[] = "A user with that name/email already exists!";
             } else {
-                $newUser_array['username'] = $username;
+                $newUser_array['email'] = $email;
             }
 
         } else {
-            $errors_array[] = "Usernaem is required!";
+            $errors_array[] = "An Email is required!";
         }
 
         // Password
@@ -53,7 +53,13 @@
 
         // If no errors then add the user to the DB
         if(empty($errors_array)) {
+            $check = User::create_user($newUser_array);
 
+            if(!$check) {
+                $errors_array[] = "Error creating new user!";
+            } else {
+                redirect_to('admin/home'); //REVIEW where to redirect to
+            }
         }
 
     }
@@ -117,7 +123,7 @@
     <!-- TEST: Sign Up Form -->
     <form style="border: 1px solid black; display: flex; flex-direction: column; justify-content: space-around; align-items: center; width: 30vw; height: 30vh;" action="login.php" method="post">
         <h3 style="display: block;">Sign Up Form</h3>
-        <input style="display: block; padding: 10px;" type="email" placeholder="Username" name="signup[username]" required>
+        <input style="display: block; padding: 10px;" type="email" placeholder="Username" name="signup[email]" required>
         <input style="display: block; padding: 10px;" type="password" placeholder="Password" name="signup[password]" required>
         <input style="display: block; padding: 10px;" type="password" placeholder="Verify Password" name="signup[verify]" required>
         <button style="padding: 10px;" type="submit">Sign Up</button>

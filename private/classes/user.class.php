@@ -600,6 +600,26 @@
 
                 return static::find_by_sql($sql);
             }
+
+            // Create a new user in the database
+            static public function create_user(array $newUserInfo_array) {
+                // TODO: Where should this method live?
+                // TODO: Flesh out the parameters and query for this method
+
+                // Get the variables from the newUserInfo_array
+                $email = $newUserIfno_array['email'];
+                $password = $newUserIfno_array['password'];
+
+                // TODO: Salt password with what?
+                // Create the password hash to store in the db
+                $passHash = password_hash($password);
+
+                $sql = "INSERT INTO users (emailAddress, password) VALUES ( ";
+                $sql .= self::db_escape($email) . ", ";
+                $sql .= self::db_escape($passHash) . " )";
+
+                return static::run_sql($sql);
+            }
             
             // # for a *single user* query's start
                 // get all extended info
