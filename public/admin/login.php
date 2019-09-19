@@ -27,23 +27,22 @@
         //set username 
         $username = $log_in_array['username'];
 
-        //FIXME: Ensure that validation is working correctly
-        $validate_email = val_validation($username, [
+        $valTest = val_validation($username, [
             'name' => 'Email', 'email' => 'yes', 'required' => 'yes'
         ]);
 
         // If email not valid add to errors array
-        if(!$validate_email) {
-            array_push($errors_array, "Entry is not a valid email!");
+        if(!empty($valTest)) {
+            $errors_array[] = "Entry is not a valid email!";
         }
 
-        $validate_password = val_validation($log_in_array['password'], [
+        $valTest = val_validation($log_in_array['password'], [
             'name' => 'Password', 'required' => 'yes'
         ]);
 
         // If the password is not valid then add to errors array
-        if(!$validate_password){
-            array_push($errors_array, "Entry is not a valid password!");
+        if(!empty($valTest)){
+            $errors_array[] = "Entry is not a valid password!";
         }
 
         // If no errors were detected then authenticate the user
@@ -59,7 +58,7 @@
             redirect_to('admin/home');
         } else {
             //set error message for failed login 
-            Session::add_var('message', 'Log in failed. Try again.');
+            Session::add_var('error', 'Log in failed. Try again.');
             // Add to the errors array
             array_push($errors_array, "The Username and/or password you entered is not correct!");
         }
@@ -91,22 +90,29 @@
 
             // Display the session info
             if(!empty($_SESSION)){
+                
+                // Draw the table for the session variables
+                $table = "
+                <table border='1'>
+                    <tr>
+                        <th>Session Variable Name</th>
+                        <th>Session Variable Value</th>
+                    </tr>";
+
+                // list each variable in the table
                 foreach($_SESSION as $key => $var) {
 
-                    $table = "
-                        <table border='1'>
-                            <tr>
-                                <th>Session Variable Name</th>
-                                <th>Session Variable Value</th>
-                            </tr>
+                    $table .= "
                             <tr>
                                 <th>" . $key . "</th>
                                 <th>" . $var . "</th>
                             </tr>
-                        </table>
                     ";
-                    echo $table;
                 }
+
+                // Echo out the table
+                $table .= "</table>";
+                echo $table;
             } else {
                 echo "<h4>No Session variables set!</h4>";
             }
