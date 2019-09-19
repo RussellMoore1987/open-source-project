@@ -47,14 +47,14 @@
         }
 
         // If no errors were detected then authenticate the user
-        if(!empty($errors_array)){
+        if(empty($errors_array)){
             //authenticate user
             $auth = User::log_in($log_in_array);
         }
         
         // TODO: Where to move this?
         //if user is authenticated
-        if($auth){ 
+        if(isset($auth) && $auth == true){ 
             //redirect to admin home REVIEW  verify location to redirect to.
             redirect_to('admin/home');
         } else {
@@ -68,22 +68,55 @@
 ?>
 
     <div style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; width: 100vw; height: 100vh;">
-    <!-- TEST: Messages -->
+    
+        <!-- TEST: Messages -->
         <div style="display: flex; flex-direction: column; justify-content: space-around; align-items: center; border: 1px solid black;">
         <?php
 
             // Display the errors if there are any
+            echo "<h4>ERROR LIST</h4>";
             if(!empty($errors_array)){
                 foreach($errors_array as $error) {
-                    echo "<h4>" . $error . "</h4>";
+                    echo "<h5>" . $error . "</h5>";
                 }
+            } else {
+                echo "<h5>No Errors to display</h5>";
             }
         
         ?></div>
-    <!-- TEST: Login Form -->
+
+        <!-- TEST: Session Info -->
+            <div style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
+        <?php
+
+            // Display the session info
+            if(!empty($_SESSION)){
+                foreach($_SESSION as $key => $var) {
+
+                    $table = "
+                        <table border='1'>
+                            <tr>
+                                <th>Session Variable Name</th>
+                                <th>Session Variable Value</th>
+                            </tr>
+                            <tr>
+                                <th>" . $key . "</th>
+                                <th>" . $var . "</th>
+                            </tr>
+                        </table>
+                    ";
+                    echo $table;
+                }
+            } else {
+                echo "<h4>No Session variables set!</h4>";
+            }
+        
+        ?></div>
+
+        <!-- TEST: Login Form -->
         <form style="border: 1px solid black; display: flex; flex-direction: column; justify-content: space-around; align-items: center; width: 30vw; height: 30vh;" action="login.php" method="post">
             <h3 style="display: block;">Login Form</h3>
-            <input style="display: block; padding: 10px;" type="text" placeholder="Username" name="login[username]" required>
+            <input style="display: block; padding: 10px;" type="email" placeholder="Username" name="login[username]" required>
             <input style="display: block; padding: 10px;" type="password" placeholder="Password" name="login[password]" required>
             <button style="padding: 10px;" type="submit">Login</button>
         </form>

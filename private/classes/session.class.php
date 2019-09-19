@@ -7,16 +7,27 @@
             session_regenerate_id(); //prevent session fixation attacks
         }
         
+        // Adds a new session variable with the check to make sure Something else doesn't already exist with that name
         public static function add_var(string $name, $value) {
             //store value as session variable with entered name 
             if (!self::check_var_exists($name)) {
                 $_SESSION[$name] = $value;
-            } else { //what to do if a session variable already exists with the given name. Leave commented out to update value
-                //return error that name is already in use.
-                // exit('A session variable with that name already exists.');
+            } else { 
+                exit("A session variable with the name \"{$name}\" already exists. If you wish to override that variable please use Session::override_var(name,value);. This one will over ride any variable.");
             }
         }
 
+        // override_var variable, main purpose to override session variables
+        public static function override_var(string $name, $value) {
+            // override if there variable 
+            if (self::check_var_exists($name)) {
+                $_SESSION[$name] = $value;
+            } else {
+                exit("No session variable with the name \"{$name}\" exists. If you wish to add that variable please use Session::add_var(name,value);.");
+            }
+        }
+
+        // unset session variable
         public static function unset_var(string $name='all') {
             if($name == 'all') { //if no value is given unset all session variables
                 session_unset();
@@ -26,6 +37,7 @@
             }
         }
 
+        // get session variable
         public static function get_var(string $name) {
             //get session variable with name. 
             return $_SESSION[$name] ?? false;
