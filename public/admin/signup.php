@@ -1,43 +1,62 @@
 <?php
-// For testing the creation of users
+    // For testing the creation of users
 
-// If a signup form was recieved
-if(isset($_POST['signup'])) {
-    // Get the form data
-    $signup_array = $_POST['signup'];
-    $username = $signup_array['username'];
-    $password = $signup_array['password'];
-    $verifyPass = $signup_array['verify'];
+    // Initialize all the autoloader
+    require_once('../../private/initialize.php');
 
-    // Errors array
-    $errors_array = [];
+    // If a signup form was recieved
+    if(isset($_POST['signup'])) {
+        // Get the form data
+        $signup_array = $_POST['signup'];
+        $username = $signup_array['username'];
+        $password = $signup_array['password'];
+        $verifyPass = $signup_array['verify'];
 
-    // Check the data that we got in the form
-    // Username
-    if(!empty($username)) {
-        // TODO: Verify that the username has not been taken already
-    } else {
-        $errors_array[] = "Usernaem is required!";
-    }
+        // Errors array
+        $errors_array = [];
 
-    // Password
-    if(!empty($password) && !empty($verifyPass)) {
+        // Array for holding the information to create the user
+        $newUser_array = [];
 
-        // Make sure the passwords match
-        if($password == $verifyPass) {
-            // TODO: Hash the password and store in the DB
+        // Check the data that we got in the form
+        // Username
+        if(!empty($username)) {
+            // TODO: Verify that the username has not been taken already
+            $checkExists = User::get_users_by_email($username);
+
+            // If the user exists then add to the errors array
+            if(!empty($checkExists)) {
+                $errors_array[] = "A user with that name/email already exists!";
+            } else {
+                $newUser_array['username'] = $username;
+            }
+
         } else {
-            $errors_array[] = "Password and Verify Password must match!";
+            $errors_array[] = "Usernaem is required!";
         }
 
-    } else {
-        $errors_array[] = "Password and Verify Password are required!";
+        // Password
+        if(!empty($password) && !empty($verifyPass)) {
+
+            // Make sure the passwords match
+            if($password == $verifyPass) {
+                // Add the password to the new user array
+                $newUser_array['password'] = $password;
+
+            } else {
+                $errors_array[] = "Password and Verify Password must match!";
+            }
+
+        } else {
+            $errors_array[] = "Password and Verify Password are required!";
+        }
+
+        // If no errors then add the user to the DB
+        if(empty($errors_array)) {
+
+        }
+
     }
-
-
-}
-
-
 ?>
 
 
