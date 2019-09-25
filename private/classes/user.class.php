@@ -601,6 +601,13 @@
                 return static::find_by_sql($sql);
             }
 
+            // TODO: Overwrite after_create_validation and after_update_validation
+            protected function after_create_validation() {
+                // At this point the password has been validated
+                $password = $this->password;
+                // TODO: Auth function for hashing password
+            }
+
             // Create a new user in the database
             static public function create_user(array $newUserInfo_array) {
                 // TODO: Where should this method live?
@@ -714,6 +721,8 @@
         // @ methods start
             // constructor method, type declaration of array
             public function __construct(array $args=[]) {
+                // clean up form information coming in
+                $args = self::cleanFormArray($args);
                 // Set up properties
                 $this->id = $args['id'] ?? NULL;    
                 $this->address = $args['address'] ?? NULL;

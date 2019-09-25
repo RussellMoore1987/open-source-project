@@ -392,6 +392,8 @@
                 $this->validate("create");
                 // if errors return false, don't continue/add record
                 if (!empty($this->errors)) { return false; }
+                // TODO: after create/validation function goes here
+                $this->after_create_validation();
                 // get all attributes sanitized
                 $attributes = $this->sanitized_attributes("create");
                 // echo "just before up date create() ***********";
@@ -426,7 +428,8 @@
                 $this->validate();
                 // if errors return false, don't continue
                 if (!empty($this->errors)) { return false; }
-
+                // Perform class specific after update validation has run
+                $this->after_update_validation();
                 // get attributes sanitized, we should only be given at this point what needs to be updated, all NULLs
                 $attributes = $this->sanitized_attributes();
                 // echo "just before up date ***********";
@@ -469,9 +472,18 @@
                 // write code in specific class if needed. pre-custom code if desired, pre queries and checks are possible including validation.
             }
 
+            // TODO: two new functions run after 1- creation/validation 2- update/validation
+            protected function after_create_validation() {
+                // Write code in specific class if needed, after validation has run this code is run
+            }
+
             // perform class specific pre-custom code for update
             protected function per_update(){
                 // write code in specific class if needed. pre-custom code if desired, pre queries and checks are possible including validation.
+            }
+
+            protected function after_update_validation() {
+                // Write code in specific class if needed, after validation has run this code is run
             }
 
             // * sql_queries located at: root/private/reference_information.php

@@ -53,7 +53,9 @@
 
         // If no errors then add the user to the DB
         if(empty($errors_array)) {
-            $check = User::create_user($newUser_array);
+            // TODO: Test this code
+            $NewUser = new User($args);
+            $NewUser->save();
 
             if(!$check) {
                 $errors_array[] = "Error creating new user!";

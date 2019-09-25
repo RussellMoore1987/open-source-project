@@ -2,8 +2,14 @@
 # Trait for User Authentication
 
 trait Auth {
+
     //variables to be set as session variables upon successful log in
     public static $session_var_array = ['id', 'fullName', 'userType'];
+
+    // TODO: Password hashing function goes here for any class
+    public static function hash_password($password) {
+        password_hash()
+    }
 
     //logs in user
     public static function log_in(array $log_in_array = []) {
