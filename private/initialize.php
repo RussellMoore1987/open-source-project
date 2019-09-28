@@ -1,6 +1,5 @@
 <?php 
     ob_start(); // Output buffering is turned on, deals with whitespace and header redirects.
-    session_start(); // Turn on session
     // Assign file paths to PHP constants
     // dirname() returns the path to the parent directory
     define("PRIVATE_PATH", dirname(__FILE__)); // C:\wamp64\www\open_source_project\private
@@ -71,4 +70,7 @@
     $db = db_connect();
     // set db connection
     DatabaseObject::set_database($db);
+
+    //start session
+    $Session = new Session();
 ?>

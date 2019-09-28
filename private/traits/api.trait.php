@@ -933,7 +933,7 @@
                     // helps to get PUT and DELETE content body
                     $postVars_array = $prepApiData_array['postVars_array'] ?? [];
 
-                    require_once(PUBLIC_PATH . '/api/v1/responseMessage.php');
+                    require_once(PUBLIC_PATH . '/api/restApi/v1/responseMessage.php');
                 }
 
                 // # prep post post
@@ -970,9 +970,9 @@
                                 }
                                 if ($arrayInfo) {
                                     if (isset($arrayInfo['id'])) {
-                                        $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/v1/" . $routName . "/?id=" . $Obj->get_id();
+                                        $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/?id=" . $Obj->get_id();
                                     } else {
-                                        $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/v1/" . $routName . "/";
+                                        $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/";
                                     }
                                 }
                             }
@@ -1175,9 +1175,9 @@
                                         }
                                         if ($arrayInfo) {
                                             if (isset($arrayInfo['id'])) {
-                                                $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/v1/" . $routName . "/?id=" . $Obj->get_id();
+                                                $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/?id=" . $Obj->get_id();
                                             } else {
-                                                $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/v1/" . $routName . "/";
+                                                $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/";
                                             }
                                         }
                                     }

@@ -4,7 +4,7 @@
 // ----------------------------------------- Root API Data -------------------------------------------------
 
 // root link
-$rootLink = PUBLIC_LINK_PATH . "/api/v1/";
+$rootLink = PUBLIC_LINK_PATH . "/api/restApi/v1/";
 
 // main object
 $apiRoot = [

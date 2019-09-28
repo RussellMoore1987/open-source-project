@@ -1,6 +1,6 @@
 <?php
     // include main logic for all pages
-    require_once('../../../private/initialize.php');
+    require_once('../../../../private/initialize.php');
 
     // set content return type
     header('Content-Type: application/json');

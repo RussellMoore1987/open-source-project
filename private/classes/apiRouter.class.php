@@ -63,7 +63,7 @@
                         }
                     } else {
                         $this->path = "pathNotFound";
-                        $this->apiIndexErrorMessage =  "'{$this->pathStr}' is not a valid API path. Please view documentation at " . PUBLIC_LINK_PATH . "/api/v1/ for viable API paths";
+                        $this->apiIndexErrorMessage =  "'{$this->pathStr}' is not a valid API path. Please view documentation at " . PUBLIC_LINK_PATH . "/api/restApi/v1/ for viable API paths";
                         $this->errorEndpointMessage = "'{$this->pathStr}' path not found";
                     }
                 }
@@ -79,10 +79,10 @@
             // check path
             if ($this->path == "index") {
                 // index/documentation page
-                if (file_exists(PUBLIC_PATH . "/api/v1/setIndex.php")) {
-                    require_once PUBLIC_PATH . '/api/v1/setIndex.php';
+                if (file_exists(PUBLIC_PATH . "/api/restApi/v1/setIndex.php")) {
+                    require_once PUBLIC_PATH . '/api/restApi/v1/setIndex.php';
                 } else {
-                    require_once PUBLIC_PATH . '/api/v1/apiIndex.php';
+                    require_once PUBLIC_PATH . '/api/restApi/v1/apiIndex.php';
                 }
             } elseif ($this->path == "pathNotFound") {
                 // setting error messages
@@ -91,10 +91,10 @@
                 $errors = $this->errorEndpointMessage;
                 $content = $this->apiIndexErrorMessage;
                 // used the responseMessage for the error message
-                require_once PUBLIC_PATH . '/api/v1/responseMessage.php';
+                require_once PUBLIC_PATH . '/api/restApi/v1/responseMessage.php';
             } else {
                 // specific endpoints
-                require_once PUBLIC_PATH . '/api/v1/apiEndPoint.php';
+                require_once PUBLIC_PATH . '/api/restApi/v1/apiEndPoint.php';
             }
         }
     }

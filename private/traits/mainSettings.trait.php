@@ -7,7 +7,7 @@
             // you can specify individual class API keys in the databaseObject class for post and get
             static protected $mainGetApiKey = ''; // use get_main_get_api_key()
             static protected $mainPostApiKey = ''; // use get_main_post_api_key()
-            // class list, specify routes
+            // class list, specify routes, rest API, and is used for registering for the context/internal API
             static protected $classList = [
                 "Category" => ['categories', 'categories/dev'],
                 // TODO: this class dose not exist right now
@@ -17,7 +17,9 @@
                 "Post" => ['posts', 'posts/dev'],
                 "Tag" => ['tags', 'tags/dev'],
                 "User" => ['users', 'users/dev']
-            ]; // use get_class_list()
+            ]; // TODO: need to pull tat in as well as the other above use get_class_list()
+            // TODO: registered user class add, if the user classes need anything other than user
+            // TODO: use authentication token add
         // @ set up section end        
     }  
 ?>
