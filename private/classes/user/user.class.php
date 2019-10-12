@@ -1,8 +1,22 @@
 <?php
-    // include api trait
+    // include traits
     require_once("userApi.trait.php");
+    require_once("userSql.trait.php");
+    require_once("userSeeder.trait.php");
+    require_once("userContext.trait.php");
 
     class User extends DatabaseObject {
+        // @ class traits start
+            // use api trait
+            use UserApi;
+            // use sql trait
+            use UserSql;
+            // use seeder trait
+            use UserSeeder;
+            // use context trait
+            use UserContext;
+        // @ class traits end
+
         // @ class database information start
             // table name
             static protected $tableName = "users";
@@ -148,11 +162,6 @@
                 ]
             ];
         // @ class database information end
-
-        // @ class api start
-            // use api trait
-            use UserApi;
-        // @ class api end
         
         // @ class specific queries start
 

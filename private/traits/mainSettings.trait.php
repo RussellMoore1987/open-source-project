@@ -18,7 +18,18 @@
                 "Tag" => ['tags', 'tags/dev'],
                 "User" => ['users', 'users/dev']
             ]; // TODO: need to pull tat in as well as the other above use get_class_list()
-            // TODO: registered user class add, if the user classes need anything other than user
+            // main context settings
+            static protected $mainContextInfo = [ 
+                // documentation password, has to be at least eight characters long and have one capital letter, one lowercase letter, one number, and one special symbol, otherwise it doesn't work
+                'documentationPassword' => "",
+                // allow Cross-Origin Resource Sharing (CORS), if you are only using the context api internally you should have this as false, if you are using it to populate outside products or pages make sure it is set to true
+                'cors' => false,
+                'devTool' => [
+                    // devTool password, has to be at least eight characters long and have one capital letter, one lowercase letter, one number, and one special symbol, otherwise it doesn't work
+                    'username' => "test",
+                    'password' => "Test@the9",
+                ]
+            ];
             // TODO: use authentication token add
         // @ set up section end        
     }  

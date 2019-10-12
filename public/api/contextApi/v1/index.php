@@ -3,15 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
 <?php
     // Pull in needed classes 
     require_once("../../../../private/initialize.php");

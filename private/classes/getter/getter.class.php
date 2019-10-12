@@ -1,19 +1,19 @@
 <?php
     class Getter {
+        // use traits
+        use MainSettings;
 
-        public function request(array $request = []) {
+        static public function request($method, $requestData) {
             // we should have it we checked work before this point in time
-            $method = $request['method'] ?? "";
-            $data = $request['data'] ?? "";
             // make call to method
-            $requestInfo = $this->$method($data);
+            $requestInfo = self::$method($requestData);
 
             // return request info
             return $requestInfo;
         }
 
         // @ custom getters below this point
-            public function get_all_users($data = []) {
+            static public function get_all_users($requestData = '') {
                 // make call
                 $requestInfo = User::find_all();
 
@@ -21,7 +21,10 @@
                 return $requestInfo;
             }
 
-            public function get_users_paginated($data = []) {
+            static public function get_users_paginated($requestData = '') {
+                // get data
+                $data = $requestData;
+
                 // get data points
                 $page = (int) $data['page'] ?? 1;
                 $perPage = (int) $data['perPage'] ?? 10;
@@ -41,9 +44,12 @@
                 return $requestInfo;
             }
 
-            public function get_users_sql_paginated($data = []) {
+            static public function get_users_sql_paginated($requestData = '') {
                  // set defaults
                  $requestInfo['errors'] = [];
+
+                 // get data
+                $data = $requestData;
 
                 // get data points
                 $page = (int) $data['page'] ?? 1;

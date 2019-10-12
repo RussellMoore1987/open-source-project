@@ -18,6 +18,7 @@
     header('Content-Type: application/json');
 
     // Setting up some server access controls to allow people to get information
+    // TODO: make this eventually have an if statement so that if we allow it said it if not skip
     header("Access-Control-Allow-Origin: *");
     header('Access-Control-Allow-Methods: GET');
 

@@ -241,7 +241,7 @@
             // DELETE
         // get
             // GET
-        // # in db class start
+        // # in mainSettings.trait start
             // set over arching API keys, use function to get the key
             // # password/key specificity general to specific, the order that keys matter
                 // mainApiKey // over arching key, all will use it if they do not have a more specific key

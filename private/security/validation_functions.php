@@ -93,6 +93,33 @@
         return preg_match($email_regex, $value) === 1;
     }
 
+    // validate password
+    function validate_password($user_password) {
+        // set up default values
+        $errors = [];
+
+        // Extra validation on password. At least one uppercase letter, lowercase letter, number, and symbol
+        // check for a uppercase letter
+        if (!preg_match('/[A-Z]/', $user_password)) {
+            $errors[] = "The password field must contain at least one uppercase letter.";
+        }
+        // check for a lowercase letter
+        if (!preg_match('/[a-z]/', $user_password)) {
+            $errors[] = "The password field must contain at least one lowercase letter.";
+        } 
+        // check for a number
+        if (!preg_match('/[0-9]/', $user_password)) {
+            $errors[] = "The password field must contain at least one number.";
+        } 
+        // check for a symbol
+        if (!preg_match('/[^A-Za-z0-9\s]/', $user_password)) {
+            $errors[] = "The password field must contain at least one symbol.";
+        }
+
+        // return data
+        return $errors;
+    }   
+
     // has_unique_username('johnqpublic')
     // Validates uniqueness of admins.username
     // For new records, provide only the username.

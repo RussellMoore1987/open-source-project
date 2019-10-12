@@ -220,6 +220,11 @@
             'getters' => ['find_by_id', 'find_where', 'count_all', 'find_all', 'find_on_join'],
             'setters' => ['save', 'delete', 'saveWhere', 'deleteWhere']
         ],
+        // allow Cross-Origin Resource Sharing (CORS), if you are only using the context api internally you should have this as false, if you are using it to populate outside products or pages make sure it is set to true
+        // TODO: add this
+        // ? you can also turn this on based off of what type of request they are making
+        'cors' => false,
+
 
 
 

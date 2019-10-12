@@ -82,3 +82,17 @@ SELECT * FROM users WHERE (tagIds LIKE '%18%' ) AND (catIds LIKE '%20%' ) AND id
 
 
 SELECT * FROM users WHERE address LIKE '%1%' AND emailAddress LIKE '%jakubowski.ena@yahoo.com%' AND id = '12' AND (firstName LIKE '%sa%' OR firstName LIKE '%Mo%' OR firstName LIKE '%Na%' OR firstName LIKE '%ma%' OR firstName LIKE '%ca%' OR firstName LIKE '%er%' OR firstName LIKE '%my%' ) AND lastName LIKE '%er%' AND mediaContentId = '3' AND note LIKE '%ne%' AND phoneNumber LIKE '%844%' AND title LIKE '%Glazier%' AND createdDate >= '2000-06-18' AND createdDate <= '2019-06-03' AND (title LIKE '%Myrtis%' OR note LIKE '%Myrtis%' OR firstName LIKE '%Myrtis%' OR lastName LIKE '%Myrtis%' OR phoneNumber LIKE '%Myrtis%' ) ORDER BY createdDate DESC, firstName DESC, lastName LIMIT 3 OFFSET 0 
+
+SELECT *
+FROM posts_to_media_content
+INNER JOIN table_name
+    ON postId = 222;
+
+
+   
+SELECT media_content.id, media_content.alt, media_content.name 
+FROM media_content
+INNER JOIN posts_to_media_content 
+ON posts_to_media_content.mediaContentId = media_content.id 
+WHERE posts_to_media_content.postId = 222 
+AND media_content.type IN ('PNG', 'JPEG', 'JPG', 'GIF') ;

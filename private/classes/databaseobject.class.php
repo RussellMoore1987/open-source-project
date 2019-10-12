@@ -463,6 +463,35 @@
                 return $post_array;
             }
 
+            // # check for rest api
+            static public function check_rest_api() {
+                $passed = isset(static::$apiInfo);
+                return $passed;
+            }
+
+            // # check for context api
+            static public function check_context_api() {
+                $passed = isset(static::$contextInfo);
+                return $passed;
+            }
+            
+            // # check for seeder
+            static public function check_for_seeder() {
+                $passed = isset(static::$seederInfo);
+                return $passed;
+            }
+
+            // # check for sql structure
+            static public function check_sql_structure() {
+                $passed = isset(static::$sqlStructure);
+                return $passed;
+            }
+
+            // # get class table name
+            static public function get_table_name() {
+                return static::$tableName;
+            }
+
             // # get class list
             static public function get_class_list() {
                 return self::$classList;
