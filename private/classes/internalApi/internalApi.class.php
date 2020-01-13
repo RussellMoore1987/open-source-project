@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php
     // TODO: get_class_methods() use this for docs
     // * documentation located at: root/private/rules_docs/internalApi.js
@@ -25,12 +8,21 @@
                 // Setting default values for the page to work
                 $data = self::get_empty_data_array();
 
-                // Check to see if $instructions are json, It will return to null if it cannot be compiled into json, true turns into an associative memory 
+                // Check to see if $instructions are json, It will return to null if it cannot be compiled into json, "true" turns the json into an associative array 
                 $instructions = json_decode($instructions, true);
                 if ($instructions && is_array($instructions)) {
                     // see what type of request it is
                     foreach ($instructions as $requestName => $request) {
-                        // if authentication token set as a global for all requests
+                        // separate type/class from request/method
+                        // could be a string or array, process accordingly
+                        if (is_array($request)) {
+                            // var_dump($requestName, $request);
+                        } else {
+                            // var_dump($requestName, $request);
+                        }
+                        
+                        // if authentication token, set as a global for all requests
+                        // TODO: make it happen
                         if ($requestName === 'authToken') {
                             // set authentication as a global variable
                             continue;
@@ -70,6 +62,7 @@
                 // output request response
                 self::internalApi_message($data);
             }
+        // TODO: use or get ride of
         // @ type/route/paths start
            
         // @ type/route/paths end

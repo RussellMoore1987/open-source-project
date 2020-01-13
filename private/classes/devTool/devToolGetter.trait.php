@@ -15,13 +15,13 @@
                 // loop through each class and set up options
                 foreach ($classes as $class => $routes) {
                     // get options
-                    $tableName = $class::get_table_name() ?? false;
+                    $classOptions['tableName'] = $class::get_table_name() ?? false;
                     $classOptions['fakerData'] = $class::check_for_seeder();
                     $classOptions['sqlStructure'] = $class::check_sql_structure();
                     $classOptions['contextApi'] = $class::check_context_api();
                     $classOptions['restApi'] = $class::check_rest_api();
                     // set options
-                    $requestInfo['tables'][$tableName] = $classOptions;
+                    $requestInfo['tables'][] = $classOptions;
                 }
 
                 // get all other tables these should be connecting tables

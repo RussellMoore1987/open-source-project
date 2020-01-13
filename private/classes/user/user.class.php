@@ -171,7 +171,7 @@
                 return static::find_by_sql($sql);
             }
             
-            // # for a *single user* query's start
+            // # for a *single user* querys start
                 // get all extended info
                 public function get_extended_info() {
                     // empty array to hold potential extended information
@@ -230,7 +230,7 @@
                     // return data
                     return Category::find_by_sql($sql);    
                 }
-            // # single post query's end
+            // # single post querys end
         // @ class specific queries end
 
         // @ properties start

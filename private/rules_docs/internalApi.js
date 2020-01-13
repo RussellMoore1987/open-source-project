@@ -73,9 +73,42 @@
                 "table": "",
                 "id": 2
             }
+        },
+        "tables2": {
+            "devTool::devTool_get_all_tables": {"data":""}
+        },
+        "tables3": {
+            "devTool::devTool_get_all_tables": ""
+        },
+        "tables4": "devTool::devTool_get_all_tables",
+        "login2": {
+            "devTool::devTool_login": {
+                "data": {
+                    "username": "test",
+                    "password": "Test@the9" 
+                }
+            }
         }
     }
 
+    // newer
+    devTool = {
+        "tables": {
+            "devTool::devTool_get_all_tables": {"data":""}
+        },
+        "tables2": {
+            "devTool::devTool_get_all_tables": ""
+        },
+        "tables3": "devTool::devTool_get_all_tables",
+        "login": {
+            "devTool::devTool_login": {
+                "data": {
+                    "username": "test",
+                    "password": "Test@the9" 
+                }
+            }
+        }
+    }
 
 
 
@@ -112,9 +145,7 @@
                     'error': 'The subcategory or sub selection of images only works on XYZ requests'
                 }
             }
-        }
-    }
-    a = {
+        },
         'image': {
             'request': 'mediaContent', // * required, specify real request
             'where': 'type::PNG,JPEG,JPG,GIF', // where request can be accumulative or add on further ones
@@ -134,8 +165,12 @@
                     'error': 'The subcategory or sub selection of image only works on XYZ requests'
                 }
             }
+        },
+        'users': {
+            'request': 'user', // * required, specify real request
         }
     }
+
 
     // request
     a = {
@@ -178,7 +213,49 @@
                 ]
             ]
         },
+        "usersNew": {
+            // just send "user" - gets all
+            // just send "user(id::22)" - gets one
+            "user(id::22, showOnWeb::1, perPage::5, page::2, set@mediaId::mediaContentId, setGlobal@userId::id)": [ // call, class registered, method if using type
+                "id", 
+                "emailAddress", 
+                "firstName", 
+                "imageName", 
+                "lastName", 
+                "mediaContentId", 
+                "note", 
+                "phoneNumber", 
+                "title",
+                {
+                    "image(id::{{mediaId}}, limit::3)": [
+                        "id",
+                        "alt", 
+                        "name"
+                    ]
+                }
+            ]
+        },
+        "setUser": {
+            // just send "user" - gets all
+            // just send "user(id::22)" - gets one
+            "user(id::22)": { // call, class registered, method if using type 
+                "emailAddress": "Russell@gmail.com", 
+                "firstName": "Russell", 
+                "imageName": "fun.PNG", 
+                "lastName": "Moore", 
+                "mediaContentId": "{{mediaId}}", 
+                "note": "new note", 
+                "phoneNumber": "435-116-2677", 
+                "title": "Ice cream truck driver",
+                "image(id::{{mediaId}})": {
+                    "alt": "new alt", 
+                    "name": "fun.PNG"
+                }
+            }
+        },
         "users": {
+            // just send "user(id::22)" - gets all
+            // options "user(id::22)", "user(id::22, where@showOnWeb::1, perPage::5, page::2, set@mediaId::mediaContentId, setGlobal@userId::id)"
             "user": [ // call, class registered, method if using type
                 "id", 
                 "emailAddress", 
@@ -233,3 +310,33 @@
         "controller", // ???
         "method" // * optional
     ]
+
+    // options on requests
+        // columns
+        // preset options
+            // offset
+            // ordered by
+            // limit
+            // like = user(like@lastName::mit) 
+            // in = user(in@id::1,2,3,4,77,99,197)
+            // per page
+            // page
+            // where = user(id::22)
+            // set variable
+            // set global variable
+        // aliases
+        // option aliases = image(size::large) = returns large image path or url or request ??? I like it, the possibility to add properties on the fly as well???, also enable you to pass parameters through filters like truncating sentences or removing HTML, api user set there own properties, ability to utilize inset PHP functions and option aliases
+
+    // on all requests
+        // properties accepted
+        // properties rejected
+        // errors
+        // status 200 or 400 B stock of whether or not it was successful
+    
+    // like
+        // Access for developers
+        // access based off of session and/or token
+        // access for the public
+        // RPC APIs functionality = class/method
+        // *** good documentation, for public, for developers
+        // Restrictions based off of session, token, public

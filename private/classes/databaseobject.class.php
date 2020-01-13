@@ -354,7 +354,6 @@
             // * sql_queries located at: root/private/rules_docs/reference_information.php
             // this allows you to add or update a record
             public function save(){
-                
                 if (isset($this->id) && !is_blank($this->id)) {
                     return $this->update();
                 } else {
