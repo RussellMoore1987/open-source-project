@@ -186,7 +186,7 @@
         },
         "posts": {
             // "authToken": "{{authToken}}", // if using authentication
-            "post": [ // call, class registered, method if using type
+            "post": [ // call, class registered, method if using type, empty array means bring back everything
                 "id",
                 "title",
                 "imageName",

@@ -29,7 +29,7 @@
         "requestMethod" => $_SERVER['REQUEST_METHOD'],
         "paramsSent" => [
             "GET" => $_GET,
-            "PUT/PATCH/DELETE/POST" => $postVars_array
+            "POST" => $postVars_array
         ],
         "requestsAccepted" => $requestsAccepted,
         "requestsNotAccepted" => $requestsNotAccepted,

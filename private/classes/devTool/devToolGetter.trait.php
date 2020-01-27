@@ -1,7 +1,6 @@
 <?php
     trait DevToolGetter {
         // @ dev tool main getter requests start
-        // ! start here ************************************************ get data to pull through
 
             // # devTool_get_all_tables
             static public function devTool_get_all_tables($requestData) {
@@ -20,6 +19,16 @@
                     $classOptions['sqlStructure'] = $class::check_sql_structure();
                     $classOptions['contextApi'] = $class::check_context_api();
                     $classOptions['restApi'] = $class::check_rest_api();
+                    $classOptions['recordCount'] = $class::count_all();
+                    // get column information
+                    $result = $class::run_sql("SHOW COLUMNS FROM " . $classOptions['tableName']);
+                    // turn results into an array
+                    $tableStructure_array = [];
+                    // loop through query
+                    while ($record = $result->fetch_assoc()) {
+                        $tableStructure_array[] = $record;    
+                    }
+                    $classOptions['tableStructure'] = $tableStructure_array;
                     // set options
                     $requestInfo['tables'][] = $classOptions;
                 }

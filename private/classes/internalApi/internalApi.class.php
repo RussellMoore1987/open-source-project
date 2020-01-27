@@ -1,4 +1,5 @@
 <?php
+    // TODO: remove var_dump()
     // TODO: get_class_methods() use this for docs
     // * documentation located at: root/private/rules_docs/internalApi.js
     class InternalApi {
@@ -13,25 +14,59 @@
                 if ($instructions && is_array($instructions)) {
                     // see what type of request it is
                     foreach ($instructions as $requestName => $request) {
-                        // separate type/class from request/method
-                        // could be a string or array, process accordingly
-                        if (is_array($request)) {
-                            // var_dump($requestName, $request);
-                        } else {
-                            // var_dump($requestName, $request);
-                        }
-                        
                         // if authentication token, set as a global for all requests
                         // TODO: make it happen
                         if ($requestName === 'authToken') {
                             // set authentication as a global variable
                             continue;
                         }
-                        // get info, type and method
-                        $type = $request['type'] ?? null;
+
+                        // separate type/class from request/method
+                        // $request could be a string or array, process accordingly
+                        if (is_array($request) && count($request) == 1) {
+                            // var_dump("array*****", $requestName, $request);
+                            foreach ($request as $key => $value) {
+                                // get type/class, RPC API
+                                // ex: "devTool::devTool_get_all_tables": {"data":""}
+                                // ex: $key: $value
+                                if (is_list($key, "::")) {
+                                    // make list to array
+                                    $typeMethod_array = split_string_by_separator($key, "::");
+                                    // set variables
+                                    $type = $typeMethod_array[0]; // devTool
+                                    $subType = $typeMethod_array[1];// devTool_get_all_tables
+                                    $requestData = $value; // {"data":""}
+                                } else {
+                                    // this should be a normal registered request/"registeredClass"/graphQL like
+                                    // ex: "post": [ "id", "title", ...]
+                                    // ex: $key: $value
+                                    $type = "registeredClass";
+                                    $subType = $key; // "post"
+                                    $requestData = $value; // [ "id", "title", ...]
+                                }
+                            }
+                        } else {
+                            // var_dump("string*****", $requestName, $request);
+                            // this assumes that we have a string and that we are going down the RPC route
+                            // ex: "tables3": "devTool::devTool_get_all_tables"
+                            // ex: $requestName: $request
+                            if (is_list($request, "::")) {
+                                // make list to array
+                                $typeMethod_array = split_string_by_separator($request, "::");
+                                // set variables
+                                $type = $typeMethod_array[0]; // devTool
+                                $subType = $typeMethod_array[1];// devTool_get_all_tables
+                                $requestData = "";
+                            } 
+                        }
+                        
+                        // get data, type and method, we now should have them no matter what
+                        $type = $type ?? null;
+                        $subType = $subType ?? null;
+                        $requestData = $requestData ?? null;
 
                         if ($type) {
-                             // type/route/paths: registeredClass, getter, setter, makeRequest, devTool, authToken.
+                             // type/route/paths: registeredClass, getter, setter, makeRequest, devTool, authToken, rpcClasses.
                             if ($type === 'registeredClass') {
                                 # code...
                             } elseif ($type === 'getter') {
@@ -45,14 +80,14 @@
                                 # code...
                             } elseif ($type === 'devTool') {
                                 // run devTool request check_prep_return
-                                $data = self::check_prep_return('DevTool', $request, $requestName, $data);
+                                $data = self::check_prep_return($type, $subType, $requestData, $requestName, $data);
                             } elseif ($type === 'authToken') {
                                 # code...
                             } else {
-                                $data['errors'][] = "The request with the name of {$requestName} has an invalid \"type\" of \"{$type}\" key value pair.";
+                                $data['errors'][] = "The request with the name of {$requestName} has an invalid \"type\" of \"{$type}\".";
                             }
                         } else {
-                            $data['errors'][] = "Each request requires a type, method, and data key value pair. the request with the name of {$requestName} was missing a \"type\" key value pair.";
+                            $data['errors'][] = "Each request requires specific instructions that can be broken down into a type, sudType, and request data. The request with the name of {$requestName} is not formatted correctly";
                         }
                     }
                 } else {
@@ -86,15 +121,16 @@
             // Check for methods
             // Check for classes
             // # check prep return the request
-            private static function check_prep_return($type = 'Getter', $request, $requestName, $data) {
+            private static function check_prep_return($type = 'Getter', $subType, $requestData, $requestName, $data) {
+                // this assumes some type of RPC API call, to execute properly and needs a class($type) and the method($subType)
                 // set defaults
-                $method = $request['method'] ?? "no_do_not_have_it";
-                $requestData = $request['data'] ?? null;
+                $method = $subType ?? "no_do_not_have_it";
+                $requestData = $requestData ?? null;
                 
                 // check to see if it has the method requested
                 if (method_exists($type, $method)) {
                     // process request
-                    $requestInfo = $type::request($method, $requestData);
+                    $requestInfo = $type::$method($requestData);
                     // check for errors
                     $requestErrors = $requestInfo['errors'] ?? [];
                     // check for errors

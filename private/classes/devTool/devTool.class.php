@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 <?php
     // include traits
     require_once('devToolGetter.trait.php');
@@ -19,28 +8,16 @@
         // @ use traits end
 
         // @ main methods start
-        // # devTool request
-            static public function request($method, $requestData) {
-                // do validation here to make sure that they are logged in
-                
-                // the method check was done previously
-                // call method
-                $requestInfo = self::$method($requestData);
-
-                // return request info
-                return $requestInfo;
-            }
-
             // # devTool_login
             static public function devTool_login($requestData) {
-                // var_dump($request);
+                // var_dump($requestData);
                 // set up default variables
                 $requestInfo = [];
                 
                 // get request password
-                $requestPassword = $requestData['password'] ?? '';
+                $requestPassword = $requestData['data']['password'] ?? '';
                 // get request username
-                $requestUsername = $requestData['username'] ?? '';
+                $requestUsername = $requestData['data']['username'] ?? '';
                 // get devTool password
                 // devTool password, has to be at least eight characters long and have one capital letter, one lowercase letter, one number, and one special symbol, otherwise it doesn't work
                 $devToolPassword = self::$mainContextInfo['devTool']['password'];
@@ -68,7 +45,6 @@
                     // pass back error message
                     $requestInfo['errors'][] = 'The password and/or username have not been set up for this corporation. No access will be granted to the dev tools until it is set up.';
                 }
-                
                 
                 // return request info
                 return $requestInfo;

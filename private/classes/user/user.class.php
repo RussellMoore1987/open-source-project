@@ -21,7 +21,7 @@
             // table name
             static protected $tableName = "users";
             // db columns
-            static protected $columns = ['id', 'address', 'adminNote', 'catIds', 'createdBy', 'createdDate', 'emailAddress', 'firstName', 'imageName', 'labelIds', 'lastName', 'mediaContentId', 'note', 'password', 'phoneNumber', 'showOnWeb', 'tagIds', 'title', 'username'];
+            static protected $columns = ['id', 'address', 'adminNote', 'catIds', 'createdBy', 'createdDate', 'emailAddress', 'firstName', 'imageName', 'labelIds', 'lastName', 'mediaContentId', 'note', 'hashPass', 'phoneNumber', 'showOnWeb', 'tagIds', 'title', 'username'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
@@ -119,7 +119,7 @@
                     'max' => 255, // string length
                     'html' => 'no'
                 ],  
-                'password' => [
+                'hashPass' => [
                     'name'=>'User Password',
                     'type' => 'str', // type of string
                     'min'=> 8, // string length
@@ -258,7 +258,7 @@
                 protected $labelIds; // get_labelIds()
                 protected $mediaContentId; // get_mediaContentId()
                 protected $tagIds; // get_tagIds()
-                protected $password; // get_password()
+                protected $hashPass; // get_hashPass()
         // @ properties end
         
         // @ methods start
@@ -283,7 +283,7 @@
                 $this->lastName = $args['lastName'] ?? NULL;
                 $this->mediaContentId = $args['mediaContentId'] ?? NULL;
                 $this->note = $args['note'] ?? NULL;
-                $this->password = $args['password'] ?? NULL;
+                $this->hashPass = $args['hashPass'] ?? NULL;
                 $this->phoneNumber = $args['phoneNumber'] ?? NULL;
                 $this->showOnWeb = $args['showOnWeb'] ?? NULL;
                 $this->tagIds = $args['tagIds'] ?? NULL;
@@ -336,8 +336,8 @@
             
             }
             // get password property
-            public function get_password() {
-                return $this->password;
+            public function get_hashPass() {
+                return $this->hashPass;
             }
 
             // get image path with recorded reference image name
