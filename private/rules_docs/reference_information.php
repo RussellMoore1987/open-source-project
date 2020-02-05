@@ -230,7 +230,7 @@
     // @ api_documentation
         // ? If you wish to clean up the class from the api info you can stick the class into a folder (with the name of the class, lowercase) and then add an API trait (named: {ClassName}Api.trait.php, ex: userApi.trait.php) include the trait into the class with the require_once reference. If you do this you can put all API information into the new trait. The trait should be located right next to the class inside the folder with the class name. 
                 // ? ex  class = root/private/classes/user/user.class.php, api trait = root/private/classes/user/userApi.trait.php
-                // ? Inside the class file use these: require_once("userApi.trait.php"); use UserApi;
+                // ? Inside the class file use these: require_once("userApi.trait.php"); in the class put: use UserApi;
         // # Index documentation
             // if the index documentation does not run as fast as you would like you can create a page in the directory of root/public/api/v1, called setIndex.php. Path: root/public/api/v1/setIndex.php. Populate this page with the dynamic index content, and then instead of going to the dynamic index it will go to the hard set index = setIndex.php. Make sure to create this page only after you have collected the dynamic index content. Once the page is created it will take over.
         // # reference for verbiage
