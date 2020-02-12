@@ -56,7 +56,7 @@
                 $Tag_obj->save();
                 // var_dump($Tag_obj);
                 // set id
-                $tagId = (int) $Tag_obj->get_id();
+                $tagId = (int) $Tag_obj->id;
                 // echo $tagId. "**************";
                 // set ctr
                 $ctr = (int) $Tag_obj->useTag;
@@ -80,10 +80,10 @@
             // sort them, they should fit into one of these arrays
             foreach ($allTags_array as $Tag) {
                 switch ($Tag->useTag) {
-                    case 1: $postTags_array[$Tag->get_id()] = $Tag->title; break;
-                    case 2: $mediaContentTags_array[$Tag->get_id()] = $Tag->title; break;
-                    case 3: $usersTags_array[$Tag->get_id()] = $Tag->title; break;
-                    case 4: $contentTags_array[$Tag->get_id()] = $Tag->title; break;
+                    case 1: $postTags_array[$Tag->id] = $Tag->title; break;
+                    case 2: $mediaContentTags_array[$Tag->id] = $Tag->title; break;
+                    case 3: $usersTags_array[$Tag->id] = $Tag->title; break;
+                    case 4: $contentTags_array[$Tag->id] = $Tag->title; break;
                 }
             }
             // sort alphabetically

@@ -27,14 +27,14 @@
                             // var_dump("array*****", $requestName, $request);
                             foreach ($request as $key => $value) {
                                 // get type/class, RPC API
-                                // ex: "devTool::devTool_get_all_tables": {"data":""}
+                                // ex: "devTool::devTool_get_all_class_tables": {"data":""}
                                 // ex: $key: $value
                                 if (is_list($key, "::")) {
                                     // make list to array
                                     $typeMethod_array = split_string_by_separator($key, "::");
                                     // set variables
                                     $type = $typeMethod_array[0]; // devTool
-                                    $subType = $typeMethod_array[1];// devTool_get_all_tables
+                                    $subType = $typeMethod_array[1];// devTool_get_all_class_tables
                                     $requestData = $value; // {"data":""}
                                 } else {
                                     // this should be a normal registered request/"registeredClass"/graphQL like
@@ -48,14 +48,14 @@
                         } else {
                             // var_dump("string*****", $requestName, $request);
                             // this assumes that we have a string and that we are going down the RPC route
-                            // ex: "tables3": "devTool::devTool_get_all_tables"
+                            // ex: "tables3": "devTool::devTool_get_all_class_tables"
                             // ex: $requestName: $request
-                            if (is_list($request, "::")) {
+                            if (is_string($request) && is_list($request, "::")) {
                                 // make list to array
                                 $typeMethod_array = split_string_by_separator($request, "::");
                                 // set variables
                                 $type = $typeMethod_array[0]; // devTool
-                                $subType = $typeMethod_array[1];// devTool_get_all_tables
+                                $subType = $typeMethod_array[1];// devTool_get_all_class_tables
                                 $requestData = "";
                             } 
                         }

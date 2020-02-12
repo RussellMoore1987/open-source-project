@@ -55,7 +55,7 @@
                 $Category_obj->save();
                 // var_dump($Category_obj);
                 // set id
-                $categoryId = (int) $Category_obj->get_id();
+                $categoryId = (int) $Category_obj->id;
                 // echo $categoryId. "**************";
                 // set ctr
                 $ctr = (int) $Category_obj->useCat;

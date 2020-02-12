@@ -132,70 +132,19 @@
                 // }
             // # single post query's end
         // @ class specific queries end
-
-
-
-        // ! working here ***********************************
-
-
-
-        // @ properties start
-            // main properties
-                public $alt;
-                public $name;
-                public $note;
-                public $type;
-            // secondary properties
-                // used primarily for the API, if you just need a image path you can just call get_image_path('small') found bellow
-                public $imagePath_array;
-            // form helpers/update helper
-                protected $catIdsOld;
-                protected $labelIdsOld;
-                protected $tagIdsOld;
-            // protected properties, read only, use getters, they are sent by functions/methods when needed 
-                protected $createdBy; // get_createdBy()
-                protected $createdDate; // get_createdDate()
-                protected $id; // get_id()
-        // @ properties end
         
         // @ methods start
-            // constructor method, type declaration of array
-            public function __construct(array $args=[]) {
-                // clean up form information coming in
-                // $args = self::cleanFormArray($args); // todo: need to uncomment
-                // Set up properties
-                $this->id = $args['id'] ?? NULL;         
-                $this->alt = $args['alt'] ?? NULL;         
-                $this->catIdsOld = $args['catIdsOld'] ?? NULL;     
-                $this->createdBy = $args['createdBy'] ?? NULL;     
-                $this->createdDate = $args['createdDate'] ?? NULL;
+            // methods
+            // extra constructor information
+            public function extended_constructor(array $args=[]) {
+                $this->catIdsOld = $args['catIdsOld'] ?? NULL;
                 $this->imagePath_array = [];
                 $this->labelIdsOld = $args['labelIdsOld'] ?? NULL;
-                $this->name = $args['name'] ?? NULL;
-                $this->note = $args['note'] ?? NULL;
-                $this->tagIdsOld = $args['tagIdsOld'] ?? NULL; 
-                $this->type = $args['type'] ?? NULL; 
-                
+                $this->tagIdsOld = $args['tagIdsOld'] ?? NULL;
                 // check to see if we have an image name, needs to run after $this->name is set
                 if (strlen(Trim($this->name)) > 0) {
                     $this->imagePath_array = [$this->get_image_path('thumbnail'), $this->get_image_path('small'), $this->get_image_path('medium'), $this->get_image_path('large'), $this->get_image_path('original')];  
                 }
-            }
-
-            // methods
-            // get createdBy property
-            public function get_createdBy() {
-                return $this->createdBy;
-            }
-
-            // get createdDate property
-            public function get_createdDate() {
-                return $this->createdDate;
-            }
-
-            // get id property
-            public function get_id() {
-                return $this->id;
             }
 
             // get image path with recorded reference image name

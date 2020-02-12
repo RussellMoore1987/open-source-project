@@ -54,7 +54,7 @@
         },
         "tables": {
             "type": "devTool",
-            "method": "devTool_get_all_tables",
+            "method": "devTool_get_all_class_tables",
             "data": ""
         },
         "tableRecords": {
@@ -75,12 +75,12 @@
             }
         },
         "tables2": {
-            "devTool::devTool_get_all_tables": {"data":""}
+            "devTool::devTool_get_all_class_tables": {"data":""}
         },
         "tables3": {
-            "devTool::devTool_get_all_tables": ""
+            "devTool::devTool_get_all_class_tables": ""
         },
-        "tables4": "devTool::devTool_get_all_tables",
+        "tables4": "devTool::devTool_get_all_class_tables",
         "login2": {
             "devTool::devTool_login": {
                 "data": {
@@ -94,12 +94,12 @@
     // newer
     devTool = {
         "tables": {
-            "devTool::devTool_get_all_tables": {"data":""}
+            "devTool::devTool_get_all_class_tables": {"data":""}
         },
         "tables2": {
-            "devTool::devTool_get_all_tables": ""
+            "devTool::devTool_get_all_class_tables": ""
         },
-        "tables3": "devTool::devTool_get_all_tables",
+        "tables3": "devTool::devTool_get_all_class_tables",
         "login": {
             "devTool::devTool_login": {
                 "data": {

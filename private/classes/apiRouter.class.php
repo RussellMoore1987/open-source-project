@@ -17,18 +17,14 @@
             // check to see if we have any classes available
             if ($this->classList_array) {
                 // reformat classList array
-                foreach ($this->classList_array as $className => $routes) {
+                foreach ($this->classList_array as $className) {
                     // get apiInfo array
                     $apiInfo_array = $className::get_api_class_info();
                     // check to see if we should add it to the array, can we even use it in the API
-                    if ($routes && $apiInfo_array) {
-                        // loop over rout to create array
-                        foreach ($routes as $rout) {
-                            // check to see if the class has the rout specified
-                            if (isset($apiInfo_array['routes'][$rout])) { 
-                                // load up a new array API ready classes, rout => className, posts => Post
-                                $apiClassList_array[$rout] = $className;
-                            }
+                    if ($apiInfo_array) {
+                        // loop over apiInfo_array to create array of routes
+                        foreach ($apiInfo_array['routes'] as $routName => $routInfo) {
+                            $apiClassList_array[$routName] = $className;
                         }
                     }
                 }

@@ -57,7 +57,7 @@
                 $Label_obj->save();
                 // var_dump($Label_obj);
                 // set id
-                $labelId = (int) $Label_obj->get_id();
+                $labelId = (int) $Label_obj->id;
                 // echo $labelId. "**************";
                 // set ctr
                 $ctr = (int) $Label_obj->useLabel;
@@ -81,10 +81,10 @@
             // sort them, they should fit into one of these arrays
             foreach ($allLabels_array as $Label) {
                 switch ($Label->useLabel) {
-                    case 1: $postLabels_array[$Label->get_id()] = $Label->title; break;
-                    case 2: $mediaContentLabels_array[$Label->get_id()] = $Label->title; break;
-                    case 3: $usersLabels_array[$Label->get_id()] = $Label->title; break;
-                    case 4: $contentLabels_array[$Label->get_id()] = $Label->title; break;
+                    case 1: $postLabels_array[$Label->id] = $Label->title; break;
+                    case 2: $mediaContentLabels_array[$Label->id] = $Label->title; break;
+                    case 3: $usersLabels_array[$Label->id] = $Label->title; break;
+                    case 4: $contentLabels_array[$Label->id] = $Label->title; break;
                 }
             }
             // sort alphabetically

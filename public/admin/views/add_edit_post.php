@@ -12,7 +12,7 @@
     <div>
         <a href='add_edit_post'>Add New Post</a>
     </div>
-    <p>Comment Count: <?php echo $Post_obj->get_comments() ?? "none"; ?></p>
+    <p>Comment Count: <?php echo $Post_obj->comments ?? "none"; ?></p>
     <form method="post" action='add_edit_post<?php if($postId != 'add' && $postId > 0) { echo "?postId={$postId}";} ?>'>
         <!-- main form -->
         <div>
@@ -59,6 +59,7 @@
                     // creating a count variable to use later
                     $count = 1;
                     // showing possible users as well as selected tags
+                    
                     foreach ($possibleUsers_array as $User) {
                         // make a default a username variable to insert on add mode, // todo: switch to session default is the user
                         if (!is_post_request() && $postId == "add" && $count == 1) {
@@ -69,10 +70,10 @@
                         // set default selected value
                         $selected = "";
                         // check to see if the post has any categories attached to it
-                        if ($User->get_id() === $Post_obj->author) {
+                        if ($User->id === $Post_obj->author) {
                             $selected = "selected";
                         }
-                        echo "<option value='{$User->get_id()}' {$selected}>{$User->fullName}</option>";
+                        echo "<option value='{$User->id}' {$selected}>{$User->fullName}</option>";
                     }
                 ?>
             </select>
@@ -143,10 +144,10 @@
                         // set default selected value
                         $active = "";
                         // check to see if the post has any mediaContent attached to it
-                        if (isset($postMediaContent_array[$MediaContent->get_id()])) {
+                        if (isset($postMediaContent_array[$MediaContent->id])) {
                             $active = "active";
                         }
-                        echo "<span id='{$MediaContent->get_id()}' class='{$active}'><img src='{$MediaContent->get_image_path('original')}'></span>";
+                        echo "<span id='{$MediaContent->id}' class='{$active}'><img src='{$MediaContent->get_image_path('original')}'></span>";
                     }
                 ?>
                 <input type="hidden" name="post[mediaContentIds]" value="<?php echo implode(",",array_keys($postMediaContent_array)); ?>">
@@ -166,8 +167,8 @@
 
         <!-- hidden form fields -->
         <input type="hidden" name="post[id]" value="<?php echo $postId == "add" ? NULL : $postId; ?>">
-        <input type="hidden" name="post[authorName]" value="<?php echo $Post_obj->get_authorName() ?? $addUserDefault ?? "";?>">
-        <input type="hidden" name="post[possibleImageName]" value="<?php echo $Post_obj->get_imageName();?>">
+        <input type="hidden" name="post[authorName]" value="<?php echo $Post_obj->authorName ?? $addUserDefault ?? "";?>">
+        <input type="hidden" name="post[possibleImageName]" value="<?php echo $Post_obj->imageName;?>">
         
 
         <!-- submit button -->

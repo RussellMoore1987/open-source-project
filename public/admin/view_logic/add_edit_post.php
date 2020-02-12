@@ -51,7 +51,7 @@
                 // validate and save
                 $Post_obj->save();
                 // set id
-                $postId = $Post_obj->get_id();
+                $postId = $Post_obj->id;
 
                 // check to see if we have an ID
                 if (!($postId === 0 || $postId === NULL) && !$Post_obj->errors) {
@@ -79,7 +79,7 @@
                 $postMediaContent_array= [];
                 // loop through result to create a associative array
                 foreach ($tempPostMediaContent_array as $MediaContent) {
-                    $id = $MediaContent->get_id(); 
+                    $id = $MediaContent->id; 
                     $name = $MediaContent->name; 
                     $postMediaContent_array[$id] = $name; 
                 }
@@ -95,7 +95,6 @@
                 $possibleTags_array = Post::get_possible_tags();
             // get all users
                 $possibleUsers_array = User::get_users_for_select();
-            
             // get all images // ! temp info it's to be replaced eventually with the correct method to show images
                 $sql = "SELECT * FROM media_content WHERE type IN ('PNG', 'JPEG', 'JPG', 'GIF') ";
                 $possibleMediaContent_array = MediaContent::find_by_sql($sql); 
@@ -110,17 +109,17 @@
             
             $tagsIds = implode(",",array_keys($postTags_array));
             $tagsIdsOld = implode(",",array_keys($postTags_array));
-
+            
             // if $_POST and error, pass correct info, this is to make sure it their selection does not revert when form does not pass
             if (is_post_request() && isset($_POST["post"]) && $Post_obj->errors) {
                 // make array from ids
-                $postCategories_array = list_to_array($Post_obj->get_catIds());
-                $postLabels_array = list_to_array($Post_obj->get_labelIds());
-                $postTags_array = list_to_array($Post_obj->get_tagIds());
+                $postCategories_array = list_to_array($Post_obj->catIds);
+                $postLabels_array = list_to_array($Post_obj->labelIds);
+                $postTags_array = list_to_array($Post_obj->tagIds);
                 // pass in form list data
-                $catIds = $Post_obj->get_catIds();
-                $labelsIds = $Post_obj->get_labelIds();
-                $tagsIds = $Post_obj->get_tagIds();
+                $catIds = $Post_obj->catIds;
+                $labelsIds = $Post_obj->labelIds;
+                $tagsIds = $Post_obj->tagIds;
             }
     // @ logic for add_edit_post.php END
 ?>

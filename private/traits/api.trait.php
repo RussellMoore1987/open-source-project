@@ -6,8 +6,6 @@
         // @ main methods start
             // # Method for getting api info from the DB
             static function get_api_info($className, $routName) {
-                // db class list
-                $dbClassList = static::$classList;
                 // make class info array
                 $dbKeyInfo_array['mainApiKey'] = static::get_main_api_key();
                 $dbKeyInfo_array['mainGetApiKey'] = static::get_main_get_api_key();
@@ -30,7 +28,7 @@
                     $prepApiData_array = static::validate_and_prep_api_parameters($_GET, $className, $routInfo_array, $getApiParameters);
     
                     // check for api authentication, we are authenticating afterwards as the return message needs more data
-                    if (!(static::apiGetAuthentication($dbKeyInfo_array, $dbClassList, $className, $apiInfo_array, $routInfo_array))) {
+                    if (!(static::apiGetAuthentication($dbKeyInfo_array, $className, $apiInfo_array, $routInfo_array))) {
                         $prepApiData_array['errors'][] = "You are not authorized to access this information.";
                     } else {
                         // except authentication token is sent through
@@ -58,8 +56,6 @@
 
             // # Method for processing POST, PUT, PATCH, DELETE api info
             static function get_post_api_info($className, $routName) {
-                // db class list
-                $dbClassList = static::$classList;
                 // make class info array
                 $dbKeyInfo_array['mainApiKey'] = static::get_main_api_key();
                 $dbKeyInfo_array['mainPostApiKey'] = static::get_main_post_api_key();
@@ -951,13 +947,13 @@
                         // save object 
                         $Obj->save();
                         // set id
-                        $id = $Obj->get_id();
+                        $id = $Obj->id;
 
                         // check to see if we have an ID
                         if (!$Obj->errors) {
                             // make success message
-                            $data_array['content']['message'] = "A new record was created with the id of {$Obj->get_id()}.";
-                            $data_array['content']['id'] = $Obj->get_id();
+                            $data_array['content']['message'] = "A new record was created with the id of {$Obj->id}.";
+                            $data_array['content']['id'] = $Obj->id;
                             // check to see if a link can be shown
                             // see if rout has GET
                             if (isset($routInfo_array['httpMethods']['get']) && isset($routInfo_array['httpMethods']['get']['arrayInfo'])) {
@@ -970,7 +966,7 @@
                                 }
                                 if ($arrayInfo) {
                                     if (isset($arrayInfo['id'])) {
-                                        $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/?id=" . $Obj->get_id();
+                                        $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/?id=" . $Obj->id;
                                     } else {
                                         $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/";
                                     }
@@ -1105,7 +1101,7 @@
                                     }
                                     if (!$data_array['errors']) {
                                         // make success message
-                                        $data_array['content']['message'] = "The record with the id of {$Obj->get_id()} was updated.";
+                                        $data_array['content']['message'] = "The record with the id of {$Obj->id} was updated.";
                                         // add id to paramsAccepted
                                         $data_array['paramsAccepted']['id'] = "id = {$id}";
                                     }
@@ -1161,8 +1157,8 @@
                                 }
                                 if (!$data_array['errors']) {
                                     // make success message
-                                    $data_array['content']['message'] = "The record with the id of {$id} was copied to the record with the id of {$Obj->get_id()}. Other parameters, if submitted, have altered the copy.";
-                                    $data_array['content']['id'] = $Obj->get_id();
+                                    $data_array['content']['message'] = "The record with the id of {$id} was copied to the record with the id of {$Obj->id}. Other parameters, if submitted, have altered the copy.";
+                                    $data_array['content']['id'] = $Obj->id;
                                     // check to see if a link can be shown
                                     // see if rout has GET
                                     if (isset($routInfo_array['httpMethods']['get']) && isset($routInfo_array['httpMethods']['get']['arrayInfo'])) {
@@ -1175,7 +1171,7 @@
                                         }
                                         if ($arrayInfo) {
                                             if (isset($arrayInfo['id'])) {
-                                                $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/?id=" . $Obj->get_id();
+                                                $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/?id=" . $Obj->id;
                                             } else {
                                                 $data_array['content']['link'] = PUBLIC_LINK_PATH . "/api/restApi/v1/" . $routName . "/";
                                             }
@@ -1289,7 +1285,7 @@
                                     // run delete
                                     $Obj->delete();
                                     // make success message
-                                    $data_array['content']['message'] = "The record with the id of {$Obj->get_id()} was deleted.";
+                                    $data_array['content']['message'] = "The record with the id of {$Obj->id} was deleted.";
                                     // add id to paramsAccepted
                                     $data_array['paramsAccepted']['id'] = "id = {$id}";
                                 } else {
@@ -1409,7 +1405,7 @@
             // TODO: probably can merge a couple of these functions together, especially for authentication validation
             // * password/key specificity located at root/private/rules_docs/reference_information.php: // @ api_documentation // # password/key specificity general to specific, the order that keys matter
             // # api get authentication
-            static public function apiGetAuthentication(array $dbKeyInfo_array, array $dbClassList, $className, array $apiInfo_array, array $routInfo_array) {
+            static public function apiGetAuthentication(array $dbKeyInfo_array, $className, array $apiInfo_array, array $routInfo_array) {
                 // check for authentication, API key, specific to general
                 if (isset($routInfo_array['httpMethods']['get']['methodKey']) && 
                     trim(strlen($routInfo_array['httpMethods']['get']['methodKey'])) > 0) {

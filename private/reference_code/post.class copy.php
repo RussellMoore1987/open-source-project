@@ -291,19 +291,64 @@
                 }
             // # single post querys end
         // @ class specific queries end
+
+        // @ properties start
+            // main properties
+                public $author;
+                public $content;
+                public $postDate;
+                public $status;
+                public $title;
+            // secondary properties
+                public $fullDate;
+                public $shortDate;
+                // used primarily for the API, if you just need a image path you can just call get_image_path('small') found bellow
+                public $imagePath_array;
+            // form helpers/update helper
+                protected $catIdsOld;
+                protected $labelIdsOld;
+                protected $mediaContentIdsOld;
+                protected $tagIdsOld;
+            // protected properties, read only, use getters, they are sent by functions/methods when needed 
+                protected $authorName; // get_authorName()
+                protected $catIds; // get_catIds()
+                protected $comments; // get_comments()
+                protected $createdBy; // get_createdBy()
+                protected $createdDate; // get_createdDate()
+                protected $id; // get_id()
+                protected $imageName; // get_imageName()
+                protected $labelIds; // get_labelIds()
+                protected $mediaContentIds; // get_mediaContentIds()
+                protected $tagIds; // get_tagIds()
+        // @ properties end
         
         // @ methods start
-            // extra constructor information
-            public function extended_constructor(array $args=[]) {
+            // constructor method, type declaration of array
+            public function __construct(array $args=[]) {
+                // clean up form information coming in
+                $args = self::cleanFormArray($args);
+                // echo "just got new post info ***********";
+                // var_dump($args);
+                // Set up properties
+                $this->id = $args['id'] ?? NULL;    
+                $this->author = $args['author'] ?? NULL;   
+                $this->authorName = $args['authorName'] ?? NULL;  
+                $this->catIds = $args['catIds'] ?? NULL;
+                $this->catIdsOld = $args['catIdsOld'] ?? NULL;
+                $this->comments = $args['comments'] ?? NULL;    
+                $this->content = $args['content'] ?? NULL;     
+                $this->createdBy = $args['createdBy'] ?? NULL;     
+                $this->createdDate = $args['createdDate'] ?? NULL;
+                $this->imageName = $args['imageName'] ?? NULL;
                 $this->imagePath_array = [];
                 // check to see if we have an image name
                 if (strlen(Trim($this->imageName)) > 0) {
                     $this->imagePath_array = [$this->get_image_path('thumbnail'), $this->get_image_path('small'), $this->get_image_path('medium'), $this->get_image_path('large'), $this->get_image_path('original')];  
                 }
+                $this->labelIds = $args['labelIds'] ?? NULL;
                 $this->labelIdsOld = $args['labelIdsOld'] ?? NULL;
-                $this->catIdsOld = $args['catIdsOld'] ?? NULL;
+                $this->mediaContentIds = $args['mediaContentIds'] ?? NULL;
                 $this->mediaContentIdsOld = $args['mediaContentIdsOld'] ?? NULL;
-                $this->tagIdsOld = $args['tagIdsOld'] ?? NULL; 
                 // Format dates 
                 if (isset($args['postDate']) && strlen(trim($args['postDate'])) > 0) {
                     // Turn date to time string
@@ -324,6 +369,62 @@
                     $this->shortDate = NULL;
                     $this->fullDate = NULL;
                 } 
+                $this->status = $args['status'] ?? NULL;  
+                $this->tagIds = $args['tagIds'] ?? NULL; 
+                $this->tagIdsOld = $args['tagIdsOld'] ?? NULL; 
+                $this->title = $args['title'] ?? NULL; 
+
+            }
+
+            // methods
+            // get authorName property
+            public function get_authorName() {
+                return $this->authorName;
+            }
+
+            // get catIds property
+            public function get_catIds() {
+                return $this->catIds;
+            }
+
+            // get comments property
+            public function get_comments() {
+                return $this->comments;
+            }
+
+            // get createdBy property
+            public function get_createdBy() {
+                return $this->createdBy;
+            }
+
+            // get createdDate property
+            public function get_createdDate() {
+                return $this->createdDate;
+            }
+
+            // get id property
+            public function get_id() {
+                return $this->id;
+            }
+
+            // get imageName property
+            public function get_imageName() {
+                return $this->imageName;
+            }
+
+            // get labelIds property
+            public function get_labelIds() {
+                return $this->labelIds;
+            }
+            
+            // get mediaContentIds property
+            public function get_mediaContentIds() {
+                return $this->mediaContentIds;
+            }
+
+            // get tagIds property
+            public function get_tagIds() {
+                return $this->tagIds;
             }
 
             // get image path with recorded reference image name

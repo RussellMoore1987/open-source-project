@@ -112,7 +112,7 @@ function get_key_value_array($obj_array) {
     $array = [];
     // loop through result to create a key value pair array
     foreach ($obj_array as $record) {
-        $id = $record->get_id(); 
+        $id = $record->id; 
         $title = $record->title; 
         $array[$id] = $title; 
     }

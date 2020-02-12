@@ -57,36 +57,6 @@
                 return self::find_by_sql($sql);
             }
         // @ class specific queries end
-
-        // @ properties start
-            // main properties
-            public $note;
-            public $title;
-            public $useTag;
-
-            //protected properties
-            protected $id;
-
-        // @ properties end
-
-        // @ methods start
-            // constructor method, type declaration of array
-            public function __construct(array $args=[]) {
-                // clean up form information coming in
-                $args = self::cleanFormArray($args);
-                $this->id = $args['id'] ?? NULL;
-                $this->note = $args['note'] ?? NULL;
-                $this->title = $args['title'] ?? NULL;
-                $this->useTag = $args['useTag'] ?? NULL;
-            }
-
-            // methods
-            // get the id
-            public function get_id() {
-                return $this->id;
-            }
-
-        // @ methods end
     }
     
 ?>

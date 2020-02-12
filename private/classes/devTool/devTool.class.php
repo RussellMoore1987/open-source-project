@@ -1,9 +1,11 @@
 <?php
     // include traits
     require_once('devToolGetter.trait.php');
+    require_once('devToolSetter.trait.php');
     class DevTool {
         // @ use traits start
          use DevToolGetter;
+         use DevToolSetter;
          use MainSettings;
         // @ use traits end
 
@@ -50,6 +52,20 @@
                 return $requestInfo;
             }
         // @ main methods end
+
+        // @ dev tool helper functions start
+            // # devTool_session_check
+            static public function devTool_session_check() {
+               
+                // TODO: check if devToolSession is there
+                // right now just let it pass
+                $pass = true;
+                // return data
+                return $pass; 
+            } 
+            
+            static protected $devToolDefaultMessage = "Access to the devTool functions can only be accessed through the request access type of devTool, and you must also be logged into the devTool.";
+        // @ dev tool helper functions end
 
         // @ layouts start
             // latest post layout

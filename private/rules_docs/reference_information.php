@@ -1,4 +1,52 @@
 <?php
+    // @ class_list
+        // registering a class allows you to use the REST API, Context API, and DevTool with its sql processor, and its graphical interfaces, and documentation 
+        // ex:
+        // static protected $classList = ["Category", "Label", "MediaContent", "Post", "Tag", "User"]; // public access use get_class_list() 
+            // class list, if there is order importance, placed the classes in order of importance. 
+                // This is especially important if you need SQL to be created in a certain order.
+                    // the order for SQL processing is $sqlStructure from $classList, then $otherTables from $otherTablesClassList. If $otherTablesClassList is not available or left empty then it will look for $otherTables from $classList
+                        // ex:
+                        // in main settings trait start
+                            // static protected $classList = ["Category", "Label", "MediaContent", "Post", "Tag", "User"]; // public access use get_class_list() 
+                            // static protected $otherTablesClassList = []; // use get_other_tables_class_list()
+                        // in main settings trait end
+                        // in a class start
+                            // static protected $sqlStructure = "
+                            //     CREATE TABLE IF NOT EXISTS users ( 
+                            //     id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+                            //     username VARCHAR(35) NOT NULL UNIQUE, 
+                            //     ...
+                            // ";
+                    
+                            // // connecting tables
+                            // static protected $otherTables = [
+                            //     "users_to_tags" => "
+                            //         CREATE TABLE IF NOT EXISTS users_to_tags ( 
+                            //         userId INT(10) UNSIGNED NOT NULL 
+                            //         tagId INT(10) UNSIGNED NOT NULL, 
+                            //         PRIMARY KEY (userId, tagId), 
+                            //         FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE, 
+                            //         FOREIGN KEY (tagId) REFERENCES tags(id) ON DELETE CASCADE ) ENGINE=InnoDB
+                            //     ",
+                            //     "users_to_labels" => "
+                            //         CREATE TABLE IF NOT EXISTS users_to_labels ( 
+                            //         userId INT(10) UNSIGNED NOT NULL, 
+                            //         labelId INT(10) UNSIGNED NOT NULL, 
+                            //         PRIMARY KEY (userId, labelId), 
+                            //         FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE, 
+                            //         FOREIGN KEY (labelId) REFERENCES labels(id) ON DELETE CASCADE ) ENGINE=InnoDB
+                            //     "
+                            // ];
+                        // in a class end
+                    // The order of creation of SQL is first > the order classes (ex: "Category", "Label", "MediaContent") > $sqlStructure array (for all classes, following $classList order) > then $otherTables (for all classes, following $classList order)
+            // # for $otherTablesClassList
+            // list the class they are in, the array in a class must be called $otherTables, 
+                // "static protected $otherTables = ['sql...']". (example above) 
+                // these tables are built last. You can specify which class you want them in. 
+                // If left blank it will try to connect to the $classList to find SQL $otherTables.
+            // static protected $otherTablesClassList = []; // use get_other_tables_class_list()
+                // use get_sql_other_tables() to get $otherTables names from an individual class, used in DevTool
     // @ collection_type_reference
         // # reference number
         // 0 = none/get all 
@@ -253,16 +301,20 @@
                 // static protected $mainApiKey = 'T3$$tK3y!2456'; // use get_main_api_key()
                 // static protected $mainGetApiKey = 'T3$$tK3y!24561234'; // use get_main_get_api_key()
                 // static protected $mainPostApiKey = 'T3$$tK3y!2456@#5^&'; // use get_main_post_api_key()
-            // set up classList in the mainSettings.trait.php, specify the routes that are available for each class
-            // class then available routes // "class" => ["available", "routes"]
-                // make sure rout names match the routes specified in the class apiInfo array
-                // "Label" => ["labels","labels/mid","labels/full"], 
+            // set up classList in the mainSettings.trait.php 
                 // example bellow
-                    // static protected $classList = [
-                    //     "Label" => ["labels","labels/mid","labels/full"],       
-                    //     "Post" => ["posts","posts/mid","posts/full"],       
-                    //     "User" => ["users","users/mid","users/full"],       
-                    // ]; // use get_class_list()
+                    // static protected $classList = ["Category", "Label", "MediaContent", "Post", "Tag", "User"]; // use get_class_list()
+                    // all classes found in the class list will have the option of being used in the rest API
+                        // in order to utilize specific routes you must specify them in the class itself
+                        // example
+                            // $apiInfo = [
+                            //     'routes' => [
+                            //         "users" => [...]
+                            //         "users/full" => [...]
+                            //     ]
+                            // ];
+                                // the routes "users" and "users/full" have been specified and are now made available.
+                                // keep on reading for other required fields within a route
         // # in db class end
 
         // # in class start 

@@ -32,10 +32,10 @@
                 <?php
                     foreach ($subsOfCategories_array as $Category) {
                         $selected = "";
-                        if ($Category_obj->subCatId == $Category->get_id()) {
+                        if ($Category_obj->subCatId == $Category->id) {
                              $selected = "selected";
                         }
-                        echo "<option {$selected} value='{$Category->get_id()}'>{$Category->title}</option>";
+                        echo "<option {$selected} value='{$Category->id}'>{$Category->title}</option>";
                     }
                 ?>
             </select>

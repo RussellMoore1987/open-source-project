@@ -92,7 +92,7 @@
                             // change the active record in the object arrays, so the information is accurate to validate all of
                             foreach ($Categories_array as $Category) {
                                 // find it and change it
-                                if ($Category->id == $this->id) {
+                                if ($Category->get_id() == $this->get_id()) {
                                     // change that record
                                     $Category->subCatId = $this->subCatId;
                                     $Category->useCat = $this->useCat;
@@ -155,7 +155,7 @@
                     // get subs
                     $subData = $this->get_subs($Categories_array);
                     // make array for cleaning records
-                    $cleanUpId_array = array_merge([$this->id], $subData);
+                    $cleanUpId_array = array_merge([$this->get_id()], $subData);
                 }
 
                 // delete record
@@ -216,7 +216,7 @@
                             } else {
                                 // loop over array find parent
                                 foreach ($Categories_array as $Parent) {
-                                    if ($Parent->id == $subCatId) {
+                                    if ($Parent->get_id() == $subCatId) {
                                         $subCatId = $Parent->subCatId;
                                         $parents++;
                                     }
@@ -234,9 +234,9 @@
                     // set sub counter
                     $sudLayers = 0;
                     // list of child IDs
-                    $subIdList_array = [$this->id];
+                    $subIdList_array = [$this->get_id()];
                     // get subs 
-                    $result = [true, [$this->id]];
+                    $result = [true, [$this->get_id()]];
                     // keep looking until we get a false
                     while ($result[0]) {
                         $result = $this->get_sub_categories($result[1], $Categories_array);
@@ -255,20 +255,42 @@
         // @ class specific queries end
 
         // @ properties start
+            // main properties
+                public $note;
+                public $subCatId;
+                public $title;
+                public $useCat;
             // secondary properties
                 // this stores the sorted category information
                 static public $allCategoriesSorted = [];
+            // form helpers/update helper
+                protected $subCatIdOld;
+                protected $useCatOld;
+            // protected properties, read only, use getters, they are sent by functions/methods when needed 
+                protected $id; // get_id()
         // @ properties end
         
         // @ methods start
-            // extra constructor information
-            public function extended_constructor(array $args=[]) {
-                // form helpers/update helper
-                $this->useCatOld = $args['useCatOld'] ?? NULL;
-                $this->subCatIdOld = $args['subCatIdOld'] ?? NULL;
+            // constructor method, type declaration of array
+            public function __construct(array $args=[]) {
+                // clean up form information coming in
+                $args = self::cleanFormArray($args);
+                // Set up properties
+                $this->id = $args['id'] ?? NULL;    
+                $this->note = $args['note'] ?? NULL;   
+                $this->subCatId = $args['subCatId'] ?? NULL;  
+                $this->subCatIdOld = $args['subCatIdOld'] ?? NULL;  
+                $this->title = $args['title'] ?? NULL;
+                $this->useCat = $args['useCat'] ?? NULL;    
+                $this->useCatOld = $args['useCatOld'] ?? NULL;    
             }
 
             // methods
+            // get id property
+            public function get_id() {
+                return $this->id;
+            }
+
             // filter all categories, expects an array of objects
             static public function filter_all_categories(array $categories_array) {
                 // make arrays of them below
@@ -376,8 +398,8 @@
                         // if matches set as child
                         if ($Sub->subCatId == $parentCatId) {
                             // add them to array
-                            $subIdList[] = $Sub->id;
-                            // echo $Sub->title . "-" . $Sub->id . "<br>";
+                            $subIdList[] = $Sub->get_id();
+                            // echo $Sub->title . "-" . $Sub->get_id() . "<br>";
                             // add a layer
                             $addLayer = true;
                         }

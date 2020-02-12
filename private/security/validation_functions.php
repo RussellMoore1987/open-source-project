@@ -130,7 +130,7 @@
     }
 
     // Determine the string is a comma separated list
-    function is_list($data, $separator=",") {
+    function is_list(string $data,string $separator=",") {
         // Check if it is a comma separated list inside the string
         if(strpos($data, $separator) !== false) {
             return true;

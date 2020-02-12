@@ -232,112 +232,20 @@
                 }
             // # single post querys end
         // @ class specific queries end
-
-        // @ properties start
-            // main properties
-                public $address;
-                public $adminNote;
-                public $emailAddress;
-                public $firstName;
-                public $lastName;
-                public $note;
-                public $phoneNumber;
-                public $showOnWeb;
-                public $title;
-                public $username;
-                // secondary properties
-                public $fullName;
-                // used primarily for the API, if you just need a image path you can just call get_image_path('small') found bellow
-                public $imagePath_array;
-            // protected properties, read only, use getters, they are sent by functions/methods when needed 
-                protected $catIds; // get_catIds()
-                protected $createdBy; // get_createdBy()
-                protected $createdDate; // get_createdDate()
-                protected $id; // get_id()
-                protected $imageName; // get_imageName()
-                protected $labelIds; // get_labelIds()
-                protected $mediaContentId; // get_mediaContentId()
-                protected $tagIds; // get_tagIds()
-                protected $hashPass; // get_hashPass()
-        // @ properties end
         
         // @ methods start
-            // constructor method, type declaration of array
-            public function __construct(array $args=[]) {
-                // Set up properties
-                $this->id = $args['id'] ?? NULL;    
-                $this->address = $args['address'] ?? NULL;
-                $this->adminNote = $args['adminNote'] ?? NULL;
-                $this->catIds = $args['catIds'] ?? NULL;
-                $this->createdBy = $args['createdBy'] ?? NULL;
-                $this->createdDate = $args['createdDate'] ?? NULL;
-                $this->emailAddress = $args['emailAddress'] ?? NULL;
-                $this->firstName = $args['firstName'] ?? NULL;
-                $this->imageName = $args['imageName'] ?? NULL;
+
+            // methods
+            // extra constructor information
+            public function extended_constructor(array $args=[]) {
+                // TODO: to use this on a lot of different classes eventually make it common or in the database object **DRY**
                 $this->imagePath_array = [];
                 // check to see if we have an image name
                 if (strlen(Trim($this->imageName)) > 0) {
                     $this->imagePath_array = [$this->get_image_path('thumbnail'), $this->get_image_path('small'), $this->get_image_path('medium'), $this->get_image_path('large'), $this->get_image_path('original')];  
                 }
-                $this->labelIds = $args['labelIds'] ?? NULL;
-                $this->lastName = $args['lastName'] ?? NULL;
-                $this->mediaContentId = $args['mediaContentId'] ?? NULL;
-                $this->note = $args['note'] ?? NULL;
-                $this->hashPass = $args['hashPass'] ?? NULL;
-                $this->phoneNumber = $args['phoneNumber'] ?? NULL;
-                $this->showOnWeb = $args['showOnWeb'] ?? NULL;
-                $this->tagIds = $args['tagIds'] ?? NULL;
-                $this->title = $args['title'] ?? NULL;
-                $this->username = $args['username'] ?? NULL;  
-                      
                 // needed to wait until last name was set
                 $this->fullName = $this->firstName . " " . $this->lastName;
-            }
-
-            // methods
-            // get catIds property
-            public function get_catIds() {
-                return $this->catIds;
-            }
-
-            // get createdBy property
-            public function get_createdBy() {
-                return $this->createdBy;
-            }
-
-            // get createdDate property
-            public function get_createdDate() {
-                return $this->createdDate;
-            }
-
-            // get id property
-            public function get_id() {
-                return $this->id;
-            }
-
-            // get imageName property
-            public function get_imageName() {
-                return $this->imageName;
-            }
-
-            // get labelIds property
-            public function get_labelIds() {
-                return $this->labelIds;
-            }
-            
-            // get mediaContentId property
-            public function get_mediaContentId() {
-                return $this->mediaContentId;
-            }
-
-            // get tagIds property
-            public function get_tagIds() {
-                return $this->tagIds;
-            
-            }
-            // get password property
-            public function get_hashPass() {
-                return $this->hashPass;
             }
 
             // get image path with recorded reference image name

@@ -42,6 +42,23 @@
         static protected $validation_columns = []; // use get_validation_columns()
         public $message = [];
         public $errors = [];
+
+        // @ generic instructor code start
+            public function __construct(array $args=[]) {
+                // clean up form information coming in
+                $args = self::cleanFormArray($args);
+                foreach (static::$columns as $column) {
+                    $this->{$column} = $args[$column] ?? NULL;
+                }
+                // run extended constructor for custom class needs
+                $this->extended_constructor($args);
+            }
+
+            // extra constructor information, should be specific to a class
+            public function extended_constructor(array $args=[]) {
+                // put code in individual class
+            }
+        // @ generic instructor code end
         
         // @ active record code start
              // set up local reference for the database
@@ -486,6 +503,24 @@
                 return $passed;
             }
 
+            // # check for sql structure, other tables, give back table names
+            static public function get_sql_other_tables() {
+                // set default variables
+                $tableNames = [];
+
+                // check to see if we even have other tables
+                if (isset(static::$otherTables) && static::$otherTables) {
+                    $otherTables = static::$otherTables;
+                    // send back array of other table names
+                    foreach ($otherTables as $tableName => $sql) {
+                        $tableNames[] = $tableName;
+                    }
+                }
+
+                // return data
+                return $tableNames;
+            }
+
             // # get class table name
             static public function get_table_name() {
                 return static::$tableName;
@@ -494,6 +529,12 @@
             // # get class list
             static public function get_class_list() {
                 return self::$classList;
+            }
+
+            // # get other tables class list
+            // this is mostly used for SQL processing, DevTool
+            static public function get_other_tables_class_list() {
+                return self::$otherTablesClassList;
             }
 
             // # get validation columns
