@@ -1,6 +1,7 @@
 <?php
     // include api trait
     require_once("postApi.trait.php");
+    require_once("postSql.trait.php");
 
     class Post extends DatabaseObject {
         // @ class database information start
@@ -117,10 +118,10 @@
             ];
         // @ class database information end
         
-        // @ class api start
-            // use api trait
+        // @ class traits start
             use PostApi;
-        // @ class api end
+            use PostSql;
+        // @ class traits end
         
         // @ class specific queries start
             // latest posts feed

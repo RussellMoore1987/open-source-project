@@ -1,14 +1,14 @@
 <?php
     // include api trait
-    require_once("labelApi.trait.php");
+    require_once("tagSql.trait.php");
 
-    class Label extends DatabaseObject {
+    class Tag extends DatabaseObject {
         // @ class database information start
             // Class specific properties. Overwritten from DatabaseObject Class
             // Name of the table
-            static protected $tableName = 'labels';
+            static protected $tableName = "tags";
             // db columns
-            static protected $columns = ['id', 'note', 'title', 'useLabel'];
+            static protected $columns = ['id', 'note', 'title', 'useTag'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
@@ -16,50 +16,50 @@
             // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
             static protected $collectionTypeReference = 0;
             // db validation, // * validation_options located at: root/private/rules_docs/reference_information.php
-            static public $validation_columns = [
+            static protected $validation_columns = [
                 'id' => [
-                    'name' => 'Label id',
+                    'name' => 'Tag id',
                     'required' => true,
                     'type' => 'int', // type of int
                     'num_min' => 1, // number min value
                     'max' => 10 // string length
                 ],
                 'note' => [
-                    'name' => 'Label Note',
+                    'name' => 'Tag Note',
                     'type' => 'str', // type of string
                     'max' => 255, // string length
                     'html' => 'no'
                 ],
                 'title' => [
-                    'name' => 'Label Title',
+                    'name' => 'Tag Title',
                     'required' => true,
                     'type' => 'str', // type of string
                     'min' => 2, // string length
                     'max' => 50, // string length
-                    'html' => 'yes'
+                    'html' => 'yes' // mostly just to allow special characters like () []
                 ],
-                'useLabel' => [
-                    'name'=>'Label useLabel',
+                'useTag' => [
+                    'name'=>'Tag useTag',
                     'required' => true,
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'num_max'=> 4, // number max value
                 ]
             ];
+
         // @ class database information end
 
-        // @ class api start
-            // api trait
-            use LabelApi;
-        // @ class api end
+        // @ class traits start
+            use TagSql;
+        // @ class traits end
 
         // @ class specific queries start
-            // Find all the labels associated with the collection type parameter
-            static public function find_all_labels(int $type = 0) {
-                $sql = "SELECT id, note, title, useLabel FROM labels ";
+            // Find all the tags associated with the collection type parameter
+            static public function find_all_tags(int $type = 0) {
+                $sql = "SELECT id, note, title, useTag FROM tags ";
                 // we expect a number between one and four // * collection_type_reference, located at: root/private/rules_docs/reference_information.php
                 if ($type <= 4 && $type <= 1) {
-                    $sql .= "WHERE useLabel = '{$type}'";
+                    $sql .= "WHERE useTag = '{$type}'";
                 }  
                 return self::find_by_sql($sql);
             }

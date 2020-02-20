@@ -21,7 +21,7 @@
                 'devTool' => [
                     // devTool password, has to be at least eight characters long and have one capital letter, one lowercase letter, one number, and one special symbol, otherwise it doesn't work
                     'username' => "test",
-                    'password' => "Test@the9",
+                    'password' => "Test@the9"
                 ]
             ];
             // # SQL connection and other tables 

@@ -65,6 +65,17 @@
             } 
             
             static protected $devToolDefaultMessage = "Access to the devTool functions can only be accessed through the request access type of devTool, and you must also be logged into the devTool.";
+
+            static public function devTool_get_other_tables_class_list() {
+                // get correct list
+                // this list comes from the main settings trait, first check $otherTablesClassList, if nothing is there use the normal $classList
+                $otherTablesClassList = isset(self::$otherTablesClassList) && COUNT(self::$otherTablesClassList) > 0 ? self::$otherTablesClassList : self::$classList;
+                // return data
+                return $otherTablesClassList; 
+            } 
+
+            // this list comes from the main settings trait, first check $otherTablesClassList, if nothing is there use the normal $classList
+            
         // @ dev tool helper functions end
 
         // @ layouts start

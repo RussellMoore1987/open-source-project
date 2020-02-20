@@ -40,8 +40,14 @@
             // class path
             $classPath = PRIVATE_PATH . "//classes/{$class}.class.php";
 
+            // custom class path
+            $customClassPath = PRIVATE_PATH . "//custom_classes/{$class}.class.php";
+
             // class folder path
             $classFolderPath = PRIVATE_PATH . "//classes/{$class}/{$class}.class.php";
+
+            // custom class folder path
+            $customClassFolderPath = PRIVATE_PATH . "//custom_classes/{$class}/{$class}.class.php";
 
             // trait path
             $traitPath =  PRIVATE_PATH . "//traits/{$class}.trait.php";
@@ -49,13 +55,18 @@
             // see if we can find the trait or class, In order of use case
             if (file_exists($classPath)) {
                 include('classes/' . $class . '.class.php');
-            } else if (is_file($traitPath)) {
+            } elseif (file_exists($customClassPath)) {
+                include('custom_classes/' . $class . '.class.php');
+            } elseif (is_file($traitPath)) {
                 include('traits/' . $class . '.trait.php');
             } elseif (file_exists($classFolderPath)) {
                 include("classes/{$class}/{$class}.class.php");
+            }  elseif (file_exists($customClassFolderPath)) {
+                include("custom_classes/{$class}/{$class}.class.php");
             } 
         }   
     }
+    
     spl_autoload_register('my_autoload');
 
     // get default functions

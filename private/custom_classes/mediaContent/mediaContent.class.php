@@ -1,4 +1,7 @@
 <?php
+    // include api trait
+    require_once("mediaContentSql.trait.php");
+
     class MediaContent extends DatabaseObject {
         // @ class database information start
             // table name
@@ -54,6 +57,10 @@
                 ]
             ];
         // @ class database information end
+
+        // @ class traits start
+            use MediaContentSql;
+        // @ class traits end
         
         // @ class specific queries start
             // # for a *single post* query's start

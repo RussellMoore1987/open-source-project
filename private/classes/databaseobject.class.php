@@ -503,22 +503,9 @@
                 return $passed;
             }
 
-            // # check for sql structure, other tables, give back table names
-            static public function get_sql_other_tables() {
-                // set default variables
-                $tableNames = [];
-
-                // check to see if we even have other tables
-                if (isset(static::$otherTables) && static::$otherTables) {
-                    $otherTables = static::$otherTables;
-                    // send back array of other table names
-                    foreach ($otherTables as $tableName => $sql) {
-                        $tableNames[] = $tableName;
-                    }
-                }
-
-                // return data
-                return $tableNames;
+            // # check for sql structure
+            static public function get_sql_structure() {
+                return $sqlStructure = isset(static::$sqlStructure) ? static::$sqlStructure : false;
             }
 
             // # get class table name
@@ -565,6 +552,44 @@
                 return self::$mainPostApiKey;
             }
         // @ class functionality methods end
+
+        // @ class dev tool helper functions start
+            // # check for sql structure, other tables, give back table names
+            static public function get_sql_other_table_names() {
+                // set default variables
+                $tableNames = [];
+
+                // check to see if we even have other tables
+                if (isset(static::$otherTables) && static::$otherTables) {
+                    $otherTables = static::$otherTables;
+                    // send back array of other table names
+                    foreach ($otherTables as $tableName => $sql) {
+                        $tableNames[] = $tableName;
+                    }
+                }
+
+                // return data
+                return $tableNames;
+            }
+
+             // # check and get sql structure for other tables
+             static public function get_sql_other_tables() {
+                // set default variables
+                $tableSql = [];
+
+                // check to see if we even have other tables
+                if (isset(static::$otherTables) && static::$otherTables) {
+                    $otherTables = static::$otherTables;
+                    // send back array of other table sql
+                    foreach ($otherTables as $sql) {
+                        $tableSql[] = $sql;
+                    }
+                }
+
+                // return data
+                return $tableSql;
+            }
+        // @ class dev tool helper functions start
 
         // @ @nameOfTool methods start
             // # get api data plus extended data

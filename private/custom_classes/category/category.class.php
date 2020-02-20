@@ -1,4 +1,7 @@
 <?php
+    // include api trait
+    require_once("categorySql.trait.php");
+
     class Category extends DatabaseObject {
         // @ class database information start
             // Class specific properties. Overwritten from DatabaseObject Class
@@ -51,6 +54,10 @@
                 ]
             ];
         // @ class database information end
+
+        // @ class traits start
+            use CategorySql;
+        // @ class traits end
         
         // @ class specific queries start
             // Find all the categories associated with the collection type parameter
