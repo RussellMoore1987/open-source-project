@@ -69,6 +69,88 @@
     echo '$Seeder->city()' . "<br>";
     echo "<b>" . $Seeder->city() . "</b><br><br>";
 
+    echo '<h2>State</h2>';
+    echo '$Seeder->state()' . "<br>";
+    echo "<b>" . $Seeder->state() . "</b><br><br>";
+    echo '$Seeder->state()' . "<br>";
+    echo "<b>" . $Seeder->state() . "</b><br><br>";
+    echo '$Seeder->state("name")' . "<br>";
+    echo "<b>" . $Seeder->state('name') . "</b><br><br>";
+    echo '$Seeder->state("name")' . "<br>";
+    echo "<b>" . $Seeder->state('name') . "</b><br><br>";
+
+    echo '<h2>First and Last Name</h2>';
+    echo '$Seeder->first_name() . " " . $Seeder->last_name()' . "<br>";
+    echo "<b>" . $Seeder->first_name() . " " . $Seeder->last_name() . "</b><br><br>";
+    echo '$Seeder->first_name() . " " . $Seeder->last_name()' . "<br>";
+    echo "<b>" . $Seeder->first_name() . " " . $Seeder->last_name() . "</b><br><br>";
+
+    echo '<h2>Email</h2>';
+    echo '$Seeder->email()' . "<br>";
+    echo "<b>" . $Seeder->email() . "</b><br><br>";
+    echo '$Seeder->email()' . "<br>";
+    echo "<b>" . $Seeder->email() . "</b><br><br>";
+    echo '$Seeder->email("{$Seeder->first_name()}{$Seeder->last_name()}")' . "<br>";
+    echo "<b>" . $Seeder->email("{$Seeder->first_name()}{$Seeder->last_name()}") . "</b><br><br>";
+    echo '$Seeder->email("{$Seeder->first_name()}{$Seeder->last_name()}")' . "<br>";
+    echo "<b>" . $Seeder->email("{$Seeder->first_name()}{$Seeder->last_name()}") . "</b><br><br>";
+
+    echo '<h2>Zip Code</h2>';
+    echo '$Seeder->zip()' . "<br>";
+    echo "<b>" . $Seeder->zip() . "</b><br><br>";
+    echo '$Seeder->zip()' . "<br>";
+    echo "<b>" . $Seeder->zip() . "</b><br><br>";
+
+    echo '<h2>Job Titles</h2>';
+    echo '$Seeder->job_title()' . "<br>";
+    echo "<b>" . $Seeder->job_title() . "</b><br><br>";
+    echo '$Seeder->job_title()' . "<br>";
+    echo "<b>" . $Seeder->job_title() . "</b><br><br>";
+    echo '$Seeder->job_title(["webDevelopment"])' . "<br>";
+    echo "<b>" . $Seeder->job_title(['webDevelopment']) . "</b><br><br>";
+    echo '$Seeder->job_title(["webDevelopment", "db"])' . "<br>";
+    echo "<b>" . $Seeder->job_title(['webDevelopment', 'db']) . "</b><br><br>";
+    echo '$Seeder->job_title(["sales", "customerService"])' . "<br>";
+    echo "<b>" . $Seeder->job_title(['sales', 'customerService']) . "</b><br><br>";
+    echo '$Seeder->job_title(["notValid"])' . "<br>";
+    echo "<b>" . $Seeder->job_title(['notValid']) . "</b><br><br>";
+    echo '$Seeder->job_title(["notValid", "db"])' . "<br>";
+    echo "<b>" . $Seeder->job_title(['notValid', 'db']) . "</b><br><br>";
+
+    echo '<h2>Username</h2>';
+    echo '$Seeder->username()' . "<br>";
+    echo "<b>" . $Seeder->username() . "</b><br><br>";
+    echo '$Seeder->username()' . "<br>";
+    echo "<b>" . $Seeder->username() . "</b><br><br>";
+    echo '$Seeder->username()' . "<br>";
+    echo "<b>" . $Seeder->username() . "</b><br><br>";
+    echo '$Seeder->username()' . "<br>";
+    echo "<b>" . $Seeder->username() . "</b><br><br>";
+
+    echo '<h2>Phone Number</h2>';
+    echo '$Seeder->phone_number()' . "<br>";
+    echo "<b>" . $Seeder->phone_number() . "</b><br><br>";
+    echo '$Seeder->phone_number()' . "<br>";
+    echo "<b>" . $Seeder->phone_number() . "</b><br><br>";
+    echo '$Seeder->phone_number(" ")' . "<br>";
+    echo "<b>" . $Seeder->phone_number(' ') . "</b><br><br>";
+    echo '$Seeder->phone_number(".")' . "<br>";
+    echo "<b>" . $Seeder->phone_number('.') . "</b><br><br>";
+    echo '$Seeder->phone_number("")' . "<br>";
+    echo "<b>" . $Seeder->phone_number('') . "</b><br><br>";
+
+    echo '<h2>Select From Options</h2>';
+    echo '$Seeder->options(["Fun", "No Fun"])' . "<br>";
+    echo "<b>" . $Seeder->options(['Fun', 'No Fun']) . "</b><br><br>";
+    echo '$Seeder->options(["M", "F"])' . "<br>";
+    echo "<b>" . $Seeder->options(['M', 'F']) . "</b><br><br>";
+    echo '$Seeder->options(["small", "media", "large", "x-large"])' . "<br>";
+    echo "<b>" . $Seeder->options(['small', 'media', 'large', 'x-large']) . "</b><br><br>";
+    echo '$Seeder->options(["Developer", "UX Designer", "Designer", "Graphic Designer", "Layout Specialist"])' . "<br>";
+    echo "<b>" . $Seeder->options(['Developer', 'UX Designer', 'Designer', 'Graphic Designer', 'Layout Specialist']) . "</b><br><br>";
+    echo '$Seeder->options(["Buzz LightYear", "Woody", "Bo Peep"])' . "<br>";
+    echo "<b>" . $Seeder->options(['Buzz LightYear', 'Woody', 'Bo Peep']) . "</b><br><br>";
+
     // Русский 
     echo '<h2>Русский</h2>';
     echo '$Seeder->word_russian()' . "<br>";

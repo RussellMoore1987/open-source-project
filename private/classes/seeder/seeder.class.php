@@ -6,6 +6,15 @@
     require_once("seederDate.trait.php");
     require_once("seederAddress.trait.php");
     require_once("seederCity.trait.php");
+    require_once("seederState.trait.php");
+    require_once("seederFirstName.trait.php");
+    require_once("seederLastName.trait.php");
+    require_once("seederEmail.trait.php");
+    require_once("seederZip.trait.php");
+    require_once("seederJobTitle.trait.php");
+    require_once("seederUsername.trait.php");
+    require_once("seederPhoneNumber.trait.php");
+    require_once("seederOption.trait.php");
 
     class Seeder {
         // to get a max character count
@@ -30,6 +39,15 @@
             use SeederDate; // get a date
             use SeederAddress; // get a address
             use SeederCity; // get a city
+            use SeederState; // get a State
+            use SeederFirstName; // get a first name
+            use SeederLastName; // get a last name
+            use SeederEmail; // get a email
+            use SeederZip; // get a zip
+            use SeederJobTitle; // get a job title
+            use SeederUsername; // get a username
+            use SeederPhoneNumber; // get a phone number
+            use SeederOption; // get an option
         // @ class traits end
     }
 ?>
