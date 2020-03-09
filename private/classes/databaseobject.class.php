@@ -30,6 +30,8 @@
         // database information
         // table name
         static protected $tableName;
+        // id name, specified in the particular class if it is different
+        static protected $idName = "id";
         // db columns
         static protected $columns = [];
         // values to exclude on normal updates, should always include id
@@ -127,7 +129,7 @@
                 }
 
                 // sql for id
-                $idSql = "id = " . self::db_escape($id);
+                $idSql = static::$idName . " = " . self::db_escape($id);
 
                 // Prep the SQL options
                 $sqlOptions['whereOptions'] = $idSql;
@@ -232,6 +234,22 @@
                     // add AND or OR or end
                     if (!($i >= count($whereOptions_array) - 1)) { $sql .= " {$whereConnector} "; } else { $sql .= " "; }
                 }
+                $result = self::$database->query($sql);
+                // error handling
+                self::db_error_check($result);
+                // get row, only one there
+                $row = $result->fetch_array();
+                // return count 
+                return array_shift($row);
+            }
+
+            // TODO: need to update
+            // * sql_queries located at: root/private/rules_docs/reference_information.php
+            // count all records
+            static public function find_max_id() {
+                // find max id
+                $sql = "SELECT MAX(" . static::$idName . ") FROM " . static::$tableName;
+                
                 $result = self::$database->query($sql);
                 // error handling
                 self::db_error_check($result);
@@ -481,26 +499,22 @@
 
             // # check for rest api
             static public function check_rest_api() {
-                $passed = isset(static::$apiInfo);
-                return $passed;
+                return $passed = isset(static::$apiInfo);
             }
 
             // # check for context api
             static public function check_context_api() {
-                $passed = isset(static::$contextInfo);
-                return $passed;
+                return $passed = isset(static::$contextInfo);
             }
             
             // # check for seeder
             static public function check_for_seeder() {
-                $passed = isset(static::$seederInfo);
-                return $passed;
+                return $passed = method_exists(get_called_class(), 'seeder_setter');
             }
 
             // # check for sql structure
             static public function check_sql_structure() {
-                $passed = isset(static::$sqlStructure);
-                return $passed;
+                return $passed = isset(static::$sqlStructure);
             }
 
             // # check for sql structure
@@ -511,6 +525,11 @@
             // # get class table name
             static public function get_table_name() {
                 return static::$tableName;
+            }
+
+            // # get class id name
+            static public function get_id_name() {
+                return static::$idName;
             }
 
             // # get class list

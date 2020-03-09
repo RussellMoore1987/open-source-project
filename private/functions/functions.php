@@ -194,4 +194,23 @@ function get_url_ctr() {
     return $ctr;
 }
 
+// remove characters from string
+function remove_char_from_str(array $arrayOfStrings = [], $string = "") {
+    // over characters to remove
+    foreach ($arrayOfStrings as $char) {
+        $string = str_replace($char, "", $string);
+    }
+    // return data
+    return $string;
+}
+
+// replace characters in string
+function replace_char_in_str(array $arrayOfStrings = [], array $arrayOfStringsToReplace = [], $string = "") {
+    // over characters to remove
+    for ($i=0; $i < count($arrayOfStrings); $i++) { 
+        $string = str_replace($arrayOfStrings[$i], $arrayOfStringsToReplace[$i], $string);
+    }
+    // return data
+    return $string;
+}
 ?>

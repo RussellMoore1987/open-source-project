@@ -2,6 +2,7 @@
     // include api trait
     require_once("labelApi.trait.php");
     require_once("labelSql.trait.php");
+    require_once("labelSeeder.trait.php");
 
     class Label extends DatabaseObject {
         // @ class database information start
@@ -52,6 +53,7 @@
         // @ class traits start
             use LabelApi;
             use LabelSql;
+            use LabelSeeder;
         // @ class traits end
 
         // @ class specific queries start

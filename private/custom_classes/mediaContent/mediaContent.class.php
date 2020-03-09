@@ -1,6 +1,7 @@
 <?php
     // include api trait
     require_once("mediaContentSql.trait.php");
+    require_once("mediaContentSeeder.trait.php");
 
     class MediaContent extends DatabaseObject {
         // @ class database information start
@@ -22,6 +23,11 @@
                     'type' => 'int', // type of int
                     'num_min'=> 1, // number min value
                     'max' => 10 // string length
+                ],
+                'alt' => [
+                    'name'=>'Media Content alt tag Name',
+                    'type' => 'str', // type of string
+                    'max' => 75 // string length
                 ], 
                 'createdBy' => [
                     'name'=>'Media Content createdBy',
@@ -60,6 +66,7 @@
 
         // @ class traits start
             use MediaContentSql;
+            use MediaContentSeeder;
         // @ class traits end
         
         // @ class specific queries start

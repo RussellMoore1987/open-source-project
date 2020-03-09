@@ -5,11 +5,11 @@
         public function zip() {
             // create default variables
             $zip = "";
-            // no text provided, make something up
+            // make zip
             for ($i=0; $i < 5; $i++) { 
                 $zip .= $this->zipRandString[rand(0, count($this->zipRandString) - 1)];
             }
-            //return data
+            // make number, return data
             return $zip; 
         }
 

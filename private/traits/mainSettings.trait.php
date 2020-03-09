@@ -3,7 +3,7 @@
         // @ set up section start
             // # Class List, REST API, Context API, DevTool
             // * class_list located at: root/private/rules_docs/reference_information.php
-            static protected $classList = ["Category", "Label", "MediaContent", "Post", "Tag", "User"]; // public access use get_class_list()
+            static protected $classList = ["User", "Category", "Label", "MediaContent", "Post", "Tag"]; // public access use get_class_list()
             // # REST API
             // * api_documentation located at: root/private/rules_docs/reference_information.php
             // set over arching API keys, use function to get the key

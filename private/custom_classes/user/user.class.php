@@ -96,9 +96,8 @@
                 ],
                 'mediaContentId'=>[
                     'name'=>'User mediaContent id',
-                    'required' => true,
                     'type' => 'int', // type of int
-                    'num_min'=> 1, // number min value
+                    'num_min'=> 0, // number min value
                     'max' => 10 // string length
                 ], 
                 'note' => [

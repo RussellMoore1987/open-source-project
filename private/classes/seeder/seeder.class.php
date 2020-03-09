@@ -18,23 +18,47 @@
 
     class Seeder {
         // to get a max character count
-        public function max_count(string $string, int $max = 25, string $ending = "") {
+        public function max_char(string $string, int $max=25, string $ending="") {
             // cut string to size
             $string = substr($string, 0, $max); 
             //remove trailing spaces
             $string = trim($string);
             // add ending and remove previous ending if there  
-            if (substr($string, -1) == "." && $ending != "" && $ending != ".") {
-                $string = substr($string, 0, strlen($string) - 1) . $ending;
-            } elseif (substr($string, -1) != "." && $ending != "") {
-                $string .= $ending;
+            if (strlen($string) > 0 && substr($string, -1) == "." && $ending != "" && $ending != ".") {
+                $string = trim(substr($string, 0, strlen($string) - 1)) . $ending;
+            } elseif (strlen($string) > 0 && substr($string, -1) != "." && $ending != "") {
+                $string = trim(substr($string, 0, strlen($string) - 1)) . $ending;
             }
+            
+            // return data
             return $string;   
         } 
+
+        // to get at lest a certain amount of characters characters
+        public function min_char(string $string, int $min=2, string $ending="") {
+            // check to see if string is longer than min
+            if (!(strlen($string) >= $min)) {
+                $addChrCount = $min - strlen($string);
+                // loop over string and add characters onto the end 
+                for ($i=0; $i < $addChrCount; $i++) { 
+                    $string .= $this->randLetters[rand(0, count($this->randLetters) - 1)];
+                }
+                // check whether or not we have an ending
+                if (strlen(trim($ending)) > 0) {
+                    $string = trim(substr($string, 0, strlen($string) - 1)) . $ending;
+                }
+            }
+            
+            // return data
+            return $string;   
+        } 
+
+        // an array of characters, mostly used for min_char()
+        public $randLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
         
         // @ class traits start
-            use SeederPS; // word, words, sentence, sentences, paragraph, paragraphs
-            use SeederPSRussian; // in Russian, word, words, sentence, sentences, paragraph, paragraphs
+            use SeederPS; // get word, words, sentence, sentences, paragraph, paragraphs
+            use SeederPSRussian; // in Russian get word, words, sentence, sentences, paragraph, paragraphs
             use SeederId; // get an id
             use SeederDate; // get a date
             use SeederAddress; // get a address

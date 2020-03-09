@@ -2,6 +2,7 @@
     // include api trait
     require_once("postApi.trait.php");
     require_once("postSql.trait.php");
+    require_once("postSeeder.trait.php");
 
     class Post extends DatabaseObject {
         // @ class database information start
@@ -121,6 +122,7 @@
         // @ class traits start
             use PostApi;
             use PostSql;
+            use PostSeeder;
         // @ class traits end
         
         // @ class specific queries start
@@ -235,7 +237,7 @@
                 
                 // get image, main queries for editing
                 public function get_post_image() {
-                    $sql = "SELECT mc.id, mc.alt, mc.name ";
+                    $sql = "SELECT mc.* ";
                     $sql .= "FROM media_content AS mc ";
                     $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
                     $sql .= "ON ptmc.mediaContentId = mc.id ";
@@ -248,7 +250,7 @@
 
                 // get images, main queries for editing
                 public function get_post_images() {
-                    $sql = "SELECT mc.id, mc.alt, mc.name ";
+                    $sql = "SELECT mc.* ";
                     $sql .= "FROM media_content AS mc ";
                     $sql .= "INNER JOIN posts_to_media_content AS ptmc ";
                     $sql .= "ON ptmc.mediaContentId = mc.id ";

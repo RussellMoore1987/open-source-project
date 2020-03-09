@@ -144,8 +144,8 @@
     echo "<b>" . $Seeder->options(['Fun', 'No Fun']) . "</b><br><br>";
     echo '$Seeder->options(["M", "F"])' . "<br>";
     echo "<b>" . $Seeder->options(['M', 'F']) . "</b><br><br>";
-    echo '$Seeder->options(["small", "medium", "large", "x-large"])' . "<br>";
-    echo "<b>" . $Seeder->options(['small', 'medium', 'large', 'x-large']) . "</b><br><br>";
+    echo '$Seeder->options(["small", "media", "large", "x-large"])' . "<br>";
+    echo "<b>" . $Seeder->options(['small', 'media', 'large', 'x-large']) . "</b><br><br>";
     echo '$Seeder->options(["Developer", "UX Designer", "Designer", "Graphic Designer", "Layout Specialist"])' . "<br>";
     echo "<b>" . $Seeder->options(['Developer', 'UX Designer', 'Designer', 'Graphic Designer', 'Layout Specialist']) . "</b><br><br>";
     echo '$Seeder->options(["Buzz LightYear", "Woody", "Bo Peep"])' . "<br>";

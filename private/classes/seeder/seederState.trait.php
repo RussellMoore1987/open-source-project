@@ -4,8 +4,8 @@
     // seeder for states 
     trait SeederState {
         // to get a state
-        public function state($type="abbreviation") {
-            // Decide what state type to get
+        public function state(string $type="abbreviation") {
+            // decide what state type to get
             if ($type == "abbreviation") {
                 $stateType = 'stateAbbreviations';
             } else {

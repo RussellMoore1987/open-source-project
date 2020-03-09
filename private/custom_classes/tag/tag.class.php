@@ -1,6 +1,7 @@
 <?php
     // include api trait
     require_once("tagSql.trait.php");
+    require_once("tagSeeder.trait.php");
 
     class Tag extends DatabaseObject {
         // @ class database information start
@@ -51,6 +52,7 @@
 
         // @ class traits start
             use TagSql;
+            use TagSeeder;
         // @ class traits end
 
         // @ class specific queries start

@@ -2,8 +2,8 @@
     // seeder for dates 
     trait SeederDate {
         // to get a date
-        public function date($min='1970', $max='now', $dateFormat='m-d-Y') {
-            // convert dates to timestamp
+        public function date(string $min='1970', string $max='now', string $dateFormat='Y-m-d') {
+            // convert dates/string to timestamp
             $min = strtotime($min);
             $max = strtotime($max);
             // get random date

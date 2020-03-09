@@ -1,6 +1,7 @@
 <?php
     // include api trait
     require_once("categorySql.trait.php");
+    require_once("categorySeeder.trait.php");
 
     class Category extends DatabaseObject {
         // @ class database information start
@@ -57,6 +58,7 @@
 
         // @ class traits start
             use CategorySql;
+            use CategorySeeder;
         // @ class traits end
         
         // @ class specific queries start

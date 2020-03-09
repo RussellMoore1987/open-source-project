@@ -1,5 +1,5 @@
 <?php
-    // ? Got first name from https://github.com/dominictarr/random-name/blob/master/first-names.txt
+    // ? Got first names from https://github.com/dominictarr/random-name/blob/master/first-names.txt
 
     // seeder for first name 
     trait SeederFirstName {

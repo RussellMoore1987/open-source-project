@@ -1,18 +1,18 @@
 <?php
-    // ? Job titles from https://zety.com/blog/job-titles#marketing, https://www.cwjobs.co.uk/JobSearch/database, https://skillcrush.com/blog/41-tech-job-titles/
+    // ? got Job titles from https://zety.com/blog/job-titles#marketing, https://www.cwjobs.co.uk/JobSearch/database, https://skillcrush.com/blog/41-tech-job-titles/
 
     // seeder for Job titles 
     trait SeederJobTitle {
         // to get a Job title
-        public function job_title(array $jobTitles=[]) {
+        public function job_title(array $arrayNamesForJobTitles=[]) {
             // create default array 
             $useJobTitles = [];
-            // construct an array of arrays to pull job titles, if no job titles in array use all from $arrayOfJobTitles
-            if (!$jobTitles) {
-                $jobTitles = $this->arrayOfJobTitles;
+            // construct an array of arrays to pull job titles, if no job titles are in the $arrayNamesForJobTitles array use all job titles from $arrayOfJobTitles
+            if (!$arrayNamesForJobTitles) {
+                $arrayNamesForJobTitles = $this->arrayOfJobTitles;
             }
-            // loop through and check to make sure that they exist
-            foreach ($jobTitles as $arrayName) {
+            // loop through and check to make sure that the job title arrays exist
+            foreach ($arrayNamesForJobTitles as $arrayName) {
                 if (isset($this->$arrayName) && is_array($this->$arrayName)) {
                     $useJobTitles[] = $arrayName;
                 }
@@ -21,9 +21,9 @@
             if (!$useJobTitles) {
                 $useJobTitles = $this->arrayOfJobTitles;
             }
-            // select an job title array
+            // select a job title array
             $jodTitleArrayName = $useJobTitles[rand(0, count($useJobTitles) - 1)];
-            //return data
+            // return data
             return $jobTitle = $this->$jodTitleArrayName[rand(0, count($this->$jodTitleArrayName) - 1)]; 
         }
 
