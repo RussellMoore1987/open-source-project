@@ -7,7 +7,7 @@
         // to get a word
         public function word() {
             // get a word
-            return $this->words[rand(0,count($this->words) - 1)]; 
+            return $this->words[rand(0, count($this->words) - 1)]; 
         }
 
         // to get words

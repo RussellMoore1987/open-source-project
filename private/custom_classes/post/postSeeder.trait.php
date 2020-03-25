@@ -2,7 +2,7 @@
     trait PostSeeder {
 
         // get seeder default record count
-        static public $seederDefaultRecordCount = 645;
+        static public $seederDefaultRecordCount = 640;
 
         // sql feeder
         static public function seeder_setter(object $Seeder) {
@@ -22,7 +22,6 @@
                 'title' => ucfirst($Seeder->max_char($Seeder->min_char($Seeder->words(rand(1,3)), 2), 50))
             ];
 
-             
             // return data
             return $seederInfo;
         }

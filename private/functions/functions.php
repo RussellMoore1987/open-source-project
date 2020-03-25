@@ -9,16 +9,16 @@ function url_for($script_path) {
 }
 
 // reference: https://www.gyrocode.com/articles/php-urlencode-vs-rawurlencode/
-// URL-encodes string
+// # URL-encodes string
 function u($string="") {
     return urlencode($string);
 }
-// URL-encode according to RFC 3986
+// # URL-encode according to RFC 3986
 function raw_u($string="") {
     return rawurlencode($string);
 }
 
-// escapes special characters, renders HTML harmless, ex " = &quot;
+// # escapes special characters, renders HTML harmless, ex " = &quot;
 function h($string="") {
     return htmlspecialchars($string);
 }
@@ -33,23 +33,23 @@ function error_500() {
     exit();
 }
 
-// allows page redirect
+// # allows page redirect
 function redirect_to($location) {
     header("Location: " . $location);
     exit();
 }
 
-// checks to see if a post request has been submitted
+// # checks to see if a post request has been submitted
 function is_post_request() {
     return $_SERVER['REQUEST_METHOD'] == 'POST';
 }
 
-// checks to see if a get request has been submitted
+// # checks to see if a get request has been submitted
 function is_get_request() {
     return $_SERVER['REQUEST_METHOD'] == 'GET';
 }
 
-// send post request
+// # send post request
 function post($url, $postVars = [], $postType = "POST"){
     //Transform our POST array into a URL-encoded query string.
     $postStr = http_build_query($postVars);
@@ -78,7 +78,7 @@ function post($url, $postVars = [], $postType = "POST"){
     return $result;
 }
 
-// Checks if a string is a comma separated list of values then turns it into an array and returns it
+// # Checks if a string is a comma separated list of values then turns it into an array and returns it
 function split_string_by_separator($string, $separator=",") {
     // Return false if there are no commas in the string
     if (strpos($string, $separator) == false) {
@@ -96,17 +96,17 @@ function split_string_by_separator($string, $separator=",") {
     }
   }
 
-  // function for formating the date to the Y-m-d SQL format
-  function format_date($date) {
-      // Turn date to time string, never fails
-      $dateStr = strtotime($date);
-      // Format the string to an SQL format
-      $formatDate = date("Y-m-d", $dateStr);
-      // Return the formatted date
-      return $formatDate;
-  }  
+// # function for formating the date to the Y-m-d SQL format
+function format_date($date) {
+    // Turn date to time string, never fails
+    $dateStr = strtotime($date);
+    // Format the string to an SQL format
+    $formatDate = date("Y-m-d", $dateStr);
+    // Return the formatted date
+    return $formatDate;
+}  
 
-// creates an array of key value pairs, relating to possible tags, categories, and labels. mostly used in classes
+// # creates an array of key value pairs, relating to possible tags, categories, and labels. mostly used in classes
 function get_key_value_array($obj_array) {
     // empty array
     $array = [];
@@ -122,7 +122,7 @@ function get_key_value_array($obj_array) {
     return $array;
 }
 
-// get image path // * image_paths located at: root/private/rules_docs/reference_information.php
+// # get image path // * image_paths located at: root/private/rules_docs/reference_information.php
 function get_image_path($type = 'small') {
     // just in case somebody spelled something wrong coming in make them go through the switch statement
     switch ($type) {
@@ -135,7 +135,7 @@ function get_image_path($type = 'small') {
     return IMAGE_LINK_PATH . "/{$type}" ;
 }
 
-// give it an array of objects and it will give you back an array of Json on objects ready for the API
+// # give it an array of objects and it will give you back an array of Json on objects ready for the API
 function obj_array_api_prep(array $obj_array) {
     // set blank array, set below
     $apiObj_array = [];
@@ -147,7 +147,7 @@ function obj_array_api_prep(array $obj_array) {
     return $apiObj_array;
 }
 
-// make a list into an array where key and value are the same
+// # make a list into an array where key and value are the same
 function list_to_array($list) {
     // make array from ids
     $list_array = explode(",", $list);
@@ -161,7 +161,7 @@ function list_to_array($list) {
     return $associativeList_array;
 }
 
-// sort by key, case insensitive, Built for associative arrays
+// # sort by key, case insensitive, Built for associative arrays
 function full_natural_key_sort(array $array) {
     // check to see if the array is empty
     if ($array) {
@@ -181,6 +181,7 @@ function full_natural_key_sort(array $array) {
     }
 }
 
+// # get_url_ctr
 function get_url_ctr() {
     $ctr = $_GET["ctr"] ?? 1;
     // make it a number
@@ -194,7 +195,7 @@ function get_url_ctr() {
     return $ctr;
 }
 
-// remove characters from string
+// # remove characters from string
 function remove_char_from_str(array $arrayOfStrings = [], $string = "") {
     // over characters to remove
     foreach ($arrayOfStrings as $char) {
@@ -204,7 +205,7 @@ function remove_char_from_str(array $arrayOfStrings = [], $string = "") {
     return $string;
 }
 
-// replace characters in string
+// # replace characters in string
 function replace_char_in_str(array $arrayOfStrings = [], array $arrayOfStringsToReplace = [], $string = "") {
     // over characters to remove
     for ($i=0; $i < count($arrayOfStrings); $i++) { 
@@ -212,5 +213,25 @@ function replace_char_in_str(array $arrayOfStrings = [], array $arrayOfStringsTo
     }
     // return data
     return $string;
+}
+
+// # merge data arrays
+function merge_data_arrays(array $data_array, array $temp_array) {
+    // merge arrays
+    // loop over errors and put them in the right spot
+    if (isset($temp_array['errors']) && $temp_array['errors']) {
+        foreach ($temp_array['errors'] as $value) {
+            $data_array['errors'][] = $value;
+        }
+    }
+    // loop over content and put them in the right spot
+    if (isset($temp_array['message']) && $temp_array['message']) {
+        foreach ($temp_array['message'] as $value) {
+            $data_array['message'][] = $value;
+        }
+    }
+
+    // return merged array
+    return $data_array;
 }
 ?>

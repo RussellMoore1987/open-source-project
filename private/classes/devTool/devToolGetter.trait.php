@@ -1,10 +1,8 @@
 <?php
     trait DevToolGetter {
         // @ dev tool main getter requests start
-
             // # devTool_get_all_class_tables
             static public function devTool_get_all_class_tables($requestData) {
-                // var_dump($requestData);
                 // set up default variables
                 $requestInfo = [];
                 
@@ -35,7 +33,7 @@
 
                     // if the table is not there do not show the additional information
                     if ($tableThere) {
-                        // it is there
+                        // this assumes that we have a table, set the corresponding information
                         $classOptions['recordCount'] = $class::count_all();
                         // get column information
                         $result = $class::run_sql("SHOW COLUMNS FROM " . $classOptions['tableName']);
@@ -45,7 +43,8 @@
                         while ($record = $result->fetch_assoc()) {
                             $tableStructure_array[] = $record;    
                         }
-                        $classOptions['tableStructure'] = $tableStructure_array ?? [];
+                        // set to structure options
+                        $classOptions['tableStructure'] = $tableStructure_array;
                         // get table size in MB
                         $result = $class::run_sql("
                             SELECT table_name AS `Table`, 
@@ -58,15 +57,16 @@
                         while ($record = $result->fetch_assoc()) {
                             $tableSize = $record['Size in MB'] . "MB";    
                         }
+                        // Set option
                         $classOptions['tableSize'] = $tableSize ?? "";
                     } else {
                         // it's not there
                         $classOptions['recordCount'] = 0;
                         $classOptions['tableStructure'] = [];
-                        $classOptions['tableSize'] = "";
+                        $classOptions['tableSize'] = "0MB";
                     }
                     
-                    // set options
+                    // set options for single table
                     $requestInfo['tables'][] = $classOptions;
                 }
 
@@ -79,7 +79,7 @@
                 // set up default variables
                 $requestInfo = [];
                 
-                // get class table names
+                // get class table names, so we can distinguish later which table come from classes and which ones do not
                 $classes = self::$classList;
                 $classTableNames = [];
                 // loop through each class and set up options
@@ -93,12 +93,14 @@
                 // get all table names
                 $tableNames = [];
                 $dbName = DB_NAME;
+                // get all tables
                 $result = DatabaseObject::run_sql("
                     SELECT table_name FROM information_schema.tables
                     WHERE table_schema = '{$dbName}';
                 ");
                 // loop through query
                 while ($record = $result->fetch_assoc()) {
+                    // set table names
                     $tableNames['tables'][] = $record['table_name'];    
                 }
 
@@ -127,10 +129,10 @@
 
                 // making sure to include all tables even if they are not constructed
                 foreach ($otherTablesSql as $tableName => $value) {
-                    if (!isset($tableNames[$tableName])) {
                         $tableNames[] = $tableName;
-                    }
                 }
+                // make sure the array does not have any duplicates
+                $tableNames = array_unique($tableNames);
 
                 // get non class table data
                 foreach ($tableNames as $tableName) {
@@ -144,8 +146,9 @@
                     ");
                     // check to see if we have anything
                     $tableThere = $result->num_rows === 0 ? false : true;
-                    $requestInfo['tables'][$tableName]['tableThere'] = $tableThere;
-                    $requestInfo['tables'][$tableName]['sql'] = $otherTablesSql[$tableName] ?? false;
+                    $tempTable_array[$tableName]['tableName'] = $tableName;
+                    $tempTable_array[$tableName]['tableThere'] = $tableThere;
+                    $tempTable_array[$tableName]['sql'] = $otherTablesSql[$tableName] ?? false;
 
                     // check to see if the the table is there
                     if ($tableThere) {
@@ -157,10 +160,14 @@
                         $row = $result->fetch_array();
                         // get count 
                         $count = array_shift($row);
-                        $requestInfo['tables'][$tableName]['cont'] = $count;
+                        // set count option
+                        $tempTable_array[$tableName]['count'] = $count;
                     } else {
-                        $requestInfo['tables'][$tableName]['cont'] = 0;
+                        $tempTable_array[$tableName]['count'] = 0;
                     }
+
+                    // put table in array
+                    $requestInfo['tables'][] =  $tempTable_array[$tableName];
                 }
 
                 // return request info

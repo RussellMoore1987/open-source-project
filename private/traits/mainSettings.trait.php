@@ -24,9 +24,13 @@
                     'password' => "Test@the9"
                 ]
             ];
-            // # SQL connection and other tables 
+            // # SQL connection and other tables, and SQL creation 
             // * class_list located at: root/private/rules_docs/reference_information.php
             static protected $otherTablesClassList = []; // public access use get_other_tables_class_list()
+            // TODO: documentation * sql_creation_commands located at: root/private/rules_docs/devTool_docs.php
+            // TODO: creation command, deletion command, and individual table commands drop, create, insert
+            // static protected $sqlCreationCommands = ["customSql" => "creation"]; // public access use get_other_tables_class_list()
+            static protected $sqlInsertCommands = ["customSql" => "insert"]; // public access use get_sql_insert_commands()
             // # authentication token 
             // TODO: use authentication token add
             

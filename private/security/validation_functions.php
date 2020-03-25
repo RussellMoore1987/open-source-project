@@ -244,7 +244,7 @@
             // check to see if it passes
             if (preg_match($email_regex, $value) === 0) {
                 // return error message
-                $errors[] =  "The value of \"{$name}\" must be a valid email. For example name@gmail.com.";
+                $errors[] =  "The value of \"{$name}\" must be a valid email. For example name@gmail.com. You sent in \"{$value}\".";
             }
         }
 

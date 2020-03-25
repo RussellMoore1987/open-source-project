@@ -27,18 +27,19 @@
                 $devToolUsername = self::$mainContextInfo['devTool']['username'];
                 // is the password set
                 if (trim(strlen($devToolPassword)) > 0) {
-                    // does it pass internal validation requirements, if no errors let it pass
+                    // is the system password set correctly, validation requirements, if no errors let it pass
                     if (!validate_password($devToolPassword)) {
                         // password check
                         if ($requestPassword === $devToolPassword && $requestUsername === $devToolUsername) {
                             // TODO: set up session, do session protection as well
-
+                            // set message
+                            $requestInfo['message'][] = "You have been logged in successfully.";
                         } else {
                             // pass back error message
                             $requestInfo['errors'][] = 'The password and/or username is incorrect.';
                         }
                     } else {
-                        // pass back error message
+                        // pass back an error message
                         $requestInfo['errors'][] = 'The password and/or username have not been set up correctly within the system.';
                         // ? uncomment at this line below to see the real error message(s)
                         // exit(print_r(validate_password($devToolPassword)));
@@ -64,8 +65,10 @@
                 return $pass; 
             } 
             
+            // # devTool Default Message
             static protected $devToolDefaultMessage = "Access to the devTool functions can only be accessed through the request access type of devTool, and you must also be logged into the devTool.";
 
+            // # devTool_get_other_tables_class_list
             static public function devTool_get_other_tables_class_list() {
                 // get correct list
                 // this list comes from the main settings trait, first check $otherTablesClassList, if nothing is there use the normal $classList
@@ -73,8 +76,6 @@
                 // return data
                 return $otherTablesClassList; 
             } 
-
-            // this list comes from the main settings trait, first check $otherTablesClassList, if nothing is there use the normal $classList
             
         // @ dev tool helper functions end
 

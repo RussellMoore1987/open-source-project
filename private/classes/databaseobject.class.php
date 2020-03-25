@@ -499,26 +499,31 @@
 
             // # check for rest api
             static public function check_rest_api() {
+                // past back true or false
                 return $passed = isset(static::$apiInfo);
             }
 
             // # check for context api
             static public function check_context_api() {
+                // past back true or false
                 return $passed = isset(static::$contextInfo);
             }
             
             // # check for seeder
             static public function check_for_seeder() {
+                // past back true or false
                 return $passed = method_exists(get_called_class(), 'seeder_setter');
             }
 
             // # check for sql structure
             static public function check_sql_structure() {
+                // past back true or false
                 return $passed = isset(static::$sqlStructure);
             }
 
             // # check for sql structure
             static public function get_sql_structure() {
+                // past back sql structure or false
                 return $sqlStructure = isset(static::$sqlStructure) ? static::$sqlStructure : false;
             }
 
@@ -529,11 +534,13 @@
 
             // # get class id name
             static public function get_id_name() {
+                // get the name of the ID for the class, default is id 
                 return static::$idName;
             }
 
             // # get class list
             static public function get_class_list() {
+                // gets class list from main settings
                 return self::$classList;
             }
 
@@ -541,6 +548,18 @@
             // this is mostly used for SQL processing, DevTool
             static public function get_other_tables_class_list() {
                 return self::$otherTablesClassList;
+            }
+
+            // // # get sql creation commands
+            // // this is used for SQL processing, DevTool
+            // static public function get_sql_creation_commands() {
+            //     return self::$sqlCreationCommands;
+            // }
+
+            // # get sql insert commands
+            // this is used for SQL processing, DevTool
+            static public function get_sql_insert_commands() {
+                return self::$sqlInsertCommands;
             }
 
             // # get validation columns
