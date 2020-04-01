@@ -17,6 +17,7 @@
                     $classOptions['sqlStructure'] = $class::check_sql_structure();
                     $classOptions['contextApi'] = $class::check_context_api();
                     $classOptions['restApi'] = $class::check_rest_api();
+                    $classOptions['className'] = $class;
 
                     // Check to see if the table exist in the database
                     $dbName = DB_NAME;

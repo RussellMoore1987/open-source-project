@@ -13,6 +13,11 @@
     header("Access-Control-Allow-Origin: *");
     header('Access-Control-Allow-Methods:  POST, GET');
 
+    // ! For testing errors
+    // if (isset($_GET['instructions'])) {
+    //     $_POST['instructions'] = $_GET['instructions'];
+    // }
+
     // get post instructions
     $postVars_array = $_POST ?? parse_str(file_get_contents("php://input"),$postVars_array) ?? [];
     $instructions = $postVars_array['instructions'] ?? [];

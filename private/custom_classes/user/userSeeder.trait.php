@@ -15,7 +15,7 @@
                 'adminNote' =>  $Seeder->max_char($Seeder->sentences(rand(0,3)), 255, "."),
                 'createdBy' => rand(1,20),
                 'createdDate' => $Seeder->date($min='1/01/19' , $max='1/01/20'),
-                'emailAddress' => $Seeder->email($Seeder->min_char("{$fName}{$lName}",4)),
+                'emailAddress' => remove_char_from_str([' '], $Seeder->email($Seeder->min_char("{$fName}{$lName}",4))),
                 'firstName' => $fName,
                 'lastName' => $lName,
                 'mediaContentId' => 0,
