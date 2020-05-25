@@ -96,3 +96,11 @@ INNER JOIN posts_to_media_content
 ON posts_to_media_content.mediaContentId = media_content.id 
 WHERE posts_to_media_content.postId = 222 
 AND media_content.type IN ('PNG', 'JPEG', 'JPG', 'GIF') ;
+
+
+
+SELECT table_name AS "Table",
+    ROUND(((data_length + index_length) / 1024 / 1024), 2) AS "Size (MB)"
+    FROM information_schema.TABLES
+    WHERE table_schema = "developmentdb"
+ORDER BY (data_length + index_length) DESC;

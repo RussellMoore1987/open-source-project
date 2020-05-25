@@ -22,7 +22,7 @@
                                 // specified array to use
                                 'arrayInfo' => 'getApiParameters2',
                                 // this anabels you to set whereConditions to limit or gide the api feed // * only for GET  
-                                'whereConditions' => 'useLabel NOT IN(1,3,4)',
+                                // 'whereConditions' => 'useLabel NOT IN(1,3,4)',
                                 // this field/property allows you to show or not show the GET examples
                                 // show or not to show that is the question
                                 "apiShowGetExamples" => 'yes', // can use no, default is yes if not set // * only for GET

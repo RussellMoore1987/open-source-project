@@ -18,6 +18,7 @@
                     $classOptions['contextApi'] = $class::check_context_api();
                     $classOptions['restApi'] = $class::check_rest_api();
                     $classOptions['className'] = $class;
+                    $classOptions['defaultCount'] = $class::$seederDefaultRecordCount ?? 10;
 
                     // Check to see if the table exist in the database
                     $dbName = DB_NAME;
@@ -30,7 +31,7 @@
                     ");
                     // check to see if we have anything
                     $tableThere = $result->num_rows === 0 ? false : true;
-                    $classOptions['tableThere'] = $tableThere;
+                    $classOptions['tableExists'] = $tableThere;
 
                     // if the table is not there do not show the additional information
                     if ($tableThere) {
@@ -148,7 +149,7 @@
                     // check to see if we have anything
                     $tableThere = $result->num_rows === 0 ? false : true;
                     $tempTable_array[$tableName]['tableName'] = $tableName;
-                    $tempTable_array[$tableName]['tableThere'] = $tableThere;
+                    $tempTable_array[$tableName]['tableExists'] = $tableThere;
                     $tempTable_array[$tableName]['sql'] = $otherTablesSql[$tableName] ?? false;
 
                     // check to see if the the table is there
