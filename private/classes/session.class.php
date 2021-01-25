@@ -2,7 +2,14 @@
 
     class Session {
 
-        public function __construct() {
+        // add in login trait
+        use Authentication;
+
+        // public function __construct() {
+        //     session_start(['cookie_lifetime' => 60*60]); //start session that lasts for 1 hour
+        //     session_regenerate_id(); //prevent session fixation attacks
+        // }
+        public static function start() {
             session_start(['cookie_lifetime' => 60*60]); //start session that lasts for 1 hour
             session_regenerate_id(); //prevent session fixation attacks
         }

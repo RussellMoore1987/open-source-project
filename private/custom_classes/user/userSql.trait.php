@@ -5,12 +5,12 @@
             CREATE TABLE IF NOT EXISTS users ( 
                 id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT, 
                 username VARCHAR(35) NOT NULL UNIQUE, 
-                hashPass VARCHAR(50) NOT NULL, 
+                hashedPassword VARCHAR(50) NOT NULL, 
                 firstName VARCHAR(25) NOT NULL, 
                 lastName VARCHAR(25) NOT NULL, 
                 address VARCHAR(150) DEFAULT NULL, 
                 phoneNumber VARCHAR(25) DEFAULT NULL, 
-                emailAddress VARCHAR(150) NOT NULL, 
+                emailAddress VARCHAR(150) NOT NULL UNIQUE, 
                 title VARCHAR(45) DEFAULT NULL, 
                 mediaContentId INT(10) UNSIGNED DEFAULT NULL, 
                 adminNote VARCHAR(255) DEFAULT NULL, 
@@ -22,8 +22,10 @@
                 catIds VARCHAR(255) DEFAULT NULL, 
                 tagIds VARCHAR(255) DEFAULT NULL, 
                 labelIds VARCHAR(255) DEFAULT NULL, 
-                KEY createdBy (createdBy)
-            ) ENGINE=InnoDB
+                KEY createdBy (createdBy),
+                KEY firstName (firstName),
+                KEY lastName (lastName)
+            ) ENGINE=InnoDB;
         ";
 
         // connecting tables

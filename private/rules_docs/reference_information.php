@@ -7,11 +7,11 @@
                 // This is especially important if you need SQL to be created in a certain order.
                     // the order for SQL processing is $sqlStructure from $classList, then $otherTables from $otherTablesClassList. If $otherTablesClassList is not available or left empty then it will look for $otherTables from $classList
                         // ex:
-                        // in main settings trait start
+                        // * in main settings trait start
                             // static protected $classList = ["Category", "Label", "MediaContent", "Post", "Tag", "User"]; // public access use get_class_list() 
                             // static protected $otherTablesClassList = []; // use get_other_tables_class_list()
-                        // in main settings trait end
-                        // in a class start
+                        // * in main settings trait end
+                        // * in a class start
                             // static protected $sqlStructure = "
                             //     CREATE TABLE IF NOT EXISTS users ( 
                             //     id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -38,7 +38,7 @@
                             //         FOREIGN KEY (labelId) REFERENCES labels(id) ON DELETE CASCADE ) ENGINE=InnoDB
                             //     "
                             // ];
-                        // in a class end
+                        // * in a class end
                     // The order of creation of SQL is first > the order classes (ex: "Category", "Label", "MediaContent") > $sqlStructure array (for all classes, following $classList order) > then $otherTables (for all classes, following $classList order)
             // # for $otherTablesClassList
             // list the class they are in, the array in a class must be called $otherTables, 
@@ -422,7 +422,6 @@
     // this array can be named whatever you would like, just make sure that matches the corresponding httpMethod arrayInfo
     // static public
     // @ get_get_api_parameters
-
         // # parameters
             // a specific parameter allows you to search based off of that parameter, if no parameters are provided only the default order by, page, and per page will be available
             // name parameters with lowercase characters, and try to avoid any special characters at the start of the parameters name, we sort parameters by PHP's built-in ksort
@@ -656,7 +655,6 @@
     // this array can be named whatever you would like, just make sure that matches the corresponding httpMethod arrayInfo
     // static public
     // @ get_post_api_parameters
-
         // # parameters
             // parameters specify what is allowed to be changed based off of what HTTP method you are using
             // ! id as of 6/14/19 is not a permissible parameter and will be ignored
@@ -713,4 +711,48 @@
                 //     ]
                 // Used in the same way as documented here // * validation_options located at: root/private/reference_information.php
                 // You can specify custom validation that will override the normal validation.
+
+    // @ authentication
+        // authentication allows a user to log into the system. This is the default set up and has the following options. 
+            // # NameOfClass
+                // this should be the name of the user class or the class in which you store users that will log into the system.
+                // default: User
+                // * value required
+            // # filedToCompare
+                // this should be the filed in the user object and database that you wish to select for verifying the user. For example that could be a username or emailAddress.
+                // default: username
+                // * value required
+            // # hashedPasswordFiledName
+                // this should be the name of the password field in which you want to verify your password. the reason it is called hashedPasswordFiledName is to remind the developer that all passwords should be saved as hashed passwords.
+                // default: hashedPassword
+                // * value required
+            // # identifierFiledName
+                // this filed should typically be the user ID, but it is up to you. it will be stored under the session variable userIdentifier when a user is logged in.
+                    // ex: if userIdentifier is set in session the user is login. This user identifier is typically the user ID but can also be another filled in the user class/database
+                // if you wish to set and maintain other session variables please see
+                    // * custom_code_spots located at: root/private/rules_docs/reference_information.php
+                // * value required
+        // #How it works
+            // it is part of the mainSettings.trait.php 
+                // it is best to use the default until you understand how it works and then feel free to adjust accordingly
+                // * default ex: static protected $authentication = ['User', 'username', 'hashedPassword', 'id'];
+                // you may need to adjust the login.php page to fit the field names accordingly.
+                    // root/public/login.php
+                    // for example if you switch it from username to emailAddress you should change the labels on the form fields so the user knows what they need to input to login.
+
+    // @ custom_code_spots
+        // as of 1/21/2021 there are three custom code spots built in
+            // # customDbObjCode.trait.php
+                // this adds extra functionality to the databaseobject.class.php file.
+                    // this is the preferred way to add functionality to this class. This will allow future updates to be made while, protecting custom code.
+                // file located at root\private\traits\customDbObjCode.trait.php.
+            // # after_session_check.php
+                // this custom code spot is for all session protected pages. This page runs after the session check is done.
+                    // this is the preferred way to add functionality to all session protected pages. This will allow future updates to be made while, protecting custom code.
+                // file located at root\public\admin\all_pages\after_session_check.php.
+            // # before_session_check.php
+                // this custom code spot is for all session protected pages. This page runs before the session check is done.
+                    // every view page in the protected environment runs this custom code each time a page is loaded
+                    // this is the preferred way to add functionality to all session protected pages. This will allow future updates to be made while, protecting custom code.
+                // file located at root\public\admin\all_pages\before_session_check.php.
 ?> 

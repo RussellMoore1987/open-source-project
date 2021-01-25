@@ -23,7 +23,6 @@
                     $Post_obj = new Post();
                     $Post_obj->errors[] = "No post with the ID of {$postId} exists";
                     $postId = "add";
-
                 }
             } else {
                 // create empty objects so page dose not brake

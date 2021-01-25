@@ -10,7 +10,7 @@
             // table name
             static protected $tableName = "users";
             // db columns
-            static protected $columns = ['id', 'address', 'adminNote', 'catIds', 'createdBy', 'createdDate', 'emailAddress', 'firstName', 'imageName', 'labelIds', 'lastName', 'mediaContentId', 'note', 'hashPass', 'phoneNumber', 'showOnWeb', 'tagIds', 'title', 'username'];
+            static protected $columns = ['id', 'address', 'adminNote', 'catIds', 'createdBy', 'createdDate', 'emailAddress', 'firstName', 'imageName', 'labelIds', 'lastName', 'mediaContentId', 'note', 'hashedPassword', 'phoneNumber', 'showOnWeb', 'tagIds', 'title', 'username'];
             // values to exclude on normal updates, should always include id
             static protected $columnExclusions = ['id'];
             // name specific properties you wish to included in the API
@@ -107,7 +107,7 @@
                     'max' => 255, // string length
                     'html' => 'no'
                 ],  
-                'hashPass' => [
+                'hashedPassword' => [
                     'name'=>'User Password',
                     'type' => 'str', // type of string
                     'min'=> 8, // string length
@@ -156,6 +156,7 @@
             use UserSql;
             use UserSeeder;
             use UserContext;
+            use Authentication;
         // @ class traits end
         
         // @ class specific queries start
@@ -233,7 +234,12 @@
             // methods
             // extra constructor information
             public function extended_constructor(array $args=[]) {
+                // hash password
+                if ($this->hashedPassword != NULL) {
+                    $this->hashedPassword = self::hash_password($this->hashedPassword);
+                }
                 // TODO: to use this on a lot of different classes eventually make it common or in the database object **DRY**
+                // path array
                 $this->imagePath_array = [];
                 // check to see if we have an image name
                 if (strlen(Trim($this->imageName)) > 0) {

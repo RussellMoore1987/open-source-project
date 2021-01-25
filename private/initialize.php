@@ -14,12 +14,12 @@
         '::1'
     ];
 
-    // defining links not the file paths
+    // defining link path
     // check to see if your local or live
     if (in_array($_SERVER['REMOTE_ADDR'], $localTest)) {
         define("MAIN_LINK_PATH", "http://localhost/open_source_project");
     } else {
-        define("MAIN_LINK_PATH", "https://mooredigitalsolutions.com"); // todo: change with real domain
+        define("MAIN_LINK_PATH", "https://mooredigitalsolutions.com"); // todo: change to server variable
     }
     define("PUBLIC_LINK_PATH", MAIN_LINK_PATH . "/public");
     define("IMAGE_LINK_PATH", PUBLIC_LINK_PATH . '/images'); 
@@ -83,5 +83,5 @@
     DatabaseObject::set_database($db);
 
     //start session
-    $Session = new Session();
+    Session::start();
 ?>

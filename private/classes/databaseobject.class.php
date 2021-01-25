@@ -24,6 +24,7 @@
         // use main settings
         use MainSettings;
         // use custom code trait
+        // * custom_code_spots located at: root/private/rules_docs/reference_information.php
         use CustomDbObjCode;
         // database connection
         static protected $database;
@@ -371,16 +372,19 @@
                 return $result;
             }
 
+            // TODO:add to docs
             // class clean up update, after an update or creation is performed
             protected function class_clean_up_update(array $array = []){
                 // write code in specific class if needed. Enables you to run cleanup information/queries based off of what was updated
             }
 
+            // TODO:add to docs
             // perform class specific pre-custom code for create
             protected function per_create(){
                 // write code in specific class if needed. pre-custom code if desired, pre queries and checks are possible including validation.
             }
 
+            // TODO:add to docs
             // perform class specific pre-custom code for update
             protected function per_update(){
                 // write code in specific class if needed. pre-custom code if desired, pre queries and checks are possible including validation.
@@ -452,7 +456,7 @@
 
         // @ class functionality methods start
             // # stands for database escape, you sanitized data, and to protect against my SQL injection
-            static protected function db_escape($db_field){
+            static public function db_escape($db_field){
                 return self::$database->escape_string($db_field);
             }
 
@@ -560,6 +564,11 @@
             // this is used for SQL processing, DevTool
             static public function get_sql_insert_commands() {
                 return self::$sqlInsertCommands;
+            }
+
+            // # get authentication info
+            static public function get_authentication_settings() {
+                return self::$authenticationSettings;
             }
 
             // # get validation columns
