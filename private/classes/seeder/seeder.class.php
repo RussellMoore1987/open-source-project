@@ -15,6 +15,7 @@
     require_once("seederUsername.trait.php");
     require_once("seederPhoneNumber.trait.php");
     require_once("seederOption.trait.php");
+    require_once("seederAnimalInfo.trait.php");
 
     class Seeder {
         // to get a max character count
@@ -72,6 +73,7 @@
             use SeederUsername; // get a username
             use SeederPhoneNumber; // get a phone number
             use SeederOption; // get an option
+            use SeederAnimalInfo; // get animal info
         // @ class traits end
     }
 ?>

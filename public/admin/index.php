@@ -8,7 +8,7 @@
         require_once(PUBLIC_PATH . '/admin/all_pages/before_session_check.php');
 
         // check to make sure they're logged in
-        Session::check_login();
+        // Session::check_login();
 
         // * custom_code_spots located at: root/private/rules_docs/reference_information.php
         // after session check (custom code spot)

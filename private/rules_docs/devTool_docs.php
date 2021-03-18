@@ -14,6 +14,7 @@
                         // Amet id lobortis consectetur metus eleifend Sed sapien libero nisi!
                     // $Seeder->max_char(string $string, int $max=25, string $ending="")
                     // this helper function does not work well with Russian characters (words, sentences, paragraphs in Russian)
+                // TODO: add in min char
             // right now we have seeders for:
             // ? all seeder code is located in root/private/classes/seeder/
                 // * address

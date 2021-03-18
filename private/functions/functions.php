@@ -195,6 +195,7 @@ function get_url_ctr() {
     return $ctr;
 }
 
+// TODO: make these functions so they can accept strings instead of arrays as well
 // # remove characters from string
 function remove_char_from_str(array $arrayOfStrings = [], $string = "") {
     // over characters to remove
