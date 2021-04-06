@@ -1,2 +1,2 @@
 # open-source-project
-beginning steps for an open source project, name has not been determined yet
+Beginning steps for an open source framework, Core Integration.
