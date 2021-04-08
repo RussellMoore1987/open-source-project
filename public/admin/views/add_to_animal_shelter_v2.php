@@ -1,4 +1,6 @@
 <?php
+    // TODO: test sql inserts
+
     // get the seeder
     $Seeder = new seeder();
 
@@ -28,7 +30,7 @@
     // # Staff
     echo "--Staff <br>";
     // @ num adjust
-    $staffCount = 250; // 200 
+    $staffCount = 25; // 200 
     for ($i=0; $i < $staffCount; $i++) {
         $staff_first_name = replace_char_in_str(["'"], ["''"], $Seeder->first_name());
         $staff_last_name = replace_char_in_str(["'"], ["''"], $Seeder->last_name());
@@ -197,7 +199,7 @@
     // # Adopters
     echo "--Adopters <br>";
     // @ num adjust
-    $adopterCount = 500; // 300 
+    $adopterCount = 50; // 300 
     for ($i=0; $i < $adopterCount; $i++) {
         $adopters_first_name = replace_char_in_str(["'"], ["''"], $Seeder->first_name());
         $adopters_last_name = replace_char_in_str(["'"], ["''"], $Seeder->last_name());
@@ -336,7 +338,8 @@
     $adoptions = [];
     $vaccinatedAnimals = [];
     // @ num adjust
-    $adoptable_pets_count = 3000; // 2000
+    $adoptable_pets_count = 200; // 2000
+    $extenderCounter = 0;
     for ($i=0; $i < $adoptable_pets_count; $i++) { 
         // determine what type of animal is
         $randNum = rand(0,100);
@@ -445,13 +448,15 @@
 
             $vaccinatedAnimals[] = $vaccinatedAnimal;
         }
+
+        $extenderCounter = $i + 1;
     }
     echo "<br><br>";
 
     // # Current AdoptablePets
     echo "--Current AdoptablePets <br>";
     // @ num adjust
-    $adoptable_pets_count = 150; // 150
+    $adoptable_pets_count = 50; // 2000
     for ($i=0; $i < $adoptable_pets_count; $i++) { 
         // determine what type of animal is
         $randNum = rand(0,100);
